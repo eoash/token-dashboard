@@ -7,6 +7,11 @@ import type {
   CostReportParams,
   CostReportResponse,
 } from "./types";
+import { getMockAnalytics, getMockUsageReport, getMockCostReport } from "./mock-data";
+
+function isMockMode(): boolean {
+  return !process.env.ANTHROPIC_ADMIN_API_KEY;
+}
 
 function getApiKey(): string {
   const key = process.env.ANTHROPIC_ADMIN_API_KEY;
@@ -48,6 +53,7 @@ async function adminFetch<T>(path: string, params: Record<string, unknown>): Pro
 export async function fetchClaudeCodeAnalytics(
   params: ClaudeCodeAnalyticsParams
 ): Promise<ClaudeCodeAnalyticsResponse> {
+  if (isMockMode()) return getMockAnalytics();
   return adminFetch<ClaudeCodeAnalyticsResponse>(
     "/usage_report/claude_code",
     params as unknown as Record<string, unknown>
@@ -58,6 +64,7 @@ export async function fetchClaudeCodeAnalytics(
 export async function fetchUsageReport(
   params: UsageReportParams
 ): Promise<UsageReportResponse> {
+  if (isMockMode()) return getMockUsageReport();
   return adminFetch<UsageReportResponse>(
     "/usage_report/messages",
     params as unknown as Record<string, unknown>
@@ -68,6 +75,7 @@ export async function fetchUsageReport(
 export async function fetchCostReport(
   params: CostReportParams
 ): Promise<CostReportResponse> {
+  if (isMockMode()) return getMockCostReport();
   return adminFetch<CostReportResponse>(
     "/cost_report",
     params as unknown as Record<string, unknown>
