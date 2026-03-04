@@ -1,8 +1,7 @@
 import KpiCard from "@/components/cards/KpiCard";
-import TeamRankingCard from "@/components/cards/TeamRankingCard";
 import DailyUsageChart from "@/components/charts/DailyUsageChart";
-import TeamBarChart from "@/components/charts/TeamBarChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
+import LeaderboardTable from "@/components/leaderboard/LeaderboardTable";
 import { formatTokens, formatDollars } from "@/lib/utils";
 import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
 import { fetchClaudeCodeAnalytics } from "@/lib/anthropic-admin";
@@ -215,14 +214,9 @@ export default async function OverviewPage() {
         </div>
       </div>
 
-      {/* Team Bar Chart */}
+      {/* Leaderboard */}
       <div className="mt-6">
-        <TeamBarChart data={overview.members} />
-      </div>
-
-      {/* Team Ranking — 전체 너비 */}
-      <div className="mt-6">
-        <TeamRankingCard data={overview.members} />
+        <LeaderboardTable />
       </div>
     </div>
   );
