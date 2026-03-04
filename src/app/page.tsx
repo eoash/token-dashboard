@@ -5,16 +5,18 @@ import TeamBarChart from "@/components/charts/TeamBarChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import { formatTokens, formatDollars } from "@/lib/utils";
 import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
+import { fetchClaudeCodeAnalytics } from "@/lib/anthropic-admin";
 import type { ClaudeCodeAnalyticsResponse, ClaudeCodeDataPoint } from "@/lib/types";
+import { getDateRange } from "@/lib/utils";
 
 async function fetchAnalytics(): Promise<ClaudeCodeAnalyticsResponse | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/analytics?days=30`, {
-      cache: "no-store",
+    const { start, end } = getDateRange(30);
+    return await fetchClaudeCodeAnalytics({
+      start_date: start,
+      end_date: end,
+      group_by: ["actor", "model", "date"],
     });
-    if (!res.ok) return null;
-    return res.json();
   } catch {
     return null;
   }
