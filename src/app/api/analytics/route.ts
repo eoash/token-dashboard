@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchClaudeCodeAnalytics } from "@/lib/anthropic-admin";
+import { fetchAnalytics, getDataSource } from "@/lib/data-source";
 import { DEFAULT_DAYS } from "@/lib/constants";
 import { getDateRange } from "@/lib/utils";
 
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
     const days = parseInt(searchParams.get("days") ?? String(DEFAULT_DAYS));
-    const date = searchParams.get("date"); // 특정 날짜 조회
+    const date = searchParams.get("date");
 
     let start_date: string;
     let end_date: string;
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     const groupBy = searchParams.getAll("group_by");
 
-    const data = await fetchClaudeCodeAnalytics({
+    const data = await fetchAnalytics({
       start_date,
       end_date,
       group_by:
@@ -32,7 +32,10 @@ export async function GET(request: NextRequest) {
           : ["actor", "model", "date"],
     });
 
-    return NextResponse.json(data);
+    return NextResponse.json({
+      ...data,
+      _source: getDataSource(),
+    });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown error";

@@ -1,0 +1,10 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp",
+    "OTEL_LOGS_EXPORTER": "otlp",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "http://YOUR_SERVER_IP:4318",
+    "OTEL_RESOURCE_ATTRIBUTES": "team.name=eostudio"
+  }
+}

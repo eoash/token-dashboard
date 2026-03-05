@@ -4,14 +4,14 @@ import ModelPieChart from "@/components/charts/ModelPieChart";
 import LeaderboardTable from "@/components/leaderboard/LeaderboardTable";
 import { formatTokens, formatDollars } from "@/lib/utils";
 import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
-import { fetchClaudeCodeAnalytics } from "@/lib/anthropic-admin";
+import { fetchAnalytics as fetchData, getDataSource } from "@/lib/data-source";
 import type { ClaudeCodeAnalyticsResponse, ClaudeCodeDataPoint } from "@/lib/types";
 import { getDateRange } from "@/lib/utils";
 
 async function fetchAnalytics(): Promise<ClaudeCodeAnalyticsResponse | null> {
   try {
     const { start, end } = getDateRange(30);
-    return await fetchClaudeCodeAnalytics({
+    return await fetchData({
       start_date: start,
       end_date: end,
       group_by: ["actor", "model", "date"],
@@ -122,7 +122,7 @@ function aggregateOverview(data: ClaudeCodeDataPoint[]) {
 }
 
 export default async function OverviewPage() {
-  const isMock = !process.env.ANTHROPIC_ADMIN_API_KEY;
+  const source = getDataSource();
   const analytics = await fetchAnalytics();
 
   if (!analytics) {
@@ -148,11 +148,17 @@ export default async function OverviewPage() {
         <span className="text-xs text-gray-500">Last 30 days</span>
       </div>
 
-      {/* Mock 모드 배너 */}
-      {isMock && (
+      {/* Data source 배너 */}
+      {source !== "prometheus" && (
         <div className="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 flex items-center gap-3">
-          <span className="text-yellow-400 text-sm font-medium">Mock Mode</span>
-          <span className="text-yellow-500/70 text-xs">샘플 데이터로 표시 중 — ANTHROPIC_ADMIN_API_KEY 설정 후 실제 데이터를 확인하세요</span>
+          <span className="text-yellow-400 text-sm font-medium">
+            {source === "mock" ? "Mock Mode" : "Admin API"}
+          </span>
+          <span className="text-yellow-500/70 text-xs">
+            {source === "mock"
+              ? "샘플 데이터 표시 중 — PROMETHEUS_URL 설정 후 OTel 데이터를 확인하세요"
+              : "Admin API 사용 중 — OTel 전환 시 PROMETHEUS_URL 설정"}
+          </span>
         </div>
       )}
 
