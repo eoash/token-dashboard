@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const menuItems = [
   { label: "Overview", href: "/" },
+  { label: "Leaderboard", href: "/leaderboard" },
   { label: "Team", href: "/team" },
   { label: "Models", href: "/models" },
   { label: "Costs", href: "/costs" },

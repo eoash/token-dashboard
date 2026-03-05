@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import KpiCard from "@/components/cards/KpiCard";
 import DailyUsageChart from "@/components/charts/DailyUsageChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import { TEAM_MEMBERS, EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
 import { formatTokens, formatDollars, formatPercent } from "@/lib/utils";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 interface MemberData {
@@ -89,26 +90,7 @@ function aggregateMember(data: ClaudeCodeDataPoint[], email: string): MemberData
 
 export default function TeamPage() {
   const [selectedEmail, setSelectedEmail] = useState(TEAM_MEMBERS[0]?.email ?? "");
-  const [rawData, setRawData] = useState<ClaudeCodeDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadData = useCallback(async () => {
-    try {
-      const res = await fetch("/api/analytics?days=30");
-      if (res.ok) {
-        const json = await res.json();
-        setRawData(json.data ?? []);
-      }
-    } catch {
-      // silent
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const { data: rawData, loading, error } = useAnalytics(30);
 
   const memberData = aggregateMember(rawData, selectedEmail);
   const memberName = EMAIL_TO_NAME[selectedEmail] ?? selectedEmail;
@@ -129,6 +111,12 @@ export default function TeamPage() {
           ))}
         </select>
       </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-400 text-sm">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <div className="text-gray-400 text-center py-12">Loading...</div>

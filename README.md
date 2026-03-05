@@ -1,36 +1,287 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EO Studio — AI Token Dashboard
 
-## Getting Started
+EO Studio 팀의 AI 코딩 도구 사용량을 실시간으로 모니터링하는 내부 대시보드입니다.
+Claude Code / Gemini / ChatGPT 사용 현황을 팀원별·모델별·기간별로 추적합니다.
 
-First, run the development server:
+**Live →** https://token-dashboard-iota.vercel.app
+**Repository →** https://github.com/eoash/token-dashboard
+
+---
+
+## 스크린샷
+
+| Overview | Leaderboard |
+|----------|-------------|
+| KPI 카드, 일별 차트, 모델 파이 | 팀원 순위, 기간 필터, 비용 추이 |
+
+---
+
+## 주요 기능
+
+### Overview (`/`)
+- **사용량 KPI**: 총 토큰, 총 비용, 활성 사용자, 일평균 세션
+- **생산성 KPI**: 수락된 코드 라인, 수락률, 커밋 수, PR 수
+- **일별 사용량 차트**: Input / Output / Cache 스택 영역 차트
+- **모델별 파이 차트**: Opus / Sonnet / Haiku 비율
+
+### Developer Leaderboard (`/leaderboard`)
+- **AI 도구 탭**: Claude Code / Gemini / ChatGPT 전환
+- **기간 필터**: Today / 7 Days / 30 Days / All Time (Claude Code만)
+- **메트릭 토글**: Cost($) / Tokens 전환
+- **컬럼**: 순위, 팀원, Input, Output, Cache, Total, 수락률, 세션/일, 비용+추이(↑↓)
+- **30초 자동 갱신** (Claude Code)
+
+### Team (`/team`)
+- 팀원 선택 드롭다운
+- 개인별 KPI: 토큰, 비용, 세션, 수락률, 코드 라인, 커밋, PR
+- 일별 사용 차트 + 모델 사용 비율
+
+### Models (`/models`)
+- 모델별 토큰/비용 집계 테이블
+- 모델별 비용 추이 차트
+
+### Costs (`/costs`)
+- 총 비용, 일평균, 월말 예상 비용
+- 비용 추이 차트 (프로젝션 포함)
+- 팀원별·모델별 비용 분포
+
+---
+
+## Mock 모드
+
+`ANTHROPIC_ADMIN_API_KEY` 없이도 전체 기능을 확인할 수 있습니다.
+API 키가 없으면 자동으로 Mock 모드로 전환되고 화면 상단에 배너가 표시됩니다.
+
+| 도구 | 데이터 출처 |
+|------|------------|
+| Claude Code | `src/lib/mock-data.ts` — 5명 × 30일 시뮬레이션 |
+| Gemini | `src/lib/mock-ai-tools.ts` — 팀원별 고정 샘플 |
+| ChatGPT | `src/lib/mock-ai-tools.ts` — 팀원별 고정 샘플 |
+
+---
+
+## 팀원 설정 (Claude Code 사용량 수집)
+
+대시보드에 **실제 사용량 데이터**를 표시하려면 Claude Code를 사용하는 팀원 각자가 아래 설정을 한 번만 실행해야 합니다.
+
+> **왜 필요한가요?**
+> Claude Code는 기본적으로 사용량 데이터를 외부로 전송하지 않습니다.
+> 아래 설정을 하면 팀의 OTel Collector로 텔레메트리가 전송되고, 대시보드에 반영됩니다.
+
+### 설치 방법 (1분)
+
+터미널을 열고 아래 명령어를 복사-붙여넣기 후 엔터:
+
+```bash
+curl -s https://raw.githubusercontent.com/eoash/token-dashboard/main/docker/managed-settings.example.json > ~/.claude/managed-settings.json && echo "✅ 완료! Claude Code를 재시작하세요"
+```
+
+완료 메시지가 뜨면 **Claude Code를 재시작**하면 끝입니다.
+
+### 설정 내용
+
+이 명령어는 `~/.claude/managed-settings.json` 파일을 생성하며, Claude Code가 시작될 때 자동으로 읽습니다:
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel-collector-production-2dac.up.railway.app"
+  }
+}
+```
+
+### 주의사항
+
+- **Claude Code를 사용하는 팀원만** 설정하면 됩니다 (대시보드 관리자는 불필요)
+- 설정 후 데이터가 대시보드에 반영되기까지 최대 **15분** 소요될 수 있습니다
+- 설정 제거: `rm ~/.claude/managed-settings.json`
+
+---
+
+## 시작하기
+
+### 1. 클론 및 설치
+
+```bash
+git clone https://github.com/eoash/token-dashboard.git
+cd token-dashboard
+npm install
+```
+
+### 2. 환경변수 설정
+
+```bash
+cp .env.example .env.local
+```
+
+`.env.local`에 아래 키를 입력합니다:
+
+```env
+# Anthropic Admin API Key
+# Console → Settings → Admin Keys 에서 발급
+# 없으면 Mock 모드로 자동 동작
+ANTHROPIC_ADMIN_API_KEY=sk-ant-admin-...
+```
+
+> Anthropic Admin API 키는 **Primary Owner** 권한이 있어야 발급 가능합니다.
+> [console.anthropic.com/settings/admin-keys](https://console.anthropic.com/settings/admin-keys)
+
+### 3. 로컬 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000) 접속
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 팀원 추가 / 수정
 
-## Learn More
+`src/lib/constants.ts`에서 팀원 목록을 관리합니다:
 
-To learn more about Next.js, take a look at the following resources:
+```ts
+export const TEAM_MEMBERS: TeamMember[] = [
+  { email: "ash@eostudio.tv", name: "Seohyun" },
+  { email: "jay@eostudio.tv", name: "Jay" },
+  // 여기에 추가
+];
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> 이메일은 Anthropic Console에 등록된 팀원 이메일과 일치해야 실제 데이터가 연동됩니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 모델 추가
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`src/lib/constants.ts`의 `MODEL_CONFIG`에 새 모델을 추가합니다:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```ts
+export const MODEL_CONFIG = {
+  "claude-opus-4-6":          { label: "Opus 4.6",    color: "#E8FF47" },
+  "claude-sonnet-4-6":        { label: "Sonnet 4.6",  color: "#3B82F6" },
+  "claude-haiku-4-5-20251001":{ label: "Haiku 4.5",   color: "#10B981" },
+  // 새 모델 추가 시 여기에 입력
+};
+```
+
+---
+
+## 모니터링 인프라 (Railway)
+
+실제 사용량 데이터는 Railway에 배포된 OTel 파이프라인을 통해 수집됩니다.
+
+```
+Claude Code 클라이언트 (managed-settings.json)
+    ↓ OTLP HTTP
+OTel Collector (Railway) → otel-collector-production-2dac.up.railway.app
+    ↓ Prometheus scrape
+Prometheus (Railway)     → prometheus-production-ae90.up.railway.app
+    ↓ PromQL
+Next.js Dashboard (Vercel, PROMETHEUS_URL 환경변수)
+```
+
+| 서비스 | Dockerfile | Railway 환경변수 |
+|--------|-----------|----------------|
+| OTel Collector | `docker/otel-collector/Dockerfile` | `RAILWAY_DOCKERFILE_PATH`, `PORT=4317` |
+| Prometheus | `docker/prom/Dockerfile` | `RAILWAY_DOCKERFILE_PATH`, `PORT=9090` |
+| Grafana | `docker/docker-compose.yml` 참조 | — |
+
+---
+
+## 프로젝트 구조
+
+```
+src/
+├── app/
+│   ├── page.tsx                  # Overview (/)
+│   ├── leaderboard/page.tsx      # Leaderboard (/leaderboard)
+│   ├── team/page.tsx             # Team (/team)
+│   ├── models/page.tsx           # Models (/models)
+│   ├── costs/page.tsx            # Costs (/costs)
+│   └── api/
+│       ├── analytics/route.ts    # GET /api/analytics?days=N
+│       ├── costs/route.ts        # GET /api/costs
+│       └── usage/route.ts        # GET /api/usage
+├── components/
+│   ├── layout/Sidebar.tsx        # 좌측 네비게이션
+│   ├── cards/KpiCard.tsx         # KPI 카드
+│   ├── charts/                   # Recharts 기반 차트 4종
+│   └── leaderboard/
+│       └── LeaderboardTable.tsx  # 리더보드 메인 컴포넌트
+└── lib/
+    ├── hooks/useAnalytics.ts     # API fetch 공통 훅
+    ├── anthropic-admin.ts        # Anthropic Admin API 클라이언트
+    ├── constants.ts              # 팀원, 모델 설정
+    ├── mock-data.ts              # Claude Code Mock 데이터
+    ├── mock-ai-tools.ts          # Gemini / GPT Mock 데이터
+    ├── types.ts                  # TypeScript 타입 정의
+    └── utils.ts                  # 포맷팅 유틸리티
+```
+
+---
+
+## 기술 스택
+
+| 항목 | 기술 | 버전 |
+|------|------|------|
+| Framework | Next.js (App Router) | 16.1.6 |
+| Language | TypeScript | 5.x |
+| Styling | Tailwind CSS | v4 |
+| Charts | Recharts | 3.x |
+| Data Source | OTel + Prometheus / Admin API | — |
+| Deploy | Vercel (앱) + Railway (모니터링) | — |
+
+---
+
+## 배포
+
+### 자동 배포 (권장)
+
+`main` 브랜치에 merge되면 Vercel이 자동으로 프로덕션 배포합니다.
+PR 생성 시에는 Preview URL이 자동 생성됩니다.
+
+### 환경변수 (Vercel)
+
+Vercel Dashboard → `token-dashboard` → **Settings → Environment Variables**
+
+```
+ANTHROPIC_ADMIN_API_KEY = sk-ant-admin-...
+```
+
+### 수동 배포
+
+```bash
+npm run deploy
+# 내부적으로 npx vercel --prod --yes 실행
+```
+
+---
+
+## 기여 가이드
+
+이 레포는 **PR 필수 정책**이 적용되어 있습니다.
+`main` 브랜치에 직접 push 불가 — 반드시 아래 흐름을 따르세요.
+
+```bash
+# 1. 새 브랜치 생성
+git checkout -b feat/your-feature
+
+# 2. 작업 후 커밋
+git add .
+git commit -m "feat: 기능 설명"
+
+# 3. 원격에 push
+git push origin feat/your-feature
+
+# 4. GitHub에서 PR 생성 → 리뷰 요청
+```
+
+> PR merge에는 **1명 이상의 Approve**가 필요합니다.
+
+---
+
+## 라이선스
+
+Internal use only — EO Studio

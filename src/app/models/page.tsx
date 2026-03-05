@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import KpiCard from "@/components/cards/KpiCard";
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import CostTrendChart from "@/components/charts/CostTrendChart";
 import { getModelLabel, getModelColor } from "@/lib/constants";
 import { formatTokens, formatDollars } from "@/lib/utils";
+import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 interface ModelDetail {
@@ -81,27 +81,7 @@ function aggregateModels(data: ClaudeCodeDataPoint[]): {
 }
 
 export default function ModelsPage() {
-  const [rawData, setRawData] = useState<ClaudeCodeDataPoint[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadData = useCallback(async () => {
-    try {
-      const res = await fetch("/api/analytics?days=30");
-      if (res.ok) {
-        const json = await res.json();
-        setRawData(json.data ?? []);
-      }
-    } catch {
-      // silent
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
+  const { data: rawData, loading, error } = useAnalytics(30);
   const { pie, details } = aggregateModels(rawData);
 
   return (
@@ -110,6 +90,12 @@ export default function ModelsPage() {
         <h1 className="text-2xl font-bold">Models</h1>
         <span className="text-xs text-gray-500">Last 30 days</span>
       </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-400 text-sm">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <div className="text-gray-400 text-center py-12">Loading...</div>
