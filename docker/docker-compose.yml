@@ -27,8 +27,9 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3001:3000" # 3001 to avoid conflict with Next.js dev server
+    env_file:
+      - .env
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=eostudio
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafana-data:/var/lib/grafana
