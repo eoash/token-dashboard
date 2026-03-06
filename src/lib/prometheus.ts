@@ -22,14 +22,14 @@ interface PromSeries {
 
 const Q = {
   inputTokens:
-    'sum by (user_email, model) (increase(claude_code_token_usage_total{token_type="input"}[1d]))',
+    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="input"}[1d]))',
   outputTokens:
-    'sum by (user_email, model) (increase(claude_code_token_usage_total{token_type="output"}[1d]))',
+    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="output"}[1d]))',
   cacheReadTokens:
-    'sum by (user_email, model) (increase(claude_code_token_usage_total{token_type="cache_read"}[1d]))',
+    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_read"}[1d]))',
   cacheCreationTokens:
-    'sum by (user_email, model) (increase(claude_code_token_usage_total{token_type="cache_creation"}[1d]))',
-  cost: "sum by (user_email, model) (increase(claude_code_cost_usage_total[1d]))",
+    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_creation"}[1d]))',
+  cost: "sum by (user_email, model) (increase(claude_code_cost_total[1d]))",
   sessions:
     "sum by (user_email) (increase(claude_code_session_count_total[1d]))",
   lines:
