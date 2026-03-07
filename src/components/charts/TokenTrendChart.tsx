@@ -47,7 +47,7 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
   );
 }
 
-export default function CostTrendChart({ data }: TokenTrendChartProps) {
+export default function TokenTrendChart({ data }: TokenTrendChartProps) {
   return (
     <div className="rounded-xl bg-[#111111] p-6">
       <h3 className="mb-4 text-lg font-semibold text-white">Token Trend</h3>

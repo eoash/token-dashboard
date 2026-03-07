@@ -1,5 +1,5 @@
 import type { ClaudeCodeAnalyticsResponse } from "./types";
-import { UNIQUE_MEMBERS, MODEL_CONFIG } from "./constants";
+import { UNIQUE_MEMBERS } from "./constants";
 
 const MODELS = [
   "claude-sonnet-4-6",
@@ -70,14 +70,6 @@ export function getMockAnalytics(): ClaudeCodeAnalyticsResponse {
         const cache_read_tokens = Math.floor(scale * randomBetween(5, 15) / 100);
         const cache_creation_tokens = Math.floor(scale * randomBetween(1, 5) / 100);
 
-        const modelConfig = MODEL_CONFIG[model];
-        const inputPrice = modelConfig?.inputPricePerMillion ?? 3;
-        const outputPrice = modelConfig?.outputPricePerMillion ?? 15;
-        const estimated_cost_usd_cents = Math.floor(
-          (input_tokens / 1_000_000) * inputPrice * 100 +
-          (output_tokens / 1_000_000) * outputPrice * 100
-        );
-
         if (input_tokens === 0) continue;
 
         data.push({
@@ -94,7 +86,6 @@ export function getMockAnalytics(): ClaudeCodeAnalyticsResponse {
           output_tokens,
           cache_read_tokens,
           cache_creation_tokens,
-          estimated_cost_usd_cents,
         });
       }
     }

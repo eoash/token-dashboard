@@ -29,7 +29,6 @@ const Q = {
     'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_read"}[1d]))',
   cacheCreationTokens:
     'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_creation"}[1d]))',
-  cost: "sum by (user_email, model) (increase(claude_code_cost_total[1d]))",
   sessions:
     "sum by (user_email) (increase(claude_code_session_count_total[1d]))",
   lines:
@@ -92,7 +91,6 @@ function emptyDataPoint(
     output_tokens: 0,
     cache_read_tokens: 0,
     cache_creation_tokens: 0,
-    estimated_cost_usd_cents: 0,
   };
 }
 
@@ -119,7 +117,6 @@ export async function fetchFromPrometheus(params: {
     outputTokens,
     cacheReadTokens,
     cacheCreationTokens,
-    cost,
     sessions,
     lines,
     commits,
@@ -131,7 +128,6 @@ export async function fetchFromPrometheus(params: {
     queryRange(Q.outputTokens, start, end),
     queryRange(Q.cacheReadTokens, start, end),
     queryRange(Q.cacheCreationTokens, start, end),
-    queryRange(Q.cost, start, end),
     queryRange(Q.sessions, start, end),
     queryRange(Q.lines, start, end),
     queryRange(Q.commits, start, end),
@@ -163,18 +159,6 @@ export async function fetchFromPrometheus(params: {
   mergeModelMetric(outputTokens, "output_tokens");
   mergeModelMetric(cacheReadTokens, "cache_read_tokens");
   mergeModelMetric(cacheCreationTokens, "cache_creation_tokens");
-
-  // Cost (USD → cents)
-  for (const s of cost) {
-    const email = s.metric.user_email || "unknown";
-    const model = s.metric.model || "unknown";
-    for (const [ts, val] of s.values) {
-      const date = tsToDate(ts);
-      const key = `${email}|${model}|${date}`;
-      if (!dataMap.has(key)) dataMap.set(key, emptyDataPoint(email, model, date));
-      dataMap.get(key)!.estimated_cost_usd_cents = Math.round(parseFloat(val) * 100);
-    }
-  }
 
   // --- Phase 2: Per-user metrics (email × date) → assign to first model entry ---
   // Build index: email|date → first key in dataMap

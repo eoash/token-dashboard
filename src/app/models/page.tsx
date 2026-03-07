@@ -1,7 +1,7 @@
 "use client";
 
 import ModelPieChart from "@/components/charts/ModelPieChart";
-import CostTrendChart from "@/components/charts/CostTrendChart";
+import TokenTrendChart from "@/components/charts/TokenTrendChart";
 import DateRangePicker from "@/components/layout/DateRangePicker";
 import { formatTokens } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
@@ -55,7 +55,7 @@ export default function ModelsPage() {
           {/* Per-model token trends */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {details.map((m) => (
-              <CostTrendChart key={m.name} data={m.daily} />
+              <TokenTrendChart key={m.name} data={m.daily} />
             ))}
           </div>
 
