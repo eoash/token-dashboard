@@ -14,13 +14,20 @@ export const EMAIL_TO_NAME: Record<string, string> = Object.fromEntries(
 );
 
 // 모델 표시명 + 색상
-export const MODEL_CONFIG: Record<string, { label: string; color: string }> = {
-  "claude-opus-4-6": { label: "Opus 4.6", color: "#E8FF47" },
-  "claude-sonnet-4-6": { label: "Sonnet 4.6", color: "#3B82F6" },
-  "claude-haiku-4-5-20251001": { label: "Haiku 4.5", color: "#10B981" },
+export interface ModelConfig {
+  label: string;
+  color: string;
+  inputPricePerMillion: number;
+  outputPricePerMillion: number;
+}
+
+export const MODEL_CONFIG: Record<string, ModelConfig> = {
+  "claude-opus-4-6":           { label: "Opus 4.6",   color: "#E8FF47", inputPricePerMillion: 15,   outputPricePerMillion: 75   },
+  "claude-sonnet-4-6":         { label: "Sonnet 4.6", color: "#3B82F6", inputPricePerMillion: 3,    outputPricePerMillion: 15   },
+  "claude-haiku-4-5-20251001": { label: "Haiku 4.5",  color: "#10B981", inputPricePerMillion: 0.25, outputPricePerMillion: 1.25 },
   // fallback for older models
-  "claude-3-5-sonnet-20241022": { label: "Sonnet 3.5", color: "#6366F1" },
-  "claude-3-5-haiku-20241022": { label: "Haiku 3.5", color: "#14B8A6" },
+  "claude-3-5-sonnet-20241022": { label: "Sonnet 3.5", color: "#6366F1", inputPricePerMillion: 3,    outputPricePerMillion: 15   },
+  "claude-3-5-haiku-20241022":  { label: "Haiku 3.5",  color: "#14B8A6", inputPricePerMillion: 0.25, outputPricePerMillion: 1.25 },
 };
 
 export function getModelLabel(model: string): string {

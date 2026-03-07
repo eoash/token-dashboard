@@ -42,7 +42,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
       acceptanceRateCount += d.session_count;
     }
 
-    if (d.actor?.email_address) userSet.add(d.actor.email_address);
+    userSet.add(d.actor.email_address ?? d.actor.id);
 
     if (d.date) {
       const existing = dailyMap.get(d.date) ?? { input: 0, output: 0, cache: 0, cost: 0, sessions: 0 };
@@ -54,8 +54,9 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
       dailyMap.set(d.date, existing);
     }
 
-    if (d.actor?.email_address) {
-      const name = EMAIL_TO_NAME[d.actor.email_address] ?? d.actor.email_address;
+    {
+      const email = d.actor.email_address ?? d.actor.id;
+      const name = EMAIL_TO_NAME[email] ?? email;
       const existing = memberMap.get(name) ?? { tokens: 0, cost: 0, lines: 0, commits: 0, prs: 0, acceptanceSum: 0, acceptanceCount: 0 };
       existing.tokens += tokens;
       existing.cost += d.estimated_cost_usd_cents / 100;

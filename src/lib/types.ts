@@ -10,9 +10,9 @@ export interface ClaudeCodeActor {
 }
 
 export interface ClaudeCodeDataPoint {
-  actor?: ClaudeCodeActor;
-  model?: string;
-  date?: string;
+  actor: ClaudeCodeActor;
+  model: string;
+  date: string;
   session_count: number;
   lines_of_code: number;
   commits: number;

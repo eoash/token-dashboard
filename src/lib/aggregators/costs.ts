@@ -24,8 +24,9 @@ export function aggregateCosts(data: ClaudeCodeDataPoint[]): CostAggregation {
       dailyMap.set(d.date, (dailyMap.get(d.date) ?? 0) + d.estimated_cost_usd_cents / 100);
     }
 
-    if (d.actor?.email_address) {
-      const name = EMAIL_TO_NAME[d.actor.email_address] ?? d.actor.email_address;
+    {
+      const email = d.actor.email_address ?? d.actor.id;
+      const name = EMAIL_TO_NAME[email] ?? email;
       memberMap.set(name, (memberMap.get(name) ?? 0) + d.estimated_cost_usd_cents / 100);
     }
 
