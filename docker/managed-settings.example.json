@@ -5,6 +5,6 @@
     "OTEL_LOGS_EXPORTER": "otlp",
     "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
     "OTEL_EXPORTER_OTLP_ENDPOINT": "https://otel-collector-production-2dac.up.railway.app",
-    "OTEL_RESOURCE_ATTRIBUTES": "team.name=eostudio"
+    "OTEL_RESOURCE_ATTRIBUTES": "team.name=eostudio,user.email=your@email.com"
   }
 }
