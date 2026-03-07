@@ -154,6 +154,30 @@ export const MODEL_CONFIG: Record<string, ModelConfig> = {
 
 ---
 
+## 데이터 수집 기준
+
+대시보드의 데이터는 두 가지 소스에서 구간을 나누어 표시됩니다.
+
+| 구간 | 데이터 소스 | 설명 |
+|------|-----------|------|
+| ~2026-03-07 | **Backfill JSON** (`src/lib/backfill/*.json`) | `install-hook.sh` 실행 시 로컬 transcript를 파싱하여 생성. 날짜·모델별 정확한 데이터 |
+| 2026-03-08~ | **Prometheus 실시간** | OTel Collector → Prometheus 파이프라인. 세션 종료 시 hook이 자동 전송 |
+
+### 왜 구간이 나뉘어 있나요?
+
+OTel Collector의 `deltatocumulative` 프로세서가 과거 타임스탬프의 backfill 데이터를 현재 시점에 합산하는 문제가 있었습니다. 이를 해결하기 위해:
+
+1. 3/7에 OTel Collector + Prometheus를 리셋하여 오염 데이터 초기화
+2. 3/7 이전 데이터는 backfill JSON에서, 3/8 이후는 Prometheus에서만 사용
+3. 구간 분리 기준은 Vercel 환경변수 `BACKFILL_END`로 제어 (`data-source.ts`)
+
+### 참고
+
+- `<synthetic>` 모델 (모델명 미파싱, 토큰 0)은 aggregator에서 자동 필터링됩니다
+- 새 팀원이 `install-hook.sh`를 실행하면 과거 데이터는 backfill JSON으로, 이후 데이터는 Prometheus로 자동 수집됩니다
+
+---
+
 ## 모니터링 인프라 (Railway)
 
 실제 사용량 데이터는 Railway에 배포된 OTel 파이프라인을 통해 수집됩니다.
