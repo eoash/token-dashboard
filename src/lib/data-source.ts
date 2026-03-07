@@ -37,7 +37,7 @@ function loadAllBackfill(): ClaudeCodeDataPoint[] {
 const backfillData = loadAllBackfill();
 
 /** backfill의 마지막 날짜 — 이 날짜 이전은 JSON에서, 이후는 Prometheus에서 */
-const BACKFILL_END = (() => {
+const BACKFILL_END = process.env.BACKFILL_END || (() => {
   const dates = backfillData.map((d) => d.date);
   return dates.length > 0 ? dates.sort().pop()! : "";
 })();
