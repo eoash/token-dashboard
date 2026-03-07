@@ -1,0 +1,184 @@
+{
+  "data": [
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-06",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 13,
+      "output_tokens": 37,
+      "cache_read_tokens": 197988,
+      "cache_creation_tokens": 29153
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-07",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-07",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 16,
+      "output_tokens": 77,
+      "cache_read_tokens": 523306,
+      "cache_creation_tokens": 110096
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-01",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 15269,
+      "output_tokens": 97717,
+      "cache_read_tokens": 31686582,
+      "cache_creation_tokens": 1601673
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-02",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1009,
+      "output_tokens": 168647,
+      "cache_read_tokens": 31285859,
+      "cache_creation_tokens": 2405776
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-03",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1315,
+      "output_tokens": 183442,
+      "cache_read_tokens": 41101604,
+      "cache_creation_tokens": 3358621
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-03-04",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-04",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 3652,
+      "output_tokens": 376876,
+      "cache_read_tokens": 84576223,
+      "cache_creation_tokens": 7080682
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-05",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 273,
+      "output_tokens": 42512,
+      "cache_read_tokens": 10308353,
+      "cache_creation_tokens": 715837
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jy.lim@eoeoeo.net",
+        "email_address": "jy.lim@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-07",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 339,
+      "output_tokens": 34755,
+      "cache_read_tokens": 9712665,
+      "cache_creation_tokens": 306977
+    }
+  ]
+}
