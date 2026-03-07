@@ -11,32 +11,44 @@ set -e
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 HOOK_FILE="$HOOKS_DIR/otel_push.py"
-BACKFILL_FILE="$HOOKS_DIR/backfill_otel.py"
 BASE_URL="https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts"
+REPO="eoash/token-dashboard"
 
 echo "=== EO Studio Token Dashboard - Hook Installer ==="
 echo ""
 
-# 0. git email 확인
+# 0. 필수 도구 확인
 GIT_EMAIL=$(git config user.email 2>/dev/null || echo "")
 if [ -z "$GIT_EMAIL" ]; then
   echo "[!] git config user.email 이 설정되어 있지 않습니다."
   echo "    먼저 실행: git config --global user.email \"your@eoeoeo.net\""
   exit 1
 fi
-echo "사용자: $GIT_EMAIL"
+
+if ! command -v gh &>/dev/null; then
+  echo "[!] gh (GitHub CLI) 가 설치되어 있지 않습니다."
+  echo "    설치: brew install gh && gh auth login"
+  exit 1
+fi
+
+# gh 인증 확인
+if ! gh auth status &>/dev/null 2>&1; then
+  echo "[!] gh 인증이 필요합니다. 먼저 실행: gh auth login"
+  exit 1
+fi
+
+USERNAME=$(echo "$GIT_EMAIL" | cut -d@ -f1)
+echo "사용자: $GIT_EMAIL ($USERNAME)"
 echo ""
 
 # 1. hooks 디렉토리 생성
 mkdir -p "$HOOKS_DIR"
 
-# 2. 파일 다운로드
-echo "[1/3] hook 파일 다운로드 중..."
+# 2. hook 파일 다운로드
+echo "[1/3] otel_push.py 다운로드 중..."
 curl -sL "$BASE_URL/otel_push.py" -o "$HOOK_FILE"
-curl -sL "$BASE_URL/backfill_otel.py" -o "$BACKFILL_FILE"
-chmod +x "$HOOK_FILE" "$BACKFILL_FILE"
+chmod +x "$HOOK_FILE"
 echo "      -> $HOOK_FILE"
-echo "      -> $BACKFILL_FILE"
 
 # 3. settings.json에 Stop hook 등록
 echo "[2/3] settings.json에 Stop hook 등록 중..."
@@ -95,14 +107,61 @@ print('      -> Stop hook 추가 완료')
   fi
 fi
 
-# 4. 과거 transcript backfill
-echo "[3/3] 과거 transcript 데이터 backfill 중..."
+# 4. 과거 transcript backfill → JSON 생성 → GitHub repo push
+echo "[3/3] 과거 transcript backfill 중..."
 
 TRANSCRIPT_COUNT=$(find "$HOME/.claude/projects" -name "*.jsonl" 2>/dev/null | grep -v subagents | wc -l | tr -d ' ')
 
 if [ "$TRANSCRIPT_COUNT" -gt 0 ]; then
-  echo "      transcript 파일 ${TRANSCRIPT_COUNT}개 발견. 전송 시작..."
-  python3 "$BACKFILL_FILE" --push --quiet
+  echo "      transcript 파일 ${TRANSCRIPT_COUNT}개 발견."
+
+  # generate_backfill.py 다운로드 & 실행
+  BACKFILL_SCRIPT=$(mktemp)
+  curl -sL "$BASE_URL/generate_backfill.py" -o "$BACKFILL_SCRIPT"
+
+  BACKFILL_JSON=$(mktemp)
+  python3 "$BACKFILL_SCRIPT" --out "$BACKFILL_JSON"
+
+  # JSON이 비어있지 않으면 GitHub에 push
+  DATA_COUNT=$(python3 -c "import json; print(len(json.load(open('$BACKFILL_JSON'))['data']))" 2>/dev/null || echo "0")
+
+  if [ "$DATA_COUNT" -gt 0 ]; then
+    echo "      ${DATA_COUNT}개 레코드 생성. GitHub에 업로드 중..."
+
+    # base64 인코딩
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      B64_CONTENT=$(base64 -i "$BACKFILL_JSON")
+    else
+      B64_CONTENT=$(base64 -w0 "$BACKFILL_JSON")
+    fi
+
+    # 기존 파일 SHA 확인 (업데이트 시 필요)
+    EXISTING_SHA=$(gh api "repos/$REPO/contents/src/lib/backfill/$USERNAME.json" --jq '.sha' 2>/dev/null || echo "")
+
+    if [ -n "$EXISTING_SHA" ]; then
+      # 파일 업데이트
+      gh api "repos/$REPO/contents/src/lib/backfill/$USERNAME.json" \
+        -X PUT \
+        -f message="backfill: $GIT_EMAIL 데이터 업데이트" \
+        -f content="$B64_CONTENT" \
+        -f sha="$EXISTING_SHA" \
+        --silent
+    else
+      # 새 파일 생성
+      gh api "repos/$REPO/contents/src/lib/backfill/$USERNAME.json" \
+        -X PUT \
+        -f message="backfill: $GIT_EMAIL 데이터 추가" \
+        -f content="$B64_CONTENT" \
+        --silent
+    fi
+
+    echo "      -> src/lib/backfill/$USERNAME.json 업로드 완료"
+    echo "      -> Vercel 자동 재배포가 트리거됩니다."
+  else
+    echo "      파싱 가능한 데이터가 없습니다. 건너뜁니다."
+  fi
+
+  rm -f "$BACKFILL_SCRIPT" "$BACKFILL_JSON"
 else
   echo "      과거 transcript가 없습니다. 건너뜁니다."
 fi
@@ -113,3 +172,4 @@ echo "사용자: $GIT_EMAIL"
 echo "대시보드: https://token-dashboard-iota.vercel.app"
 echo ""
 echo "이제 Claude Code 세션이 끝날 때마다 토큰 사용량이 자동으로 수집됩니다."
+echo "과거 데이터는 Vercel 재배포 후 대시보드에 표시됩니다."

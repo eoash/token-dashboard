@@ -1,7 +1,8 @@
 import type { ClaudeCodeAnalyticsResponse, ClaudeCodeDataPoint } from "./types";
 import { fetchFromPrometheus } from "./prometheus";
 import { getMockAnalytics } from "./mock-data";
-import backfillJson from "./backfill-data.json";
+import fs from "fs";
+import path from "path";
 
 export type DataSource = "prometheus" | "mock";
 
@@ -10,9 +11,34 @@ export function getDataSource(): DataSource {
   return "mock";
 }
 
-/** backfill JSON의 마지막 날짜 — 이 날짜 이전은 JSON에서, 이후는 Prometheus에서 */
+/** backfill/ 디렉토리의 모든 JSON을 읽어서 병합 */
+function loadAllBackfill(): ClaudeCodeDataPoint[] {
+  const dir = path.join(process.cwd(), "src/lib/backfill");
+  if (!fs.existsSync(dir)) return [];
+
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+  const all: ClaudeCodeDataPoint[] = [];
+
+  for (const file of files) {
+    try {
+      const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.data)) {
+        all.push(...parsed.data);
+      }
+    } catch {
+      // skip invalid files
+    }
+  }
+
+  return all;
+}
+
+const backfillData = loadAllBackfill();
+
+/** backfill의 마지막 날짜 — 이 날짜 이전은 JSON에서, 이후는 Prometheus에서 */
 const BACKFILL_END = (() => {
-  const dates = (backfillJson.data as ClaudeCodeDataPoint[]).map((d) => d.date);
+  const dates = backfillData.map((d) => d.date);
   return dates.length > 0 ? dates.sort().pop()! : "";
 })();
 
@@ -30,16 +56,18 @@ export async function fetchAnalytics(params: {
   // Prometheus + backfill JSON 병합
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus에 이미 있는 날짜들
-  const promDates = new Set(promData.data.map((d) => d.date));
+  // Prometheus에 이미 있는 날짜+actor 조합
+  const promKeys = new Set(
+    promData.data.map((d) => `${d.date}:${d.actor.id}`)
+  );
 
-  // backfill에서 요청 범위 내 + Prometheus에 없는 날짜만 추가
-  const backfillPoints = (backfillJson.data as ClaudeCodeDataPoint[]).filter(
+  // backfill에서 요청 범위 내 + Prometheus에 없는 날짜+actor만 추가
+  const backfillPoints = backfillData.filter(
     (d) =>
       d.date >= params.start_date &&
       d.date <= params.end_date &&
       d.date <= BACKFILL_END &&
-      !promDates.has(d.date)
+      !promKeys.has(`${d.date}:${d.actor.id}`)
   );
 
   return { data: [...backfillPoints, ...promData.data] };
