@@ -102,13 +102,16 @@ export async function fetchFromPrometheus(params: {
   start_date: string;
   end_date: string;
 }): Promise<ClaudeCodeAnalyticsResponse> {
-  // end를 고정 자정 대신 NOW로 설정: 오늘 데이터가 마지막 step 범위에 포함되도록
+  // Rolling window: start=NOW-Ndays, end=NOW
+  // 마지막 step이 NOW에 정렬되어 오늘 자정 이후 데이터도 마지막 버킷에 포함됨
   const now = new Date();
   const endDay = new Date(`${params.end_date}T23:59:59Z`);
   const end = (endDay > now ? now : endDay).toISOString();
-  // start는 end 기준으로 역산: step이 NOW에 정렬되어 오늘 데이터가 마지막 버킷에 들어옴
   const startDay = new Date(`${params.start_date}T00:00:00Z`);
-  const start = startDay.toISOString();
+  // start를 end 기준 역산: step 정렬을 NOW에 맞춤
+  const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / 86400000);
+  const rollingStart = new Date(now.getTime() - daysDiff * 86400 * 1000);
+  const start = rollingStart.toISOString();
 
   // Execute all queries in parallel
   const [
