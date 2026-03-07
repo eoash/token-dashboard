@@ -39,14 +39,14 @@ def find_transcripts():
         os.path.join(TRANSCRIPT_BASE, "*", "*", "*.jsonl"),
     ]:
         files.extend(glob.glob(pattern))
-    return [f for f in files if "/subagents/" not in f]
+    return [f for f in files if "subagents" not in os.path.basename(os.path.dirname(f))]
 
 
 def parse_transcripts(files: list[str]) -> list[dict]:
     results = []
     for path in files:
         try:
-            with open(path) as f:
+            with open(path, encoding="utf-8", errors="replace") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
@@ -138,7 +138,7 @@ def main():
     result = json.dumps({"data": data}, ensure_ascii=False)
 
     if out_path:
-        with open(out_path, "w") as f:
+        with open(out_path, "w", encoding="utf-8") as f:
             f.write(result)
         dates = sorted(set(d["date"] for d in data))
         print(f"      {email}: {len(data)}개 레코드, {dates[0]} ~ {dates[-1]}")
