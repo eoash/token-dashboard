@@ -28,10 +28,21 @@ for cmd in python3 curl git; do
 done
 
 GIT_EMAIL=$(git config user.email 2>/dev/null || echo "")
-if [ -z "$GIT_EMAIL" ]; then
-  echo "[!] git config user.email 이 설정되어 있지 않습니다."
-  echo "    먼저 실행: git config --global user.email \"your@eoeoeo.net\""
-  exit 1
+if [ -z "$GIT_EMAIL" ] || ! echo "$GIT_EMAIL" | grep -q "@eoeoeo.net"; then
+  if [ -n "$GIT_EMAIL" ]; then
+    echo "현재 이메일: $GIT_EMAIL (eoeoeo.net이 아닙니다)"
+  fi
+  echo ""
+  echo "본인의 @eoeoeo.net 이메일을 입력해주세요 (예: june)"
+  printf "이메일 아이디: "
+  read -r EMAIL_ID </dev/tty
+  if [ -z "$EMAIL_ID" ]; then
+    echo "[!] 이메일을 입력하지 않았습니다."
+    exit 1
+  fi
+  GIT_EMAIL="${EMAIL_ID}@eoeoeo.net"
+  git config --global user.email "$GIT_EMAIL"
+  echo "-> git email 설정 완료: $GIT_EMAIL"
 fi
 
 echo "사용자: $GIT_EMAIL"
