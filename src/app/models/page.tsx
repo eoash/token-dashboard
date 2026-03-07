@@ -2,19 +2,20 @@
 
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import CostTrendChart from "@/components/charts/CostTrendChart";
+import DateRangePicker from "@/components/layout/DateRangePicker";
 import { formatTokens } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { aggregateModels } from "@/lib/aggregators/models";
 
 export default function ModelsPage() {
-  const { data: rawData, loading, error } = useAnalytics(30);
+  const { data: rawData, loading, error } = useAnalytics();
   const { pie, details } = aggregateModels(rawData);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Models</h1>
-        <span className="text-xs text-gray-500">Last 30 days</span>
+        <DateRangePicker />
       </div>
 
       {error && (

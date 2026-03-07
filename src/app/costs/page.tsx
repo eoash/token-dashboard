@@ -4,12 +4,13 @@ import { useMemo } from "react";
 import KpiCard from "@/components/cards/KpiCard";
 import UsageTrendChart from "@/components/charts/UsageTrendChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
+import DateRangePicker from "@/components/layout/DateRangePicker";
 import { formatTokens, formatPercent } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { aggregateUtilization } from "@/lib/aggregators/costs";
 
 export default function UtilizationPage() {
-  const { data: rawData, loading, error } = useAnalytics(30);
+  const { data: rawData, loading, error } = useAnalytics();
 
   const util = useMemo(
     () => (loading ? null : aggregateUtilization(rawData)),
@@ -20,7 +21,7 @@ export default function UtilizationPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Utilization</h1>
-        <span className="text-xs text-gray-500">Last 30 days</span>
+        <DateRangePicker />
       </div>
 
       {error && (

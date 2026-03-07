@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
+import { useDateRange } from "@/lib/contexts/DateRangeContext";
 
 interface UseAnalyticsResult {
   data: ClaudeCodeDataPoint[];
@@ -9,7 +10,8 @@ interface UseAnalyticsResult {
   error: string | null;
 }
 
-export function useAnalytics(days: number = 30): UseAnalyticsResult {
+export function useAnalytics(): UseAnalyticsResult {
+  const { range } = useDateRange();
   const [data, setData] = useState<ClaudeCodeDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +21,7 @@ export function useAnalytics(days: number = 30): UseAnalyticsResult {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/analytics?days=${days}`)
+    fetch(`/api/analytics?start=${range.start}&end=${range.end}`)
       .then((res) => {
         if (!res.ok) throw new Error(`서버 오류 (${res.status})`);
         return res.json();
@@ -38,7 +40,7 @@ export function useAnalytics(days: number = 30): UseAnalyticsResult {
       });
 
     return () => { cancelled = true; };
-  }, [days]);
+  }, [range.start, range.end]);
 
   return { data, loading, error };
 }

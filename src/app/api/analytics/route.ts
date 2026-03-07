@@ -26,13 +26,18 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = request.nextUrl;
+    const startParam = searchParams.get("start");
+    const endParam = searchParams.get("end");
     const days = parseInt(searchParams.get("days") ?? String(DEFAULT_DAYS));
     const date = searchParams.get("date");
 
     let start_date: string;
     let end_date: string;
 
-    if (date) {
+    if (startParam && endParam) {
+      start_date = startParam;
+      end_date = endParam;
+    } else if (date) {
       start_date = date;
       end_date = date;
     } else {

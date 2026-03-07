@@ -4,6 +4,7 @@ import { useState } from "react";
 import KpiCard from "@/components/cards/KpiCard";
 import DailyUsageChart from "@/components/charts/DailyUsageChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
+import DateRangePicker from "@/components/layout/DateRangePicker";
 import { UNIQUE_MEMBERS } from "@/lib/constants";
 import { formatTokens, formatPercent } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
@@ -11,26 +12,29 @@ import { aggregateMember } from "@/lib/aggregators/team";
 
 export default function TeamPage() {
   const [selectedName, setSelectedName] = useState(UNIQUE_MEMBERS[0]?.name ?? "");
-  const { data: rawData, loading, error } = useAnalytics(30);
+  const { data: rawData, loading, error } = useAnalytics();
 
   const memberData = aggregateMember(rawData, selectedName);
   const memberName = selectedName;
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
         <h1 className="text-2xl font-bold">Team</h1>
-        <select
-          value={selectedName}
-          onChange={(e) => setSelectedName(e.target.value)}
-          className="bg-[#111111] border border-[#333] rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-[#E8FF47]"
-        >
-          {UNIQUE_MEMBERS.map((m) => (
-            <option key={m.name} value={m.name}>
-              {m.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-3 flex-wrap">
+          <DateRangePicker />
+          <select
+            value={selectedName}
+            onChange={(e) => setSelectedName(e.target.value)}
+            className="bg-[#111111] border border-[#333] rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-[#E8FF47]"
+          >
+            {UNIQUE_MEMBERS.map((m) => (
+              <option key={m.name} value={m.name}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {error && (
