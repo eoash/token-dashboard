@@ -25,14 +25,23 @@ PROMETHEUS_URL = os.environ.get("PROMETHEUS_URL", "")
 TEAM = [
     ("june@eoeoeo.net", "U09D8BW4S87"),
     ("chiri@eoeoeo.net", "U01PR3MV7A9"),
+    ("saul@eoeoeo.net", "U084DJJGMPY"),
     ("gwy@eoeoeo.net", "U05AQEJ6V38"),
     ("ty@eoeoeo.net", "U01N18NN84S"),
+    ("phoenix@eoeoeo.net", "U054M9FHK1A"),
+    ("hyeri@eoeoeo.net", "U09L44ZPGLS"),
     ("jy.lim@eoeoeo.net", "U08D4B6L7ML"),
     ("cw.lim@eoeoeo.net", "U0965HJG737"),
+    ("heejoo@eoeoeo.net", "U09ULTPVAJX"),
+    ("izzy@eoeoeo.net", "U087VRBL7JS"),
     ("jemin@eoeoeo.net", "U06AF25LX6Z"),
     ("dwkim@eoeoeo.net", "U02C5GN2JRJ"),
     ("ksm@eoeoeo.net", "U01QUAZR7TK"),
-    # 추가 팀원은 여기에 (email, slack_id) 형태로 추가
+    ("gyeol@eoeoeo.net", "U0A6U8D8Q3E"),
+    ("jeebin@eoeoeo.net", "U0913A2E5K3"),
+    ("zen.park@eoeoeo.net", "U0AATRC7DQW"),
+    ("soyoung@eoeoeo.net", "U0AG9N79QTV"),
+    # TODO: Slack ID 미확인 — chankim, grace, chaenn, songsh, hyunahk, ljw, leejumi, yjk, jhghood25, dev
 ]
 
 REMINDER_MESSAGE = """안녕하세요! :wave:
