@@ -1,4 +1,4 @@
-import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
+import { resolveActorName, getModelLabel, getModelColor } from "@/lib/constants";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface MemberData {
@@ -13,8 +13,8 @@ export interface MemberData {
   models: { name: string; value: number; color: string }[];
 }
 
-export function aggregateMember(data: ClaudeCodeDataPoint[], email: string): MemberData {
-  const filtered = data.filter((d) => d.actor.email_address === email);
+export function aggregateMember(data: ClaudeCodeDataPoint[], name: string): MemberData {
+  const filtered = data.filter((d) => resolveActorName(d.actor) === name);
 
   let totalTokens = 0;
   let totalCost = 0;

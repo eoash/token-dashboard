@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchAnalytics, getDataSource } from "@/lib/data-source";
-import { DEFAULT_DAYS } from "@/lib/constants";
+import { DEFAULT_DAYS, EXCLUDED_EMAILS } from "@/lib/constants";
 import { getDateRange } from "@/lib/utils";
 
 const VALID_GROUP_BY = ["actor", "model", "date"] as const;
@@ -43,10 +43,13 @@ export async function GET(request: NextRequest) {
 
     const groupBy = parseGroupBy(searchParams.getAll("group_by"));
 
-    const data = await fetchAnalytics({ start_date, end_date, group_by: groupBy });
+    const raw = await fetchAnalytics({ start_date, end_date, group_by: groupBy });
+    const data = raw.data.filter(
+      (d) => !EXCLUDED_EMAILS.has(d.actor.email_address ?? "")
+    );
 
     return NextResponse.json({
-      ...data,
+      data,
       _source: getDataSource(),
     });
   } catch (error) {

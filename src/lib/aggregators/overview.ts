@@ -42,7 +42,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
       acceptanceRateCount += d.session_count;
     }
 
-    userSet.add(d.actor.email_address ?? d.actor.id);
+    userSet.add(resolveActorName(d.actor));
 
     if (d.date) {
       const existing = dailyMap.get(d.date) ?? { input: 0, output: 0, cache: 0, cost: 0, sessions: 0 };

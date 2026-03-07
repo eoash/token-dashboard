@@ -1,5 +1,5 @@
 import type { ClaudeCodeAnalyticsResponse } from "./types";
-import { TEAM_MEMBERS, MODEL_CONFIG } from "./constants";
+import { UNIQUE_MEMBERS, MODEL_CONFIG } from "./constants";
 
 const MODELS = [
   "claude-sonnet-4-6",
@@ -44,8 +44,8 @@ export function getMockAnalytics(): ClaudeCodeAnalyticsResponse {
     const factor = dayFactor(date);
     const isWeekend = factor < 1;
 
-    for (let ui = 0; ui < TEAM_MEMBERS.length; ui++) {
-      const user = TEAM_MEMBERS[ui];
+    for (let ui = 0; ui < UNIQUE_MEMBERS.length; ui++) {
+      const user = UNIQUE_MEMBERS[ui];
       const userWeight = USER_WEIGHTS[ui];
       const acceptanceBase = USER_ACCEPTANCE_BASE[ui];
 

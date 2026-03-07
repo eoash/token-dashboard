@@ -78,14 +78,12 @@ function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">OUTPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE R</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">TOTAL</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">ACCEPT</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">SESSIONS/DAY</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{metric === "cost" ? "COST" : "TOKENS"}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={9} className="px-4 py-12 text-center text-neutral-600">불러오는 중...</td></tr>
+              <tr><td colSpan={7} className="px-4 py-12 text-center text-neutral-600">불러오는 중...</td></tr>
             ) : rows.map((row, i) => (
               <tr key={row.name} className="border-b border-[#1a1a1a] hover:bg-[#161616] transition-colors">
                 <td className="px-4 py-4 text-sm">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
@@ -99,12 +97,6 @@ function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cacheRead)}</td>
                 <td className="px-4 py-4 text-right text-white font-mono text-sm font-medium">{formatTokens(row.total)}</td>
-                <td className="px-4 py-4 text-right">
-                  <span className={`text-sm font-mono font-medium ${row.acceptanceRate >= 0.8 ? "text-green-400" : row.acceptanceRate >= 0.7 ? "text-yellow-400" : "text-red-400"}`}>
-                    {(row.acceptanceRate * 100).toFixed(0)}%
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{row.avgDailySessions}</td>
                 <td className="px-4 py-4 text-right">
                   <div className="flex flex-col items-end gap-0.5">
                     <span className="font-mono text-sm font-bold text-[#E8FF47]">
@@ -133,6 +125,9 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
 
   return (
     <>
+      <div className="mx-6 mt-4 mb-2 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-2 text-yellow-400 text-xs">
+        ⚠️ Mock 데이터입니다 — 실제 사용량이 아닙니다
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -142,7 +137,6 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">INPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">OUTPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">TOTAL</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">SESSIONS/DAY</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{metric === "cost" ? "COST" : "TOKENS"}</th>
             </tr>
           </thead>
@@ -162,7 +156,6 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.inputTokens)}</td>
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.outputTokens)}</td>
                 <td className="px-4 py-4 text-right text-white font-mono text-sm font-medium">{formatTokens(row.totalTokens)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{row.avgDailySessions}</td>
                 <td className="px-4 py-4 text-right">
                   <div className="flex flex-col items-end gap-0.5">
                     <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>
