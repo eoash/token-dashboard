@@ -102,8 +102,13 @@ export async function fetchFromPrometheus(params: {
   start_date: string;
   end_date: string;
 }): Promise<ClaudeCodeAnalyticsResponse> {
-  const start = `${params.start_date}T00:00:00Z`;
-  const end = `${params.end_date}T23:59:59Z`;
+  // end를 고정 자정 대신 NOW로 설정: 오늘 데이터가 마지막 step 범위에 포함되도록
+  const now = new Date();
+  const endDay = new Date(`${params.end_date}T23:59:59Z`);
+  const end = (endDay > now ? now : endDay).toISOString();
+  // start는 end 기준으로 역산: step이 NOW에 정렬되어 오늘 데이터가 마지막 버킷에 들어옴
+  const startDay = new Date(`${params.start_date}T00:00:00Z`);
+  const start = startDay.toISOString();
 
   // Execute all queries in parallel
   const [
