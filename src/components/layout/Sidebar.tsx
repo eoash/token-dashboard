@@ -9,6 +9,7 @@ const menuItems = [
   { label: "Team", href: "/team" },
   { label: "Models", href: "/models" },
   { label: "Utilization", href: "/utilization" },
+  { label: "Efficiency", href: "/efficiency" },
 ];
 
 export default function Sidebar() {
