@@ -1,16 +1,6 @@
 // ============================================================
-// Anthropic Admin API Response Types
+// Claude Code Analytics Types (OTel / Prometheus)
 // ============================================================
-
-// --- Claude Code Analytics API ---
-// GET /v1/organizations/usage_report/claude_code
-
-export interface ClaudeCodeAnalyticsParams {
-  start_date: string; // YYYY-MM-DD
-  end_date: string;
-  group_by?: ("actor" | "model" | "date")[];
-  actor_type?: "api_key" | "user";
-}
 
 export interface ClaudeCodeActor {
   type: "api_key" | "user";
@@ -39,54 +29,9 @@ export interface ClaudeCodeAnalyticsResponse {
   data: ClaudeCodeDataPoint[];
 }
 
-// --- Usage Report API ---
-// GET /v1/organizations/usage_report/messages
-
-export interface UsageReportParams {
-  start_date: string;
-  end_date: string;
-  group_by?: ("model" | "api_key_id" | "workspace_id")[];
-  bucket_width?: "1d" | "1h" | "1m";
-}
-
-export interface UsageReportDataPoint {
-  model?: string;
-  api_key_id?: string;
-  workspace_id?: string;
-  bucket_start?: string;
-  input_tokens: number;
-  output_tokens: number;
-  input_cached_tokens_uncached: number;
-  input_cached_tokens_cache_read: number;
-  input_cached_tokens_cache_creation: number;
-}
-
-export interface UsageReportResponse {
-  data: UsageReportDataPoint[];
-}
-
-// --- Cost Report API ---
-// GET /v1/organizations/cost_report
-
-export interface CostReportParams {
-  start_date: string;
-  end_date: string;
-  group_by?: ("workspace_id" | "model")[];
-  bucket_width?: "1d" | "1h" | "1m";
-}
-
-export interface CostReportDataPoint {
-  workspace_id?: string;
-  model?: string;
-  bucket_start?: string;
-  cost_usd: number;
-}
-
-export interface CostReportResponse {
-  data: CostReportDataPoint[];
-}
-
-// --- Aggregated / UI Types ---
+// ============================================================
+// UI Types
+// ============================================================
 
 export interface TeamMember {
   email: string;

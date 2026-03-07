@@ -1,16 +1,5 @@
-import type {
-  ClaudeCodeAnalyticsResponse,
-  UsageReportResponse,
-  CostReportResponse,
-} from "./types";
-
-const TEAM = [
-  { email: "ash@eostudio.tv", name: "Seohyun" },
-  { email: "jay@eostudio.tv", name: "Jay" },
-  { email: "alex@eostudio.tv", name: "Alex" },
-  { email: "yuna@eostudio.tv", name: "Yuna" },
-  { email: "chris@eostudio.tv", name: "Chris" },
-];
+import type { ClaudeCodeAnalyticsResponse } from "./types";
+import { TEAM_MEMBERS } from "./constants";
 
 const MODELS = [
   "claude-sonnet-4-6",
@@ -55,8 +44,8 @@ export function getMockAnalytics(): ClaudeCodeAnalyticsResponse {
     const factor = dayFactor(date);
     const isWeekend = factor < 1;
 
-    for (let ui = 0; ui < TEAM.length; ui++) {
-      const user = TEAM[ui];
+    for (let ui = 0; ui < TEAM_MEMBERS.length; ui++) {
+      const user = TEAM_MEMBERS[ui];
       const userWeight = USER_WEIGHTS[ui];
       const acceptanceBase = USER_ACCEPTANCE_BASE[ui];
 
@@ -107,57 +96,6 @@ export function getMockAnalytics(): ClaudeCodeAnalyticsResponse {
           estimated_cost_usd_cents,
         });
       }
-    }
-  }
-
-  return { data };
-}
-
-export function getMockUsageReport(): UsageReportResponse {
-  const dates = getLast30Days();
-  const data = [];
-
-  for (const date of dates) {
-    const factor = dayFactor(date);
-    for (let mi = 0; mi < MODELS.length; mi++) {
-      const model = MODELS[mi];
-      const scale = 5_000_000 * MODEL_WEIGHTS[mi] * factor;
-
-      data.push({
-        model,
-        bucket_start: `${date}T00:00:00Z`,
-        input_tokens: Math.floor(scale * 0.8),
-        output_tokens: Math.floor(scale * 0.12),
-        input_cached_tokens_uncached: Math.floor(scale * 0.05),
-        input_cached_tokens_cache_read: Math.floor(scale * 0.02),
-        input_cached_tokens_cache_creation: Math.floor(scale * 0.01),
-      });
-    }
-  }
-
-  return { data };
-}
-
-export function getMockCostReport(): CostReportResponse {
-  const dates = getLast30Days();
-  const data = [];
-
-  for (const date of dates) {
-    const factor = dayFactor(date);
-    for (let mi = 0; mi < MODELS.length; mi++) {
-      const model = MODELS[mi];
-      const scale = 5_000_000 * MODEL_WEIGHTS[mi] * factor;
-      const inputPrice = model.includes("opus") ? 15 : model.includes("haiku") ? 0.25 : 3;
-      const outputPrice = model.includes("opus") ? 75 : model.includes("haiku") ? 1.25 : 15;
-      const cost_usd =
-        (scale * 0.8 / 1_000_000) * inputPrice +
-        (scale * 0.12 / 1_000_000) * outputPrice;
-
-      data.push({
-        model,
-        bucket_start: `${date}T00:00:00Z`,
-        cost_usd: parseFloat(cost_usd.toFixed(4)),
-      });
     }
   }
 

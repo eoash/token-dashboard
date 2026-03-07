@@ -33,4 +33,3 @@ export function getModelColor(model: string): string {
 
 // API 기본값
 export const DEFAULT_DAYS = 30;
-export const ANTHROPIC_ADMIN_BASE = "https://api.anthropic.com/v1/organizations";

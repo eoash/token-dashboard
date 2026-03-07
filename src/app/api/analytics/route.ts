@@ -3,7 +3,27 @@ import { fetchAnalytics, getDataSource } from "@/lib/data-source";
 import { DEFAULT_DAYS } from "@/lib/constants";
 import { getDateRange } from "@/lib/utils";
 
+const VALID_GROUP_BY = ["actor", "model", "date"] as const;
+type GroupByValue = typeof VALID_GROUP_BY[number];
+
+function isAuthorized(request: NextRequest): boolean {
+  const secret = process.env.DASHBOARD_API_SECRET;
+  if (!secret) return true; // 미설정 시 개발 환경으로 간주
+  return request.headers.get("authorization") === `Bearer ${secret}`;
+}
+
+function parseGroupBy(raw: string[]): GroupByValue[] {
+  const valid = raw.filter((v): v is GroupByValue =>
+    (VALID_GROUP_BY as readonly string[]).includes(v)
+  );
+  return valid.length > 0 ? valid : ["actor", "model", "date"];
+}
+
 export async function GET(request: NextRequest) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = request.nextUrl;
     const days = parseInt(searchParams.get("days") ?? String(DEFAULT_DAYS));
@@ -21,24 +41,16 @@ export async function GET(request: NextRequest) {
       end_date = range.end;
     }
 
-    const groupBy = searchParams.getAll("group_by");
+    const groupBy = parseGroupBy(searchParams.getAll("group_by"));
 
-    const data = await fetchAnalytics({
-      start_date,
-      end_date,
-      group_by:
-        groupBy.length > 0
-          ? (groupBy as ("actor" | "model" | "date")[])
-          : ["actor", "model", "date"],
-    });
+    const data = await fetchAnalytics({ start_date, end_date, group_by: groupBy });
 
     return NextResponse.json({
       ...data,
       _source: getDataSource(),
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error";
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
