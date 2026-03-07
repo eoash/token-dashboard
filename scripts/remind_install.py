@@ -41,7 +41,15 @@ TEAM = [
     ("jeebin@eoeoeo.net", "U0913A2E5K3"),
     ("zen.park@eoeoeo.net", "U0AATRC7DQW"),
     ("soyoung@eoeoeo.net", "U0AG9N79QTV"),
-    # TODO: Slack ID 미확인 — chankim, grace, chaenn, songsh, hyunahk, ljw, leejumi, yjk, jhghood25, dev
+    ("chankim@eoeoeo.net", "U0AFQTD56BF"),
+    ("grace@eoeoeo.net", "U08DZQRQK40"),
+    ("chaenn@eoeoeo.net", "U08LPAS6BC5"),
+    ("songsh@eoeoeo.net", "U091NH5Q01Z"),
+    ("hyunahk@eoeoeo.net", "U0AELDG3VJL"),
+    ("ljw@eoeoeo.net", "U0903FLKQUD"),
+    ("leejumi@eoeoeo.net", "U0A911VKC1M"),
+    ("yjk@eoeoeo.net", "U0A6U8EFX52"),
+    ("jhghood25@eoeoeo.net", "U09B2A3T8F9"),
 ]
 
 REMINDER_MESSAGE = """안녕하세요! :wave:
