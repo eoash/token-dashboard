@@ -79,6 +79,7 @@ export default async function OverviewPage() {
           title="Avg Daily Sessions"
           value={String(overview.avgDailySessions)}
           subtitle="sessions per day"
+          unavailable
         />
       </div>
 
@@ -88,21 +89,25 @@ export default async function OverviewPage() {
           title="Accepted Lines"
           value={overview.totalLines.toLocaleString()}
           subtitle="lines of code accepted"
+          unavailable
         />
         <KpiCard
           title="Acceptance Rate"
           value={`${(overview.avgAcceptanceRate * 100).toFixed(1)}%`}
           subtitle="tool suggestion accepted"
+          unavailable
         />
         <KpiCard
           title="Total Commits"
           value={overview.totalCommits.toLocaleString()}
           subtitle="commits in period"
+          unavailable
         />
         <KpiCard
           title="Pull Requests"
           value={overview.totalPRs.toLocaleString()}
           subtitle="PRs merged"
+          unavailable
         />
       </div>
 

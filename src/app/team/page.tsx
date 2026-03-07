@@ -47,10 +47,11 @@ export default function TeamPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <KpiCard title="Total Tokens" value={formatTokens(memberData.totalTokens)} />
             <KpiCard title="Cost" value={formatDollars(memberData.totalCost)} />
-            <KpiCard title="Sessions" value={String(memberData.sessions)} />
+            <KpiCard title="Sessions" value={String(memberData.sessions)} unavailable />
             <KpiCard
               title="Tool Accept Rate"
               value={formatPercent(memberData.toolAcceptanceRate)}
+              unavailable
             />
           </div>
 
@@ -60,16 +61,19 @@ export default function TeamPage() {
               title="Lines of Code"
               value={memberData.linesOfCode.toLocaleString()}
               subtitle={`by ${memberName}`}
+              unavailable
             />
             <KpiCard
               title="Commits"
               value={String(memberData.commits)}
               subtitle={`by ${memberName}`}
+              unavailable
             />
             <KpiCard
               title="Pull Requests"
               value={String(memberData.pullRequests)}
               subtitle={`by ${memberName}`}
+              unavailable
             />
           </div>
 
