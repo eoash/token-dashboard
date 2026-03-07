@@ -1,6 +1,6 @@
 #!/bin/bash
-# Token Dashboard - OTel Push Hook 설치 + 과거 데이터 Backfill
-# 팀원 PC에서 실행하면 Claude Code 세션 종료 시 토큰 사용량을 자동 수집합니다.
+# Token Dashboard - AI 도구 사용량 자동 수집 설치
+# Claude Code / Codex / Gemini CLI 토큰 사용량을 자동으로 대시보드에 수집합니다.
 # 기존 transcript가 있으면 과거 데이터도 자동으로 대시보드에 전송합니다.
 #
 # 필요: python3, curl, git (GitHub 계정 불필요)
@@ -15,6 +15,8 @@ SETTINGS="$HOME/.claude/settings.json"
 HOOK_FILE="$HOOKS_DIR/otel_push.py"
 BASE_URL="https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts"
 DASHBOARD_API="https://token-dashboard-iota.vercel.app/api/backfill"
+OTEL_COLLECTOR="https://otel-collector-production-2dac.up.railway.app"
+GEMINI_SETTINGS="$HOME/.gemini/settings.json"
 # 자동 업데이트 hook 명령: 매 실행마다 GitHub에서 최신 otel_push.py를 다운로드 후 실행
 HOOK_CMD="bash -c 'D=\$(cat);curl -sL $BASE_URL/otel_push.py -o ~/.claude/hooks/otel_push.py 2>/dev/null;echo \"\$D\"|python3 ~/.claude/hooks/otel_push.py'"
 
@@ -59,13 +61,13 @@ echo ""
 mkdir -p "$HOOKS_DIR"
 
 # 2. hook 파일 다운로드
-echo "[1/3] otel_push.py 다운로드 중..."
+echo "[1/7] otel_push.py 다운로드 중..."
 curl -sL "$BASE_URL/otel_push.py" -o "$HOOK_FILE"
 chmod +x "$HOOK_FILE"
 echo "      -> $HOOK_FILE"
 
 # 3. settings.json에 Stop hook 등록 (자동 업데이트 명령)
-echo "[2/3] settings.json에 Stop hook 등록 중..."
+echo "[2/7] Claude Code Stop hook 등록 중..."
 
 python3 -c "
 import json, os
@@ -108,7 +110,7 @@ with open(path, 'w') as f:
 "
 
 # 4. 과거 transcript backfill → JSON 생성 → Dashboard API로 전송
-echo "[3/3] 과거 transcript backfill 중..."
+echo "[3/7] 과거 transcript backfill 중..."
 
 CLAUDE_DIR="$HOME/.claude/projects"
 if [ ! -d "$CLAUDE_DIR" ]; then
@@ -163,7 +165,7 @@ print(json.dumps(data))
 fi
 
 # 5. Codex CLI 세션 데이터 수집 (1회 즉시 실행)
-echo "[4/5] Codex CLI 데이터 수집 중..."
+echo "[4/7] Codex CLI 데이터 수집 중..."
 
 CODEX_SESSIONS="$HOME/.codex/sessions"
 if [ -d "$CODEX_SESSIONS" ]; then
@@ -176,7 +178,7 @@ else
 fi
 
 # 6. Codex 자동 수집 cron 등록 (2시간마다)
-echo "[5/5] Codex 자동 수집 cron 등록 중..."
+echo "[5/7] Codex 자동 수집 cron 등록 중..."
 
 CODEX_PUSH_LOCAL="$HOOKS_DIR/codex_push.py"
 curl -sL "$BASE_URL/codex_push.py" -o "$CODEX_PUSH_LOCAL"
@@ -195,10 +197,87 @@ crontab "${CRON_TMP}.new"
 rm -f "$CRON_TMP" "${CRON_TMP}.new"
 echo "      -> cron 등록 완료: 매 2시간마다 자동 수집"
 
+# 7. Gemini CLI 텔레메트리 설정 (네이티브 OTel → Collector 직접 전송)
+echo "[6/7] Gemini CLI 텔레메트리 설정 중..."
+
+if command -v gemini &>/dev/null; then
+  mkdir -p "$HOME/.gemini"
+
+  python3 -c "
+import json, os
+
+path = os.path.expanduser('$GEMINI_SETTINGS')
+otel_endpoint = '$OTEL_COLLECTOR'
+
+# settings.json 읽기 (없으면 빈 객체)
+data = {}
+if os.path.exists(path):
+    try:
+        with open(path, 'r') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        data = {}
+
+# telemetry 섹션 설정
+existing = data.get('telemetry', {})
+new_telemetry = {
+    'enabled': True,
+    'target': 'local',
+    'otlpEndpoint': otel_endpoint,
+    'otlpProtocol': 'http',
+}
+
+if existing.get('otlpEndpoint') == otel_endpoint:
+    print('      -> 이미 설정되어 있습니다.')
+else:
+    data['telemetry'] = {**existing, **new_telemetry}
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2)
+    if existing.get('otlpEndpoint'):
+        print(f'      -> endpoint 업데이트: {existing[\"otlpEndpoint\"]} → {otel_endpoint}')
+    else:
+        print(f'      -> 텔레메트리 설정 완료: {otel_endpoint}')
+"
+else
+  echo "      Gemini CLI 미설치. 설치 후 install-hook.sh를 다시 실행하면 자동 설정됩니다."
+  echo "      설치: npm install -g @anthropic-ai/gemini-cli 또는 https://geminicli.com"
+fi
+
+# 8. Gemini CLI GEMINI.md에 사용자 이메일 기록 (메트릭 식별용)
+echo "[7/7] Gemini CLI 사용자 설정 중..."
+
+if command -v gemini &>/dev/null; then
+  python3 -c "
+import json, os
+
+path = os.path.expanduser('$GEMINI_SETTINGS')
+email = '$GIT_EMAIL'
+
+data = {}
+if os.path.exists(path):
+    try:
+        with open(path, 'r') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        data = {}
+
+if data.get('userEmail') == email:
+    print('      -> 이미 설정되어 있습니다.')
+else:
+    data['userEmail'] = email
+    with open(path, 'w') as f:
+        json.dump(data, f, indent=2)
+    print(f'      -> 사용자 이메일 설정: {email}')
+"
+else
+  echo "      건너뜀 (Gemini CLI 미설치)"
+fi
+
 echo ""
 echo "=== 설치 완료 ==="
 echo "사용자: $GIT_EMAIL"
 echo "대시보드: https://token-dashboard-iota.vercel.app"
 echo ""
-echo "Claude Code: 세션 종료 시 자동 수집"
+echo "Claude Code: 세션 종료 시 자동 수집 (Stop hook)"
 echo "Codex CLI:   2시간마다 자동 수집 (cron)"
+echo "Gemini CLI:  세션 중 실시간 전송 (네이티브 OTel)"
