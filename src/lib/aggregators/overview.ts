@@ -1,4 +1,4 @@
-import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
+import { resolveActorName, getModelLabel, getModelColor } from "@/lib/constants";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface OverviewAggregation {
@@ -55,8 +55,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
     }
 
     {
-      const email = d.actor.email_address ?? d.actor.id;
-      const name = EMAIL_TO_NAME[email] ?? email;
+      const name = resolveActorName(d.actor);
       const existing = memberMap.get(name) ?? { tokens: 0, cost: 0, lines: 0, commits: 0, prs: 0, acceptanceSum: 0, acceptanceCount: 0 };
       existing.tokens += tokens;
       existing.cost += d.estimated_cost_usd_cents / 100;

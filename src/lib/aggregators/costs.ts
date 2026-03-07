@@ -1,5 +1,5 @@
-import { EMAIL_TO_NAME, getModelLabel, getModelColor } from "@/lib/constants";
-import { projectMonthlyCost } from "@/lib/utils";
+import { resolveActorName, getModelLabel, getModelColor } from "@/lib/constants";
+import { projectMonthlyCost, getDaysInCurrentMonth } from "@/lib/utils";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface CostAggregation {
@@ -25,8 +25,7 @@ export function aggregateCosts(data: ClaudeCodeDataPoint[]): CostAggregation {
     }
 
     {
-      const email = d.actor.email_address ?? d.actor.id;
-      const name = EMAIL_TO_NAME[email] ?? email;
+      const name = resolveActorName(d.actor);
       memberMap.set(name, (memberMap.get(name) ?? 0) + d.estimated_cost_usd_cents / 100);
     }
 
@@ -42,13 +41,8 @@ export function aggregateCosts(data: ClaudeCodeDataPoint[]): CostAggregation {
   const projected = projectMonthlyCost(dailyCosts);
 
   // M-7 fix: 하드코딩 30 → 해당 월의 실제 일수 사용
-  const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
-  const daysInCurrentMonth = new Date(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    0
-  ).getDate();
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const daysInCurrentMonth = getDaysInCurrentMonth();
 
   const dailyWithProjection = dailyCosts.map((d) => ({
     ...d,

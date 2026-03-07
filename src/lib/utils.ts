@@ -54,6 +54,12 @@ export function centsToDollars(cents: number): number {
   return cents / 100;
 }
 
+/** 현재 월의 총 일수 */
+export function getDaysInCurrentMonth(): number {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+}
+
 /** 월말 예상 비용 계산 */
 export function projectMonthlyCost(
   dailyCosts: { date: string; cost: number }[]
@@ -61,11 +67,5 @@ export function projectMonthlyCost(
   if (dailyCosts.length === 0) return 0;
   const totalCost = dailyCosts.reduce((sum, d) => sum + d.cost, 0);
   const avgDaily = totalCost / dailyCosts.length;
-  const today = new Date();
-  const daysInMonth = new Date(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    0
-  ).getDate();
-  return avgDaily * daysInMonth;
+  return avgDaily * getDaysInCurrentMonth();
 }

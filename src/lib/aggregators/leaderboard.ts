@@ -1,4 +1,4 @@
-import { EMAIL_TO_NAME } from "@/lib/constants";
+import { resolveActorName } from "@/lib/constants";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface ClaudeMemberRow {
@@ -21,8 +21,7 @@ export function aggregateMembers(data: ClaudeCodeDataPoint[]): ClaudeMemberRow[]
   }>();
 
   for (const d of data) {
-    const email = d.actor.email_address ?? d.actor.id;
-    const name = EMAIL_TO_NAME[email] ?? email.split("@")[0];
+    const name = resolveActorName(d.actor);
     const e = map.get(name) ?? { input: 0, output: 0, cacheRead: 0, total: 0, cost: 0, acceptSum: 0, acceptCount: 0, sessions: 0, days: new Set() };
     e.input += d.input_tokens;
     e.output += d.output_tokens;

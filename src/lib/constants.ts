@@ -38,5 +38,11 @@ export function getModelColor(model: string): string {
   return MODEL_CONFIG[model]?.color ?? "#888888";
 }
 
+/** actor → 표시 이름 변환 (이메일 미등록 시 username 부분 사용) */
+export function resolveActorName(actor: { email_address?: string | null; id: string }): string {
+  const email = actor.email_address ?? actor.id;
+  return EMAIL_TO_NAME[email] ?? email.split("@")[0];
+}
+
 // API 기본값
 export const DEFAULT_DAYS = 30;
