@@ -11,14 +11,13 @@ import {
 } from "recharts";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 
-interface CostTrendData {
+interface TokenTrendData {
   date: string;
-  cost: number;
-  projected?: number;
+  tokens: number;
 }
 
-interface CostTrendChartProps {
-  data: CostTrendData[];
+interface TokenTrendChartProps {
+  data: TokenTrendData[];
 }
 
 function formatDate(dateStr: string): string {
@@ -28,6 +27,12 @@ function formatDate(dateStr: string): string {
   return `${month}/${day}`;
 }
 
+function formatTokenAxis(value: number): string {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(0)}K`;
+  return String(value);
+}
+
 function CustomTooltip({ active, payload, label }: TooltipContentProps<number, string>) {
   if (!active || !payload?.length) return null;
   return (
@@ -35,17 +40,17 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
       <p className="mb-2 text-sm text-neutral-400">{label}</p>
       {payload.map((entry: { dataKey?: string; name?: string; value?: number; color?: string }) => (
         <p key={entry.dataKey} className="text-sm" style={{ color: entry.color }}>
-          {entry.name}: ${Number(entry.value).toFixed(2)}
+          {entry.name}: {Number(entry.value).toLocaleString()} tokens
         </p>
       ))}
     </div>
   );
 }
 
-export default function CostTrendChart({ data }: CostTrendChartProps) {
+export default function CostTrendChart({ data }: TokenTrendChartProps) {
   return (
     <div className="rounded-xl bg-[#111111] p-6">
-      <h3 className="mb-4 text-lg font-semibold text-white">Cost Trend</h3>
+      <h3 className="mb-4 text-lg font-semibold text-white">Token Trend</h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
@@ -57,29 +62,19 @@ export default function CostTrendChart({ data }: CostTrendChartProps) {
               tick={{ fill: "#999", fontSize: 12 }}
             />
             <YAxis
-              tickFormatter={(v: number) => `$${v}`}
+              tickFormatter={formatTokenAxis}
               stroke="#666"
               tick={{ fill: "#999", fontSize: 12 }}
             />
             <Tooltip content={CustomTooltip} />
             <Line
               type="monotone"
-              dataKey="cost"
+              dataKey="tokens"
               stroke="#E8FF47"
               strokeWidth={2}
               dot={{ fill: "#E8FF47", r: 3 }}
               activeDot={{ r: 5 }}
-              name="Actual"
-            />
-            <Line
-              type="monotone"
-              dataKey="projected"
-              stroke="#666"
-              strokeWidth={2}
-              strokeDasharray="6 3"
-              dot={false}
-              name="Projected"
-              connectNulls={false}
+              name="Tokens"
             />
           </LineChart>
         </ResponsiveContainer>

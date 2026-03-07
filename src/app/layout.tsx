@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EO Studio Token Dashboard",
-  description: "Token usage and cost dashboard for EO Studio",
+  description: "Token usage and utilization dashboard for EO Studio",
 };
 
 export default function RootLayout({

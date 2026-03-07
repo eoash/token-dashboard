@@ -14,7 +14,6 @@ import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 interface TeamData {
   name: string;
   tokens: number;
-  cost: number;
 }
 
 interface TeamBarChartProps {
@@ -35,9 +34,6 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
       <p className="mb-1 text-sm font-medium text-white">{label}</p>
       <p className="text-sm text-[#E8FF47]">
         Tokens: {Number(entry.value).toLocaleString()}
-      </p>
-      <p className="text-sm text-neutral-400">
-        Cost: ${(entry.payload as TeamData).cost.toFixed(2)}
       </p>
     </div>
   );

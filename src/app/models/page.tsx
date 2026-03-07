@@ -1,9 +1,8 @@
 "use client";
 
-import KpiCard from "@/components/cards/KpiCard";
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import CostTrendChart from "@/components/charts/CostTrendChart";
-import { formatTokens, formatDollars } from "@/lib/utils";
+import { formatTokens } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { aggregateModels } from "@/lib/aggregators/models";
 
@@ -47,15 +46,12 @@ export default function ModelsPage() {
                     <span className="text-sm font-medium">{m.label}</span>
                   </div>
                   <p className="text-xl font-bold">{formatTokens(m.totalTokens)}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Cost: {formatDollars(m.totalCost)}
-                  </p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Per-model cost trends */}
+          {/* Per-model token trends */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {details.map((m) => (
               <CostTrendChart key={m.name} data={m.daily} />
@@ -74,7 +70,6 @@ export default function ModelsPage() {
                     <th className="text-right py-2 font-medium">Output</th>
                     <th className="text-right py-2 font-medium">Cache</th>
                     <th className="text-right py-2 font-medium">Total</th>
-                    <th className="text-right py-2 font-medium">Cost</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -98,11 +93,8 @@ export default function ModelsPage() {
                       <td className="text-right text-gray-400">
                         {formatTokens(m.cacheTokens)}
                       </td>
-                      <td className="text-right font-medium">
+                      <td className="text-right font-medium text-[#E8FF47]">
                         {formatTokens(m.totalTokens)}
-                      </td>
-                      <td className="text-right text-[#E8FF47]">
-                        {formatDollars(m.totalCost)}
                       </td>
                     </tr>
                   ))}

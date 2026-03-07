@@ -64,22 +64,26 @@ export default async function OverviewPage() {
           title="Total Tokens"
           value={formatTokens(overview.totalTokens)}
           subtitle="input + output + cache"
+          tooltip="입력·출력·캐시를 포함한 전체 토큰 사용량. 팀 전체가 Claude에게 보내고 받은 텍스트의 총량입니다."
         />
         <KpiCard
           title="Cache Hit Rate"
           value={formatPercent(overview.cacheHitRate)}
           subtitle="cache reuse efficiency"
+          tooltip="캐시된 프롬프트를 재활용한 비율. 높을수록 동일 컨텍스트 재전송이 줄어 응답이 빨라지고 비용 효율이 올라갑니다."
         />
         <KpiCard
           title="Active Users"
           value={String(overview.activeUsers)}
           subtitle="unique team members"
+          tooltip="최근 30일간 Claude를 1회 이상 사용한 팀원 수입니다."
         />
         <KpiCard
           title="Avg Daily Sessions"
           value={String(overview.avgDailySessions)}
           subtitle="sessions per day"
           unavailable
+          tooltip="하루 평균 Claude 세션 수. 현재 OTel 메트릭에서 세션 카운트를 지원하지 않아 추적 불가 상태입니다."
         />
       </div>
 
@@ -90,24 +94,28 @@ export default async function OverviewPage() {
           value={overview.totalLines.toLocaleString()}
           subtitle="lines of code accepted"
           unavailable
+          tooltip="Claude가 제안한 코드 중 팀원이 실제로 수락한 라인 수. 현재 미추적 상태입니다."
         />
         <KpiCard
           title="Acceptance Rate"
           value={`${(overview.avgAcceptanceRate * 100).toFixed(1)}%`}
           subtitle="tool suggestion accepted"
           unavailable
+          tooltip="Claude의 도구 호출(편집·생성 등) 중 팀원이 승인한 비율. 현재 미추적 상태입니다."
         />
         <KpiCard
           title="Total Commits"
           value={overview.totalCommits.toLocaleString()}
           subtitle="commits in period"
           unavailable
+          tooltip="Claude 세션에서 발생한 Git 커밋 수. 현재 미추적 상태입니다."
         />
         <KpiCard
           title="Pull Requests"
           value={overview.totalPRs.toLocaleString()}
           subtitle="PRs merged"
           unavailable
+          tooltip="Claude 지원으로 머지된 PR 수. 현재 미추적 상태입니다."
         />
       </div>
 

@@ -3,7 +3,7 @@ import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface MemberData {
   totalTokens: number;
-  totalCost: number;
+  cacheHitRate: number;
   sessions: number;
   linesOfCode: number;
   commits: number;
@@ -17,7 +17,9 @@ export function aggregateMember(data: ClaudeCodeDataPoint[], name: string): Memb
   const filtered = data.filter((d) => resolveActorName(d.actor) === name);
 
   let totalTokens = 0;
-  let totalCost = 0;
+  let totalInput = 0;
+  let totalCacheRead = 0;
+  let totalCacheCreation = 0;
   let sessions = 0;
   let linesOfCode = 0;
   let commits = 0;
@@ -31,7 +33,9 @@ export function aggregateMember(data: ClaudeCodeDataPoint[], name: string): Memb
   for (const d of filtered) {
     const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
     totalTokens += tokens;
-    totalCost += d.estimated_cost_usd_cents;
+    totalInput += d.input_tokens;
+    totalCacheRead += d.cache_read_tokens;
+    totalCacheCreation += d.cache_creation_tokens;
     sessions += d.session_count;
     linesOfCode += d.lines_of_code;
     commits += d.commits;
@@ -50,9 +54,11 @@ export function aggregateMember(data: ClaudeCodeDataPoint[], name: string): Memb
     modelMap.set(d.model, (modelMap.get(d.model) ?? 0) + tokens);
   }
 
+  const allInput = totalInput + totalCacheRead + totalCacheCreation;
+
   return {
     totalTokens,
-    totalCost: totalCost / 100,
+    cacheHitRate: allInput > 0 ? totalCacheRead / allInput : 0,
     sessions,
     linesOfCode,
     commits,

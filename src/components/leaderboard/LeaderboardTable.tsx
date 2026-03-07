@@ -1,29 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { formatTokens } from "@/lib/utils";
+import { formatTokens, formatPercent } from "@/lib/utils";
 import { getMockGeminiData, getMockGptData, type AiMemberRow } from "@/lib/mock-ai-tools";
 import { aggregateMembers, type ClaudeMemberRow } from "@/lib/aggregators/leaderboard";
 
 type AiTool = "claude" | "gemini" | "gpt";
 type Period = "today" | "7d" | "30d" | "all";
-type Metric = "cost" | "tokens";
 
 const PERIOD_DAYS: Record<Period, number> = { today: 1, "7d": 7, "30d": 30, all: 365 };
 const PERIOD_LABELS: Record<Period, string> = { today: "Today", "7d": "7 Days", "30d": "30 Days", all: "All Time" };
 const AVATAR_COLORS = ["#7C3AED", "#DB2777", "#059669", "#D97706", "#2563EB"];
 const MEDAL = ["🥇", "🥈", "🥉"];
-
-
-function Trend({ pct }: { pct: number }) {
-  if (pct === 0) return <span className="text-neutral-600 text-xs">—</span>;
-  const up = pct > 0;
-  return (
-    <span className={`text-xs font-medium ${up ? "text-red-400" : "text-green-400"}`}>
-      {up ? "↑" : "↓"}{Math.abs(pct).toFixed(1)}%
-    </span>
-  );
-}
 
 function Avatar({ initial, color }: { initial: string; color: string }) {
   return (
@@ -35,7 +23,7 @@ function Avatar({ initial, color }: { initial: string; color: string }) {
 }
 
 // ── Claude Code 테이블 ──────────────────────────────
-function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
+function ClaudeTable({ period }: { period: Period }) {
   const [rows, setRows] = useState<ClaudeMemberRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +66,7 @@ function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">OUTPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE R</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">TOTAL</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{metric === "cost" ? "COST" : "TOKENS"}</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE HIT</th>
             </tr>
           </thead>
           <tbody>
@@ -98,12 +86,9 @@ function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cacheRead)}</td>
                 <td className="px-4 py-4 text-right text-white font-mono text-sm font-medium">{formatTokens(row.total)}</td>
                 <td className="px-4 py-4 text-right">
-                  <div className="flex flex-col items-end gap-0.5">
-                    <span className="font-mono text-sm font-bold text-[#E8FF47]">
-                      {metric === "cost" ? `$${row.cost.toFixed(2)}` : formatTokens(row.total)}
-                    </span>
-                    <Trend pct={row.costTrend} />
-                  </div>
+                  <span className="font-mono text-sm font-bold text-[#E8FF47]">
+                    {formatPercent(row.cacheHitRate)}
+                  </span>
                 </td>
               </tr>
             ))}
@@ -119,7 +104,7 @@ function ClaudeTable({ metric, period }: { metric: Metric; period: Period }) {
 }
 
 // ── Gemini / GPT 공통 테이블 ─────────────────────────
-function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentColor: string; metric: Metric }) {
+function AiTable({ rows, accentColor }: { rows: AiMemberRow[]; accentColor: string }) {
   const sorted = [...rows].sort((a, b) => b.totalTokens - a.totalTokens);
   const colors = [accentColor, accentColor + "cc", accentColor + "99", "#6B7280", "#6B7280"];
 
@@ -137,7 +122,6 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">INPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">OUTPUT</th>
               <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">TOTAL</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{metric === "cost" ? "COST" : "TOKENS"}</th>
             </tr>
           </thead>
           <tbody>
@@ -155,14 +139,10 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
                 </td>
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.inputTokens)}</td>
                 <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.outputTokens)}</td>
-                <td className="px-4 py-4 text-right text-white font-mono text-sm font-medium">{formatTokens(row.totalTokens)}</td>
                 <td className="px-4 py-4 text-right">
-                  <div className="flex flex-col items-end gap-0.5">
-                    <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>
-                      {metric === "cost" ? `$${row.costUsd.toFixed(2)}` : formatTokens(row.totalTokens)}
-                    </span>
-                    <Trend pct={row.costTrend} />
-                  </div>
+                  <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>
+                    {formatTokens(row.totalTokens)}
+                  </span>
                 </td>
               </tr>
             ))}
@@ -181,7 +161,6 @@ function AiTable({ rows, accentColor, metric }: { rows: AiMemberRow[]; accentCol
 export default function LeaderboardTable() {
   const [tool, setTool] = useState<AiTool>("claude");
   const [period, setPeriod] = useState<Period>("30d");
-  const [metric, setMetric] = useState<Metric>("cost");
 
   const AI_TOOLS: { key: AiTool; label: string; color: string }[] = [
     { key: "claude", label: "Claude Code", color: "#E8FF47" },
@@ -203,31 +182,21 @@ export default function LeaderboardTable() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 flex-wrap">
-          {tool === "claude" && (
-            <div className="flex rounded-lg bg-[#1a1a1a] border border-[#2a2a2a] p-1 gap-1">
-              {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
-                <button key={p} onClick={() => setPeriod(p)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${period === p ? "bg-white text-black" : "text-neutral-400 hover:text-white"}`}>
-                  {PERIOD_LABELS[p]}
-                </button>
-              ))}
-            </div>
-          )}
+        {tool === "claude" && (
           <div className="flex rounded-lg bg-[#1a1a1a] border border-[#2a2a2a] p-1 gap-1">
-            {(["cost", "tokens"] as Metric[]).map((m) => (
-              <button key={m} onClick={() => setMetric(m)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${metric === m ? "bg-[#E8FF47] text-black" : "text-neutral-400 hover:text-white"}`}>
-                {m === "cost" ? "Cost" : "Tokens"}
+            {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
+              <button key={p} onClick={() => setPeriod(p)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${period === p ? "bg-white text-black" : "text-neutral-400 hover:text-white"}`}>
+                {PERIOD_LABELS[p]}
               </button>
             ))}
           </div>
-        </div>
+        )}
       </div>
 
-      {tool === "claude" && <ClaudeTable metric={metric} period={period} />}
-      {tool === "gemini" && <AiTable rows={getMockGeminiData()} accentColor="#4285F4" metric={metric} />}
-      {tool === "gpt"    && <AiTable rows={getMockGptData()}    accentColor="#10A37F" metric={metric} />}
+      {tool === "claude" && <ClaudeTable period={period} />}
+      {tool === "gemini" && <AiTable rows={getMockGeminiData()} accentColor="#4285F4" />}
+      {tool === "gpt"    && <AiTable rows={getMockGptData()}    accentColor="#10A37F" />}
     </div>
   );
 }

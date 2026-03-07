@@ -39,16 +39,19 @@ export default function UtilizationPage() {
               title="Total Tokens"
               value={formatTokens(util.totalTokens)}
               subtitle="input + output + cache"
+              tooltip="입력·출력·캐시를 포함한 전체 토큰 사용량. 팀 전체가 Claude에게 보내고 받은 텍스트의 총량입니다."
             />
             <KpiCard
               title="Cache Hit Rate"
               value={formatPercent(util.cacheHitRate)}
               subtitle="cache reuse efficiency"
+              tooltip="캐시된 프롬프트를 재활용한 비율. 높을수록 동일 컨텍스트 재전송이 줄어 응답이 빨라지고 비용 효율이 올라갑니다."
             />
             <KpiCard
               title="Avg Daily Tokens"
               value={formatTokens(util.avgDailyTokens)}
               subtitle="tokens per day"
+              tooltip="일 평균 토큰 사용량. 전체 토큰을 활성 일수로 나눈 값입니다."
             />
           </div>
 

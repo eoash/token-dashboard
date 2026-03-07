@@ -1,7 +1,7 @@
 interface TeamMemberRank {
   name: string;
   tokens: number;
-  cost: number;
+  cacheHitRate?: number;
   lines?: number;
   commits?: number;
   prs?: number;
@@ -66,10 +66,10 @@ export default function TeamRankingCard({ data }: TeamRankingCardProps) {
                 />
               </div>
 
-              {/* 점유율 + 비용 */}
+              {/* 점유율 + cache hit */}
               <div className="flex items-center justify-between text-xs">
                 <span className="text-neutral-400 font-medium">{pct}%</span>
-                <span className="text-neutral-500">${member.cost.toFixed(2)}</span>
+                <span className="text-neutral-500">cache {member.cacheHitRate != null ? `${(member.cacheHitRate * 100).toFixed(1)}%` : "—"}</span>
               </div>
 
               {/* 생산성 지표 */}

@@ -9,8 +9,7 @@ export interface ModelDetail {
   inputTokens: number;
   outputTokens: number;
   cacheTokens: number;
-  totalCost: number;
-  daily: { date: string; cost: number }[];
+  daily: { date: string; tokens: number }[];
 }
 
 export function aggregateModels(data: ClaudeCodeDataPoint[]): {
@@ -23,7 +22,6 @@ export function aggregateModels(data: ClaudeCodeDataPoint[]): {
       input: number;
       output: number;
       cache: number;
-      cost: number;
       daily: Map<string, number>;
     }
   >();
@@ -33,15 +31,14 @@ export function aggregateModels(data: ClaudeCodeDataPoint[]): {
       input: 0,
       output: 0,
       cache: 0,
-      cost: 0,
       daily: new Map(),
     };
     existing.input += d.input_tokens;
     existing.output += d.output_tokens;
     existing.cache += d.cache_read_tokens;
-    existing.cost += d.estimated_cost_usd_cents;
 
-    existing.daily.set(d.date, (existing.daily.get(d.date) ?? 0) + d.estimated_cost_usd_cents / 100);
+    const dayTokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    existing.daily.set(d.date, (existing.daily.get(d.date) ?? 0) + dayTokens);
     modelMap.set(d.model, existing);
   }
 
@@ -54,10 +51,9 @@ export function aggregateModels(data: ClaudeCodeDataPoint[]): {
       inputTokens: v.input,
       outputTokens: v.output,
       cacheTokens: v.cache,
-      totalCost: v.cost / 100,
       daily: Array.from(v.daily.entries())
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([date, cost]) => ({ date, cost })),
+        .map(([date, tokens]) => ({ date, tokens })),
     }))
     .sort((a, b) => b.totalTokens - a.totalTokens);
 
