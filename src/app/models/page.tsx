@@ -55,7 +55,7 @@ export default function ModelsPage() {
           {/* Per-model token trends */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {details.map((m) => (
-              <TokenTrendChart key={m.name} data={m.daily} />
+              <TokenTrendChart key={m.name} data={m.daily} label={m.label} color={m.color} />
             ))}
           </div>
 

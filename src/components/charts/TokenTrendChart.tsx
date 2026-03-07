@@ -18,6 +18,8 @@ interface TokenTrendData {
 
 interface TokenTrendChartProps {
   data: TokenTrendData[];
+  label?: string;
+  color?: string;
 }
 
 function formatDate(dateStr: string): string {
@@ -47,10 +49,14 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
   );
 }
 
-export default function TokenTrendChart({ data }: TokenTrendChartProps) {
+export default function TokenTrendChart({ data, label, color }: TokenTrendChartProps) {
+  const lineColor = color ?? "#E8FF47";
   return (
     <div className="rounded-xl bg-[#111111] p-6">
-      <h3 className="mb-4 text-lg font-semibold text-white">Token Trend</h3>
+      <h3 className="mb-4 text-lg font-semibold text-white flex items-center gap-2">
+        {label && <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: lineColor }} />}
+        {label ?? "Token Trend"}
+      </h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
@@ -70,9 +76,9 @@ export default function TokenTrendChart({ data }: TokenTrendChartProps) {
             <Line
               type="monotone"
               dataKey="tokens"
-              stroke="#E8FF47"
+              stroke={lineColor}
               strokeWidth={2}
-              dot={{ fill: "#E8FF47", r: 3 }}
+              dot={{ fill: lineColor, r: 3 }}
               activeDot={{ r: 5 }}
               name="Tokens"
             />
