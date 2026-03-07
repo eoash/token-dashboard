@@ -50,6 +50,34 @@ def parse_transcript(transcript_path: str) -> list[dict]:
     return entries
 
 
+def count_bash_commands(transcript_path: str):
+    """transcript에서 git commit / gh pr create 실행 횟수 카운트"""
+    commits = 0
+    prs = 0
+    try:
+        with open(transcript_path, "r", encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if record.get("type") != "assistant":
+                    continue
+                for block in record.get("message", {}).get("content", []):
+                    if block.get("type") == "tool_use" and block.get("name") == "Bash":
+                        cmd = block.get("input", {}).get("command", "")
+                        if "git commit" in cmd:
+                            commits += 1
+                        if "gh pr create" in cmd:
+                            prs += 1
+    except (IOError, OSError):
+        pass
+    return commits, prs
+
+
 def aggregate_tokens(entries: list[dict]) -> dict:
     """모델별, 토큰 타입별 합산"""
     # key: (model, token_type) -> sum
@@ -87,7 +115,7 @@ def estimate_cost(totals: dict) -> dict:
     return dict(costs)
 
 
-def build_otlp_payload(totals: dict, costs: dict, user_email: str, session_id: str) -> dict:
+def build_otlp_payload(totals: dict, costs: dict, user_email: str, session_id: str, commits: int = 0, prs: int = 0) -> dict:
     """OTLP JSON 형식의 메트릭 payload 생성"""
     import time
 
@@ -146,6 +174,60 @@ def build_otlp_payload(totals: dict, costs: dict, user_email: str, session_id: s
             },
         })
 
+    # 세션 카운트: otel_push.py 1회 실행 = 1 세션
+    metrics.append({
+        "name": "claude_code_session_count_total",
+        "description": "Claude Code session count",
+        "sum": {
+            "dataPoints": [{
+                "attributes": [
+                    {"key": "user_email", "value": {"stringValue": user_email}},
+                ],
+                "timeUnixNano": str(now_ns),
+                "startTimeUnixNano": str(now_ns),
+                "asInt": "1",
+            }],
+            "aggregationTemporality": 1,
+            "isMonotonic": True,
+        },
+    })
+
+    if commits > 0:
+        metrics.append({
+            "name": "claude_code_commit_count_total",
+            "description": "Git commits made during Claude Code sessions",
+            "sum": {
+                "dataPoints": [{
+                    "attributes": [
+                        {"key": "user_email", "value": {"stringValue": user_email}},
+                    ],
+                    "timeUnixNano": str(now_ns),
+                    "startTimeUnixNano": str(now_ns),
+                    "asInt": str(commits),
+                }],
+                "aggregationTemporality": 1,
+                "isMonotonic": True,
+            },
+        })
+
+    if prs > 0:
+        metrics.append({
+            "name": "claude_code_pull_request_count_total",
+            "description": "Pull requests created during Claude Code sessions",
+            "sum": {
+                "dataPoints": [{
+                    "attributes": [
+                        {"key": "user_email", "value": {"stringValue": user_email}},
+                    ],
+                    "timeUnixNano": str(now_ns),
+                    "startTimeUnixNano": str(now_ns),
+                    "asInt": str(prs),
+                }],
+                "aggregationTemporality": 1,
+                "isMonotonic": True,
+            },
+        })
+
     return {
         "resourceMetrics": [
             {
@@ -185,6 +267,15 @@ def push_metrics(payload: dict) -> bool:
         return False
 
 
+def sanitize_email(email: str) -> str:
+    """중복 도메인 제거 (예: user@eoeoeo.net@eoeoeo.net → user@eoeoeo.net)"""
+    at_count = email.count("@")
+    if at_count > 1:
+        parts = email.split("@")
+        return f"{parts[0]}@{parts[-1]}"
+    return email
+
+
 def detect_user_email() -> str:
     """git config에서 이메일 추출"""
     try:
@@ -194,10 +285,69 @@ def detect_user_email() -> str:
             capture_output=True, text=True, timeout=5,
         )
         if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
+            return sanitize_email(result.stdout.strip())
     except Exception:
         pass
     return "unknown"
+
+
+BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_v2_done")
+BACKFILL_SCRIPT_URL = "https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/generate_backfill.py"
+BACKFILL_API_URL = "https://token-dashboard-iota.vercel.app/api/backfill"
+
+
+def maybe_rebackfill(user_email: str):
+    """1회성 re-backfill: marker 파일이 없으면 최신 generate_backfill.py로 재생성 후 API에 전송"""
+    if os.path.exists(BACKFILL_MARKER):
+        return
+
+    import subprocess
+    import tempfile
+
+    try:
+        # 최신 generate_backfill.py 다운로드
+        script_path = os.path.join(tempfile.gettempdir(), "generate_backfill_v2.py")
+        urllib.request.urlretrieve(BACKFILL_SCRIPT_URL, script_path)
+
+        # 실행하여 backfill JSON 생성
+        out_path = os.path.join(tempfile.gettempdir(), "backfill_v2.json")
+        subprocess.run(
+            ["python3", script_path, "--out", out_path],
+            capture_output=True, text=True, timeout=60,
+        )
+
+        if not os.path.exists(out_path):
+            return
+
+        with open(out_path, "r") as f:
+            backfill_data = json.load(f)
+
+        if not backfill_data.get("data"):
+            return
+
+        # API에 POST
+        backfill_data["email"] = user_email
+        payload = json.dumps(backfill_data).encode("utf-8")
+        req = urllib.request.Request(
+            BACKFILL_API_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status == 200:
+                # marker 파일 생성 — 다음부터 실행 안 함
+                os.makedirs(os.path.dirname(BACKFILL_MARKER), exist_ok=True)
+                with open(BACKFILL_MARKER, "w") as m:
+                    m.write("v2")
+    except Exception:
+        pass  # 실패해도 메인 로직에 영향 없음
+    finally:
+        for p in [script_path, out_path]:
+            try:
+                os.remove(p)
+            except Exception:
+                pass
 
 
 def main():
@@ -233,12 +383,18 @@ def main():
     # 3. 비용 추정
     costs = estimate_cost(totals)
 
-    # 4. 사용자 이메일
+    # 4. 커밋/PR 카운트
+    commits, prs = count_bash_commands(transcript_path)
+
+    # 5. 사용자 이메일
     user_email = detect_user_email()
 
-    # 5. OTLP payload 생성 & 전송
-    payload = build_otlp_payload(totals, costs, user_email, session_id)
+    # 6. OTLP payload 생성 & 전송
+    payload = build_otlp_payload(totals, costs, user_email, session_id, commits, prs)
     push_metrics(payload)
+
+    # 7. 1회성 re-backfill (commits/sessions 누락 수정)
+    maybe_rebackfill(user_email)
 
 
 if __name__ == "__main__":

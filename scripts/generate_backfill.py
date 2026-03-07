@@ -19,6 +19,15 @@ from collections import defaultdict
 TRANSCRIPT_BASE = os.path.expanduser("~/.claude/projects")
 
 
+def sanitize_email(email: str) -> str:
+    """중복 도메인 제거 (예: user@eoeoeo.net@eoeoeo.net → user@eoeoeo.net)"""
+    at_count = email.count("@")
+    if at_count > 1:
+        parts = email.split("@")
+        return f"{parts[0]}@{parts[-1]}"
+    return email
+
+
 def detect_user_email() -> str:
     try:
         result = subprocess.run(
@@ -26,7 +35,7 @@ def detect_user_email() -> str:
             capture_output=True, text=True, timeout=5,
         )
         if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
+            return sanitize_email(result.stdout.strip())
     except Exception:
         pass
     return "unknown"
@@ -42,10 +51,17 @@ def find_transcripts():
     return [f for f in files if "subagents" not in os.path.basename(os.path.dirname(f))]
 
 
-def parse_transcripts(files: list[str]) -> list[dict]:
+def parse_transcripts(files):
     results = []
+    commits_by_date = defaultdict(int)
+    prs_by_date = defaultdict(int)
+    sessions_by_date = defaultdict(int)
+
     for path in files:
         try:
+            # 각 transcript 파일 = 1 세션. 첫 날짜 기준으로 세션 카운트
+            session_date = None
+            current_date = None
             with open(path, encoding="utf-8", errors="replace") as f:
                 for line in f:
                     line = line.strip()
@@ -56,13 +72,27 @@ def parse_transcripts(files: list[str]) -> list[dict]:
                     except json.JSONDecodeError:
                         continue
 
+                    ts_str = record.get("timestamp", "")
+                    if ts_str:
+                        current_date = ts_str[:10]
+                        if session_date is None:
+                            session_date = current_date
+
                     if record.get("type") != "assistant":
                         continue
 
-                    ts_str = record.get("timestamp", "")
                     msg = record.get("message", {})
                     model = msg.get("model")
                     usage = msg.get("usage")
+
+                    # Bash 명령 카운트
+                    for block in msg.get("content", []):
+                        if block.get("type") == "tool_use" and block.get("name") == "Bash":
+                            cmd = block.get("input", {}).get("command", "")
+                            if "git commit" in cmd and current_date:
+                                commits_by_date[current_date] += 1
+                            if "gh pr create" in cmd and current_date:
+                                prs_by_date[current_date] += 1
 
                     if not model or not usage or not ts_str:
                         continue
@@ -75,13 +105,19 @@ def parse_transcripts(files: list[str]) -> list[dict]:
                         "cache_read_tokens": usage.get("cache_read_input_tokens", 0),
                         "cache_creation_tokens": usage.get("cache_creation_input_tokens", 0),
                     })
+
+            if session_date:
+                sessions_by_date[session_date] += 1
         except (IOError, OSError):
             pass
-    return results
+    return results, dict(commits_by_date), dict(prs_by_date), dict(sessions_by_date)
 
 
-def aggregate(entries: list[dict], email: str) -> list[dict]:
+def aggregate(entries, email, commits_by_date=None, prs_by_date=None, sessions_by_date=None):
     """date × model 별 합산 → ClaudeCodeDataPoint[] 형태"""
+    commits_by_date = commits_by_date or {}
+    prs_by_date = prs_by_date or {}
+    sessions_by_date = sessions_by_date or {}
     agg = defaultdict(lambda: {
         "input_tokens": 0, "output_tokens": 0,
         "cache_read_tokens": 0, "cache_creation_tokens": 0,
@@ -95,7 +131,17 @@ def aggregate(entries: list[dict], email: str) -> list[dict]:
         agg[key]["cache_creation_tokens"] += e["cache_creation_tokens"]
 
     data = []
+    seen_dates = set()
     for (date, model), tokens in sorted(agg.items()):
+        # 날짜당 첫 번째 모델 항목에만 카운트 배분
+        commits = 0
+        pull_requests = 0
+        session_count = 0
+        if date not in seen_dates:
+            commits = commits_by_date.get(date, 0)
+            pull_requests = prs_by_date.get(date, 0)
+            session_count = sessions_by_date.get(date, 0)
+            seen_dates.add(date)
         data.append({
             "actor": {
                 "type": "user",
@@ -104,10 +150,10 @@ def aggregate(entries: list[dict], email: str) -> list[dict]:
             },
             "model": model,
             "date": date,
-            "session_count": 0,
+            "session_count": session_count,
             "lines_of_code": 0,
-            "commits": 0,
-            "pull_requests": 0,
+            "commits": commits,
+            "pull_requests": pull_requests,
             "tool_acceptance_rate": 0,
             **tokens,
         })
@@ -123,12 +169,12 @@ def main():
         print(json.dumps({"data": []}))
         return
 
-    entries = parse_transcripts(files)
+    entries, commits_by_date, prs_by_date, sessions_by_date = parse_transcripts(files)
     if not entries:
         print(json.dumps({"data": []}))
         return
 
-    data = aggregate(entries, email)
+    data = aggregate(entries, email, commits_by_date, prs_by_date, sessions_by_date)
 
     out_path = None
     for i, arg in enumerate(sys.argv):
