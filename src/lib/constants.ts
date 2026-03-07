@@ -2,7 +2,7 @@ import type { TeamMember } from "./types";
 
 // EO Studio 팀원 매핑
 export const TEAM_MEMBERS: TeamMember[] = [
-  { email: "ash@eostudio.tv", name: "Seohyun" },
+  { email: "ash@eoeoeo.net", name: "Seohyun" },
   { email: "jay@eostudio.tv", name: "Jay" },
   { email: "alex@eostudio.tv", name: "Alex" },
   { email: "yuna@eostudio.tv", name: "Yuna" },
