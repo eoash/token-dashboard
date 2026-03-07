@@ -42,6 +42,10 @@ const BACKFILL_END = process.env.BACKFILL_END || (() => {
   return dates.length > 0 ? dates.sort().pop()! : "";
 })();
 
+export function getBackfillEnd(): string {
+  return BACKFILL_END;
+}
+
 export async function fetchAnalytics(params: {
   start_date: string;
   end_date: string;

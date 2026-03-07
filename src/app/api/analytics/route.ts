@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchAnalytics, getDataSource } from "@/lib/data-source";
+import { fetchAnalytics, getDataSource, getBackfillEnd } from "@/lib/data-source";
 import { DEFAULT_DAYS, EXCLUDED_EMAILS } from "@/lib/constants";
 import { getDateRange } from "@/lib/utils";
 
@@ -56,6 +56,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       data,
       _source: getDataSource(),
+      _backfill_end: getBackfillEnd(),
+      _backfill_count: raw.data.length - data.length !== undefined ? raw.data.length : 0,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
