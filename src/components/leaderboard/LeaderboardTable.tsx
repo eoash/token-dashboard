@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { formatTokens, formatPercent } from "@/lib/utils";
-import { getMockGeminiData, getMockGptData, type AiMemberRow } from "@/lib/mock-ai-tools";
+import { getMockGptData, type AiMemberRow } from "@/lib/mock-ai-tools";
 import { aggregateMembers, type ClaudeMemberRow } from "@/lib/aggregators/leaderboard";
+import type { GeminiMemberRow } from "@/app/api/gemini-usage/route";
 
 type AiTool = "claude" | "gemini" | "gpt";
 type Period = "today" | "7d" | "30d" | "all";
@@ -157,6 +158,96 @@ function AiTable({ rows, accentColor }: { rows: AiMemberRow[]; accentColor: stri
   );
 }
 
+// ── Gemini CLI 테이블 (실데이터) ─────────────────────
+function GeminiTable() {
+  const [rows, setRows] = useState<GeminiMemberRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState("");
+  const accentColor = "#4285F4";
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/gemini-usage");
+      if (!res.ok) throw new Error(`서버 오류 (${res.status})`);
+      const json = await res.json();
+      setRows(json.data ?? []);
+      setLastUpdated(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+    } catch (e) {
+      console.error("gemini leaderboard fetch failed:", e);
+      setError("데이터를 불러오지 못했습니다.");
+      setRows([]);
+    } finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const t = setInterval(fetchData, 30_000);
+    const onVis = () => { if (document.visibilityState === "visible") fetchData(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { clearInterval(t); document.removeEventListener("visibilitychange", onVis); };
+  }, [fetchData]);
+
+  return (
+    <>
+      {lastUpdated && <p className="text-xs text-neutral-600 px-6 pb-2">Updated {lastUpdated}</p>}
+      {error && (
+        <div className="mx-6 mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-red-400 text-xs">
+          {error}
+        </div>
+      )}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#1e1e1e]">
+              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium w-10">#</th>
+              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium">DEVELOPER</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">INPUT</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">OUTPUT</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">THOUGHT</th>
+              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan={7} className="px-4 py-12 text-center text-neutral-600">불러오는 중...</td></tr>
+            ) : rows.length === 0 ? (
+              <tr><td colSpan={7} className="px-4 py-12 text-center text-neutral-600">Gemini CLI 사용 데이터가 없습니다</td></tr>
+            ) : rows.map((row, i) => (
+              <tr key={row.email} className="border-b border-[#1a1a1a] hover:bg-[#161616] transition-colors">
+                <td className="px-4 py-4 text-sm">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
+                <td className="px-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar initial={row.name[0]} color={AVATAR_COLORS[i % AVATAR_COLORS.length]} />
+                    <span className="font-medium text-white">{row.name}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
+                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
+                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cache)}</td>
+                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.thought)}</td>
+                <td className="px-4 py-4 text-right">
+                  <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>
+                    {formatTokens(row.total)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="px-6 py-3 border-t border-[#1a1a1a] flex justify-between text-xs text-neutral-600">
+        <span>{rows.length}명 · All Time</span>
+        <span>Auto-refresh: 30s</span>
+      </div>
+    </>
+  );
+}
+
 // ── 메인 컴포넌트 ────────────────────────────────────
 export default function LeaderboardTable() {
   const [tool, setTool] = useState<AiTool>("claude");
@@ -195,7 +286,7 @@ export default function LeaderboardTable() {
       </div>
 
       {tool === "claude" && <ClaudeTable period={period} />}
-      {tool === "gemini" && <AiTable rows={getMockGeminiData()} accentColor="#4285F4" />}
+      {tool === "gemini" && <GeminiTable />}
       {tool === "gpt"    && <AiTable rows={getMockGptData()}    accentColor="#10A37F" />}
     </div>
   );
