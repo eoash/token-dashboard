@@ -8,7 +8,7 @@ const menuItems = [
   { label: "Leaderboard", href: "/leaderboard" },
   { label: "Team", href: "/team" },
   { label: "Models", href: "/models" },
-  { label: "Costs", href: "/costs" },
+  { label: "Utilization", href: "/costs" },
 ];
 
 export default function Sidebar() {

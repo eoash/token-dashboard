@@ -2,25 +2,24 @@
 
 import { useMemo } from "react";
 import KpiCard from "@/components/cards/KpiCard";
-import CostTrendChart from "@/components/charts/CostTrendChart";
+import UsageTrendChart from "@/components/charts/UsageTrendChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
-import { formatDollars } from "@/lib/utils";
+import { formatTokens, formatPercent } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
-import { aggregateCosts } from "@/lib/aggregators/costs";
+import { aggregateUtilization } from "@/lib/aggregators/costs";
 
-export default function CostsPage() {
+export default function UtilizationPage() {
   const { data: rawData, loading, error } = useAnalytics(30);
 
-  // loading 중 불필요한 집계 연산 방지
-  const costs = useMemo(
-    () => (loading ? null : aggregateCosts(rawData)),
+  const util = useMemo(
+    () => (loading ? null : aggregateUtilization(rawData)),
     [rawData, loading]
   );
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Costs</h1>
+        <h1 className="text-2xl font-bold">Utilization</h1>
         <span className="text-xs text-gray-500">Last 30 days</span>
       </div>
 
@@ -30,46 +29,51 @@ export default function CostsPage() {
         </div>
       )}
 
-      {loading || !costs ? (
+      {loading || !util ? (
         <div className="text-gray-400 text-center py-12">Loading...</div>
       ) : (
         <>
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <KpiCard
-              title="Total Cost"
-              value={formatDollars(costs.totalCostUsd)}
-              subtitle="last 30 days"
+              title="Total Tokens"
+              value={formatTokens(util.totalTokens)}
+              subtitle="input + output + cache"
             />
             <KpiCard
-              title="Avg Daily"
-              value={formatDollars(costs.avgDailyCost)}
-              subtitle="per day average"
+              title="Cache Hit Rate"
+              value={formatPercent(util.cacheHitRate)}
+              subtitle="cache reuse efficiency"
             />
             <KpiCard
-              title="Projected Monthly"
-              value={formatDollars(costs.projectedMonthly)}
-              subtitle="end of month estimate"
+              title="Avg Daily Tokens"
+              value={formatTokens(util.avgDailyTokens)}
+              subtitle="tokens per day"
             />
           </div>
 
-          {/* Cost Trend */}
+          {/* Usage Trend */}
           <div className="mb-6">
-            <CostTrendChart data={costs.daily} />
+            <UsageTrendChart data={util.daily} />
           </div>
 
           {/* Member + Model breakdown */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="rounded-xl bg-[#111111] p-6">
-              <h3 className="text-lg font-semibold mb-4">Cost by Team Member</h3>
+              <h3 className="text-lg font-semibold mb-4">Tokens by Team Member</h3>
               <div className="space-y-3">
-                {costs.memberCosts.map((m) => {
-                  const pct = costs.totalCostUsd > 0 ? (m.cost / costs.totalCostUsd) * 100 : 0;
+                {util.memberTokens.map((m) => {
+                  const pct = util.totalTokens > 0 ? (m.tokens / util.totalTokens) * 100 : 0;
                   return (
                     <div key={m.name}>
                       <div className="flex justify-between text-sm mb-1">
                         <span>{m.name}</span>
-                        <span className="text-[#E8FF47]">{formatDollars(m.cost)}</span>
+                        <span className="text-gray-400">
+                          {formatTokens(m.tokens)}
+                          <span className="text-xs text-gray-600 ml-2">
+                            cache {formatPercent(m.cacheHitRate)}
+                          </span>
+                        </span>
                       </div>
                       <div className="h-2 rounded-full bg-[#1a1a1a]">
                         <div
@@ -83,7 +87,7 @@ export default function CostsPage() {
               </div>
             </div>
 
-            <ModelPieChart data={costs.modelCosts} />
+            <ModelPieChart data={util.modelTokens} />
           </div>
         </>
       )}

@@ -3,7 +3,7 @@ import type { ClaudeCodeDataPoint } from "@/lib/types";
 
 export interface OverviewAggregation {
   totalTokens: number;
-  totalCostUsd: number;
+  cacheHitRate: number;
   activeUsers: number;
   avgDailySessions: number;
   totalLines: number;
@@ -11,13 +11,15 @@ export interface OverviewAggregation {
   totalPRs: number;
   avgAcceptanceRate: number;
   daily: { date: string; input_tokens: number; output_tokens: number; cache_read_tokens: number }[];
-  members: { name: string; tokens: number; cost: number; lines: number; commits: number; prs: number; acceptanceRate: number }[];
+  members: { name: string; tokens: number; cacheHitRate: number; lines: number; commits: number; prs: number; acceptanceRate: number }[];
   models: { name: string; value: number; color: string }[];
 }
 
 export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregation {
   let totalTokens = 0;
-  let totalCostCents = 0;
+  let totalCacheRead = 0;
+  let totalCacheCreation = 0;
+  let totalInput = 0;
   let totalSessions = 0;
   let totalLines = 0;
   let totalCommits = 0;
@@ -25,14 +27,16 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
   let acceptanceRateSum = 0;
   let acceptanceRateCount = 0;
   const userSet = new Set<string>();
-  const dailyMap = new Map<string, { input: number; output: number; cache: number; cost: number; sessions: number }>();
-  const memberMap = new Map<string, { tokens: number; cost: number; lines: number; commits: number; prs: number; acceptanceSum: number; acceptanceCount: number }>();
+  const dailyMap = new Map<string, { input: number; output: number; cache: number; sessions: number }>();
+  const memberMap = new Map<string, { tokens: number; cacheRead: number; cacheCreation: number; input: number; lines: number; commits: number; prs: number; acceptanceSum: number; acceptanceCount: number }>();
   const modelMap = new Map<string, number>();
 
   for (const d of data) {
     const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
     totalTokens += tokens;
-    totalCostCents += d.estimated_cost_usd_cents;
+    totalCacheRead += d.cache_read_tokens;
+    totalCacheCreation += d.cache_creation_tokens;
+    totalInput += d.input_tokens;
     totalSessions += d.session_count;
     totalLines += d.lines_of_code;
     totalCommits += d.commits;
@@ -45,20 +49,21 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
     userSet.add(resolveActorName(d.actor));
 
     if (d.date) {
-      const existing = dailyMap.get(d.date) ?? { input: 0, output: 0, cache: 0, cost: 0, sessions: 0 };
+      const existing = dailyMap.get(d.date) ?? { input: 0, output: 0, cache: 0, sessions: 0 };
       existing.input += d.input_tokens;
       existing.output += d.output_tokens;
       existing.cache += d.cache_read_tokens;
-      existing.cost += d.estimated_cost_usd_cents;
       existing.sessions += d.session_count;
       dailyMap.set(d.date, existing);
     }
 
     {
       const name = resolveActorName(d.actor);
-      const existing = memberMap.get(name) ?? { tokens: 0, cost: 0, lines: 0, commits: 0, prs: 0, acceptanceSum: 0, acceptanceCount: 0 };
+      const existing = memberMap.get(name) ?? { tokens: 0, cacheRead: 0, cacheCreation: 0, input: 0, lines: 0, commits: 0, prs: 0, acceptanceSum: 0, acceptanceCount: 0 };
       existing.tokens += tokens;
-      existing.cost += d.estimated_cost_usd_cents / 100;
+      existing.cacheRead += d.cache_read_tokens;
+      existing.cacheCreation += d.cache_creation_tokens;
+      existing.input += d.input_tokens;
       existing.lines += d.lines_of_code;
       existing.commits += d.commits;
       existing.prs += d.pull_requests;
@@ -79,7 +84,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
 
   return {
     totalTokens,
-    totalCostUsd: totalCostCents / 100,
+    cacheHitRate: (totalCacheRead + totalInput) > 0 ? totalCacheRead / (totalCacheRead + totalCacheCreation + totalInput) : 0,
     activeUsers: userSet.size,
     avgDailySessions: Math.round(totalSessions / days),
     totalLines,
@@ -98,7 +103,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
       .map(([name, v]) => ({
         name,
         tokens: v.tokens,
-        cost: v.cost,
+        cacheHitRate: (v.cacheRead + v.cacheCreation + v.input) > 0 ? v.cacheRead / (v.cacheRead + v.cacheCreation + v.input) : 0,
         lines: v.lines,
         commits: v.commits,
         prs: v.prs,

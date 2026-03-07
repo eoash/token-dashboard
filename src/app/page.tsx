@@ -2,7 +2,7 @@ import KpiCard from "@/components/cards/KpiCard";
 import DailyUsageChart from "@/components/charts/DailyUsageChart";
 import ModelPieChart from "@/components/charts/ModelPieChart";
 import LeaderboardTable from "@/components/leaderboard/LeaderboardTable";
-import { formatTokens, formatDollars } from "@/lib/utils";
+import { formatTokens, formatPercent } from "@/lib/utils";
 import { aggregateOverview } from "@/lib/aggregators/overview";
 import { fetchAnalytics, getDataSource } from "@/lib/data-source";
 import { getDateRange } from "@/lib/utils";
@@ -66,9 +66,9 @@ export default async function OverviewPage() {
           subtitle="input + output + cache"
         />
         <KpiCard
-          title="Total Cost"
-          value={formatDollars(overview.totalCostUsd)}
-          subtitle="estimated USD"
+          title="Cache Hit Rate"
+          value={formatPercent(overview.cacheHitRate)}
+          subtitle="cache reuse efficiency"
         />
         <KpiCard
           title="Active Users"
