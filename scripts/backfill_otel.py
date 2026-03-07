@@ -20,7 +20,7 @@ OTEL_ENDPOINT = "https://otel-collector-production-2dac.up.railway.app"
 OTLP_METRICS_PATH = "/v1/metrics"
 SERVICE_NAME = "claude-code"
 TEAM_NAME = "eostudio"
-USER_EMAIL = "ash@eoeoeo.net"
+USER_EMAIL = None  # auto-detect from git config
 
 TRANSCRIPT_BASE = os.path.expanduser("~/.claude/projects")
 
@@ -161,25 +161,49 @@ def push_payload(payload: dict) -> tuple[bool, str]:
         return False, str(e)
 
 
+def detect_user_email() -> str:
+    """git config에서 이메일 추출"""
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["git", "config", "user.email"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return "unknown"
+
+
 def main():
+    global USER_EMAIL
+    if USER_EMAIL is None:
+        USER_EMAIL = detect_user_email()
+
     do_push = "--push" in sys.argv
+    quiet = "--quiet" in sys.argv
     since = None
     for i, arg in enumerate(sys.argv):
         if arg == "--since" and i + 1 < len(sys.argv):
             since = sys.argv[i + 1]
 
-    print(f"{'🚀 PUSH 모드' if do_push else '👀 DRY-RUN 모드 (--push로 실제 전송)'}")
-    print()
+    if not quiet:
+        print(f"{'🚀 PUSH 모드' if do_push else '👀 DRY-RUN 모드 (--push로 실제 전송)'}")
+        print(f"사용자: {USER_EMAIL}")
+        print()
+
+    log = (lambda msg: None) if quiet else print
 
     # 1. transcript 파일 수집
     files = find_transcripts()
-    print(f"transcript 파일: {len(files)}개")
+    log(f"transcript 파일: {len(files)}개")
 
     # 2. 전체 파싱
     all_entries = []
     for f in files:
         all_entries.extend(parse_transcript(f))
-    print(f"파싱된 메시지: {len(all_entries)}개")
+    log(f"파싱된 메시지: {len(all_entries)}개")
 
     # 3. 날짜별 집계
     by_date = aggregate_by_date(all_entries)
@@ -189,11 +213,11 @@ def main():
         dates = [d for d in dates if d >= since]
 
     if not dates:
-        print("전송할 데이터가 없습니다.")
+        log("전송할 데이터가 없습니다.")
         return
 
-    print(f"날짜 범위: {dates[0]} ~ {dates[-1]} ({len(dates)}일)")
-    print()
+    log(f"날짜 범위: {dates[0]} ~ {dates[-1]} ({len(dates)}일)")
+    log("")
 
     # 4. 날짜별 출력 / 전송
     total_tokens_all = 0
@@ -219,14 +243,14 @@ def main():
                     success_count += 1
             else:
                 status = "⏭️ skip (no data)"
-            print(f"  {date}: {day_tokens:>12,} tokens  [{model_str}]  {status}")
+            log(f"  {date}: {day_tokens:>12,} tokens  [{model_str}]  {status}")
         else:
-            print(f"  {date}: {day_tokens:>12,} tokens  [{model_str}]")
+            log(f"  {date}: {day_tokens:>12,} tokens  [{model_str}]")
 
-    print()
-    print(f"총 토큰: {total_tokens_all:,}")
+    log("")
+    log(f"총 토큰: {total_tokens_all:,}")
     if do_push:
-        print(f"전송 결과: {success_count}/{len(dates)} 성공")
+        print(f"      backfill 결과: {success_count}/{len(dates)}일 전송 완료")
 
 
 if __name__ == "__main__":
