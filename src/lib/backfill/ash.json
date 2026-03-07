@@ -1,1 +1,922 @@
-{"data": [{"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-08", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 2801, "output_tokens": 146895, "cache_read_tokens": 35153640, "cache_creation_tokens": 1563418}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-08", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 825, "output_tokens": 31199, "cache_read_tokens": 5346872, "cache_creation_tokens": 748048}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-09", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 6300, "output_tokens": 22644, "cache_read_tokens": 8456994, "cache_creation_tokens": 687341}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-09", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 188, "output_tokens": 2594, "cache_read_tokens": 2110238, "cache_creation_tokens": 223898}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-10", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 178, "output_tokens": 561, "cache_read_tokens": 1211798, "cache_creation_tokens": 108703}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-10", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 3027, "output_tokens": 60473, "cache_read_tokens": 32713961, "cache_creation_tokens": 1296773}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-11", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 98, "output_tokens": 52, "cache_read_tokens": 197220, "cache_creation_tokens": 6276}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-11", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 13601, "output_tokens": 105446, "cache_read_tokens": 41117597, "cache_creation_tokens": 1112261}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-12", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 5061, "output_tokens": 45487, "cache_read_tokens": 78047704, "cache_creation_tokens": 1734385}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-12", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 2690, "output_tokens": 16927, "cache_read_tokens": 6393186, "cache_creation_tokens": 276238}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-13", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 5074, "output_tokens": 50484, "cache_read_tokens": 44079588, "cache_creation_tokens": 3054833}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-14", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 156, "output_tokens": 62, "cache_read_tokens": 290624, "cache_creation_tokens": 184833}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-15", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 603, "output_tokens": 3686, "cache_read_tokens": 2108937, "cache_creation_tokens": 201475}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-16", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 5977, "output_tokens": 100115, "cache_read_tokens": 73669097, "cache_creation_tokens": 1742153}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-17", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 52805, "output_tokens": 4554, "cache_read_tokens": 10907444, "cache_creation_tokens": 1058910}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-17", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 7541, "output_tokens": 72997, "cache_read_tokens": 79196264, "cache_creation_tokens": 2750647}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-18", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 56, "output_tokens": 3631, "cache_read_tokens": 581746, "cache_creation_tokens": 268170}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-18", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 428, "output_tokens": 31678, "cache_read_tokens": 23702617, "cache_creation_tokens": 1148817}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-5-20250929", "date": "2026-02-18", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 82, "output_tokens": 11793, "cache_read_tokens": 2570896, "cache_creation_tokens": 105490}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-18", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 42689, "output_tokens": 90113, "cache_read_tokens": 49378096, "cache_creation_tokens": 1266143}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-19", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 598, "output_tokens": 26761, "cache_read_tokens": 23073714, "cache_creation_tokens": 1238058}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-19", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 27619, "output_tokens": 230651, "cache_read_tokens": 201835226, "cache_creation_tokens": 6990472}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-20", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 100755, "output_tokens": 62595, "cache_read_tokens": 48576706, "cache_creation_tokens": 2734834}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-20", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 458, "output_tokens": 21633, "cache_read_tokens": 14609420, "cache_creation_tokens": 975180}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-21", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 1916, "output_tokens": 69247, "cache_read_tokens": 38423681, "cache_creation_tokens": 1646628}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-22", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 703, "output_tokens": 43352, "cache_read_tokens": 28394753, "cache_creation_tokens": 1406468}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-22", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 5036, "output_tokens": 73027, "cache_read_tokens": 44392564, "cache_creation_tokens": 3815207}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-23", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 12212, "output_tokens": 52644, "cache_read_tokens": 32464459, "cache_creation_tokens": 1526078}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-24", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 255, "output_tokens": 5760, "cache_read_tokens": 2122434, "cache_creation_tokens": 422108}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-24", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 979, "output_tokens": 29253, "cache_read_tokens": 37520146, "cache_creation_tokens": 1209005}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-24", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 23883, "output_tokens": 98024, "cache_read_tokens": 80302266, "cache_creation_tokens": 3575212}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-25", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 13390, "output_tokens": 41189, "cache_read_tokens": 26066975, "cache_creation_tokens": 2814537}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-25", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 10133, "output_tokens": 28355, "cache_read_tokens": 15034938, "cache_creation_tokens": 766420}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-haiku-4-5-20251001", "date": "2026-02-26", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 721, "output_tokens": 13362, "cache_read_tokens": 9291921, "cache_creation_tokens": 2063756}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-02-26", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 211, "output_tokens": 40325, "cache_read_tokens": 9069517, "cache_creation_tokens": 285205}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-26", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 19136, "output_tokens": 666748, "cache_read_tokens": 142209924, "cache_creation_tokens": 8605282}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-27", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 613, "output_tokens": 68410, "cache_read_tokens": 29120495, "cache_creation_tokens": 2413845}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-02-28", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 284, "output_tokens": 26573, "cache_read_tokens": 7406622, "cache_creation_tokens": 288682}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-01", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 5836, "output_tokens": 103376, "cache_read_tokens": 19917918, "cache_creation_tokens": 851888}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-02", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 122692, "output_tokens": 190590, "cache_read_tokens": 47544485, "cache_creation_tokens": 4233037}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-02", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 697, "output_tokens": 74731, "cache_read_tokens": 28682353, "cache_creation_tokens": 676720}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-03", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 55754, "output_tokens": 224288, "cache_read_tokens": 78288578, "cache_creation_tokens": 5170136}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-03", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 1030, "output_tokens": 15532, "cache_read_tokens": 4538314, "cache_creation_tokens": 332336}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-04", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 8265, "output_tokens": 98298, "cache_read_tokens": 41352468, "cache_creation_tokens": 2378078}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-04", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 622, "output_tokens": 100049, "cache_read_tokens": 36676070, "cache_creation_tokens": 763727}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-05", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 2460, "output_tokens": 86171, "cache_read_tokens": 39998214, "cache_creation_tokens": 1934490}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-05", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 910, "output_tokens": 115483, "cache_read_tokens": 44690534, "cache_creation_tokens": 1582184}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-06", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 409, "output_tokens": 45890, "cache_read_tokens": 11010339, "cache_creation_tokens": 1412288}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-06", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 20247, "output_tokens": 139035, "cache_read_tokens": 40890295, "cache_creation_tokens": 2062783}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-opus-4-6", "date": "2026-03-07", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 28047, "output_tokens": 369603, "cache_read_tokens": 134368940, "cache_creation_tokens": 5350179}, {"actor": {"type": "user", "id": "ash@eoeoeo.net", "email_address": "ash@eoeoeo.net"}, "model": "claude-sonnet-4-6", "date": "2026-03-07", "session_count": 0, "lines_of_code": 0, "commits": 0, "pull_requests": 0, "tool_acceptance_rate": 0, "input_tokens": 7059, "output_tokens": 96275, "cache_read_tokens": 27162222, "cache_creation_tokens": 806078}]}
+{
+  "data": [
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-08",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-08",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 2801,
+      "output_tokens": 146895,
+      "cache_read_tokens": 35153640,
+      "cache_creation_tokens": 1563418
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-08",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 825,
+      "output_tokens": 31199,
+      "cache_read_tokens": 5346872,
+      "cache_creation_tokens": 748048
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 6300,
+      "output_tokens": 22644,
+      "cache_read_tokens": 8456994,
+      "cache_creation_tokens": 687341
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 188,
+      "output_tokens": 2594,
+      "cache_read_tokens": 2110238,
+      "cache_creation_tokens": 223898
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-10",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 178,
+      "output_tokens": 561,
+      "cache_read_tokens": 1211798,
+      "cache_creation_tokens": 108703
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-10",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 3027,
+      "output_tokens": 60473,
+      "cache_read_tokens": 32713961,
+      "cache_creation_tokens": 1296773
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-11",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 13601,
+      "output_tokens": 105446,
+      "cache_read_tokens": 41117597,
+      "cache_creation_tokens": 1112261
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-12",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 2690,
+      "output_tokens": 16927,
+      "cache_read_tokens": 6393186,
+      "cache_creation_tokens": 276238
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-13",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 462,
+      "output_tokens": 3085,
+      "cache_read_tokens": 1987171,
+      "cache_creation_tokens": 182370
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-16",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 5977,
+      "output_tokens": 100115,
+      "cache_read_tokens": 73669097,
+      "cache_creation_tokens": 1742153
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-17",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-17",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 52805,
+      "output_tokens": 4554,
+      "cache_read_tokens": 10907444,
+      "cache_creation_tokens": 1058910
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-17",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 7415,
+      "output_tokens": 69566,
+      "cache_read_tokens": 77442700,
+      "cache_creation_tokens": 2590550
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 56,
+      "output_tokens": 3631,
+      "cache_read_tokens": 581746,
+      "cache_creation_tokens": 268170
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 428,
+      "output_tokens": 31678,
+      "cache_read_tokens": 23702617,
+      "cache_creation_tokens": 1148817
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 82,
+      "output_tokens": 11793,
+      "cache_read_tokens": 2570896,
+      "cache_creation_tokens": 105490
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 42674,
+      "output_tokens": 89844,
+      "cache_read_tokens": 49226700,
+      "cache_creation_tokens": 1256080
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-19",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-19",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 598,
+      "output_tokens": 26761,
+      "cache_read_tokens": 23073714,
+      "cache_creation_tokens": 1238058
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-19",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 27619,
+      "output_tokens": 230651,
+      "cache_read_tokens": 201835226,
+      "cache_creation_tokens": 6990472
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-20",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 100755,
+      "output_tokens": 62595,
+      "cache_read_tokens": 48576706,
+      "cache_creation_tokens": 2734834
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-20",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 458,
+      "output_tokens": 21633,
+      "cache_read_tokens": 14609420,
+      "cache_creation_tokens": 975180
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-21",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-21",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1916,
+      "output_tokens": 69247,
+      "cache_read_tokens": 38423681,
+      "cache_creation_tokens": 1646628
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-22",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-22",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 703,
+      "output_tokens": 43352,
+      "cache_read_tokens": 28394753,
+      "cache_creation_tokens": 1406468
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-22",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 5036,
+      "output_tokens": 73027,
+      "cache_read_tokens": 44392564,
+      "cache_creation_tokens": 3815207
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-23",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-23",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 12212,
+      "output_tokens": 52644,
+      "cache_read_tokens": 32464459,
+      "cache_creation_tokens": 1526078
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-24",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 255,
+      "output_tokens": 5760,
+      "cache_read_tokens": 2122434,
+      "cache_creation_tokens": 422108
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-24",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 979,
+      "output_tokens": 29253,
+      "cache_read_tokens": 37520146,
+      "cache_creation_tokens": 1209005
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-24",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 23883,
+      "output_tokens": 98024,
+      "cache_read_tokens": 80302266,
+      "cache_creation_tokens": 3575212
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-25",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 13390,
+      "output_tokens": 41189,
+      "cache_read_tokens": 26066975,
+      "cache_creation_tokens": 2814537
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-25",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 10133,
+      "output_tokens": 28355,
+      "cache_read_tokens": 15034938,
+      "cache_creation_tokens": 766420
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 529,
+      "output_tokens": 9454,
+      "cache_read_tokens": 6975938,
+      "cache_creation_tokens": 1398300
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 211,
+      "output_tokens": 40325,
+      "cache_read_tokens": 9069517,
+      "cache_creation_tokens": 285205
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 19023,
+      "output_tokens": 646312,
+      "cache_read_tokens": 139863714,
+      "cache_creation_tokens": 8160121
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-27",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 613,
+      "output_tokens": 68410,
+      "cache_read_tokens": 29120495,
+      "cache_creation_tokens": 2413845
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-03-01",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 5836,
+      "output_tokens": 103376,
+      "cache_read_tokens": 19917918,
+      "cache_creation_tokens": 851888
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "<synthetic>",
+      "date": "2026-03-02",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-02",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 122692,
+      "output_tokens": 190590,
+      "cache_read_tokens": 47544485,
+      "cache_creation_tokens": 4233037
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-03-02",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 697,
+      "output_tokens": 74731,
+      "cache_read_tokens": 28682353,
+      "cache_creation_tokens": 676720
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-03",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 55754,
+      "output_tokens": 224288,
+      "cache_read_tokens": 78288578,
+      "cache_creation_tokens": 5170136
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-03-03",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1030,
+      "output_tokens": 15532,
+      "cache_read_tokens": 4538314,
+      "cache_creation_tokens": 332336
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-04",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 8265,
+      "output_tokens": 98298,
+      "cache_read_tokens": 41352468,
+      "cache_creation_tokens": 2378078
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-05",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 2460,
+      "output_tokens": 86171,
+      "cache_read_tokens": 39998214,
+      "cache_creation_tokens": 1934490
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-06",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 419,
+      "output_tokens": 46859,
+      "cache_read_tokens": 11482691,
+      "cache_creation_tokens": 1415671
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "ash@eoeoeo.net",
+        "email_address": "ash@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-07",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 40,
+      "output_tokens": 3659,
+      "cache_read_tokens": 424501,
+      "cache_creation_tokens": 76305
+    }
+  ]
+}
