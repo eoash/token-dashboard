@@ -25,7 +25,7 @@ def parse_transcript(transcript_path: str) -> list[dict]:
     """transcript JSONL에서 assistant 메시지의 model/usage 추출"""
     entries = []
     try:
-        with open(transcript_path, "r") as f:
+        with open(transcript_path, "r", encoding="utf-8", errors="replace") as f:
             for line in f:
                 line = line.strip()
                 if not line:
