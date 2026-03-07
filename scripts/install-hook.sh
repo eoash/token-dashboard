@@ -10,6 +10,13 @@
 
 set -e
 
+# Windows 환경 감지 → Python UTF-8 모드 강제
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OS" == "Windows_NT" ]]; then
+  export PYTHONUTF8=1
+  export PYTHONIOENCODING=utf-8
+  chcp.com 65001 > /dev/null 2>&1 || true
+fi
+
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 HOOK_FILE="$HOOKS_DIR/otel_push.py"
