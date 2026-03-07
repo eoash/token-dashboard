@@ -54,21 +54,21 @@ export async function fetchAnalytics(params: {
   }
 
   // Prometheus + backfill JSON 병합
+  // BACKFILL_END 이전 → backfill JSON만 사용
+  // BACKFILL_END 이후 → Prometheus만 사용
+  // (OTel deltatocumulative가 과거 데이터를 오늘에 합산하므로 구간을 분리)
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus에 이미 있는 날짜+actor 조합
-  const promKeys = new Set(
-    promData.data.map((d) => `${d.date}:${d.actor.id}`)
-  );
+  const promPoints = BACKFILL_END
+    ? promData.data.filter((d) => d.date > BACKFILL_END)
+    : promData.data;
 
-  // backfill에서 요청 범위 내 + Prometheus에 없는 날짜+actor만 추가
   const backfillPoints = backfillData.filter(
     (d) =>
       d.date >= params.start_date &&
       d.date <= params.end_date &&
-      d.date <= BACKFILL_END &&
-      !promKeys.has(`${d.date}:${d.actor.id}`)
+      d.date <= BACKFILL_END
   );
 
-  return { data: [...backfillPoints, ...promData.data] };
+  return { data: [...backfillPoints, ...promPoints] };
 }
