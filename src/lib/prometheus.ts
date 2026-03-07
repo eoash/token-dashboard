@@ -228,7 +228,7 @@ export async function fetchFromPrometheus(params: {
   }
 
   for (const dp of dataMap.values()) {
-    const key = `${dp.actor?.email_address}|${dp.date}`;
+    const key = `${dp.actor.email_address}|${dp.date}`;
     const acc = accMap.get(key) ?? 0;
     const tot = totMap.get(key) ?? 0;
     dp.tool_acceptance_rate = tot > 0 ? acc / tot : 0;

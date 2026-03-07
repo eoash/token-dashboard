@@ -34,9 +34,9 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
     totalTokens += tokens;
     totalCostCents += d.estimated_cost_usd_cents;
     totalSessions += d.session_count;
-    totalLines += d.lines_of_code ?? 0;
-    totalCommits += d.commits ?? 0;
-    totalPRs += d.pull_requests ?? 0;
+    totalLines += d.lines_of_code;
+    totalCommits += d.commits;
+    totalPRs += d.pull_requests;
     if (d.tool_acceptance_rate != null) {
       acceptanceRateSum += d.tool_acceptance_rate * d.session_count;
       acceptanceRateCount += d.session_count;
@@ -60,9 +60,9 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
       const existing = memberMap.get(name) ?? { tokens: 0, cost: 0, lines: 0, commits: 0, prs: 0, acceptanceSum: 0, acceptanceCount: 0 };
       existing.tokens += tokens;
       existing.cost += d.estimated_cost_usd_cents / 100;
-      existing.lines += d.lines_of_code ?? 0;
-      existing.commits += d.commits ?? 0;
-      existing.prs += d.pull_requests ?? 0;
+      existing.lines += d.lines_of_code;
+      existing.commits += d.commits;
+      existing.prs += d.pull_requests;
       if (d.tool_acceptance_rate != null) {
         existing.acceptanceSum += d.tool_acceptance_rate * d.session_count;
         existing.acceptanceCount += d.session_count;

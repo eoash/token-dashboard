@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { EMAIL_TO_NAME } from "@/lib/constants";
 import { formatTokens } from "@/lib/utils";
 import { getMockGeminiData, getMockGptData, type AiMemberRow } from "@/lib/mock-ai-tools";
-import type { ClaudeCodeDataPoint } from "@/lib/types";
+import { aggregateMembers, type ClaudeMemberRow } from "@/lib/aggregators/leaderboard";
 
 type AiTool = "claude" | "gemini" | "gpt";
 type Period = "today" | "7d" | "30d" | "all";
@@ -33,53 +32,6 @@ function Avatar({ initial, color }: { initial: string; color: string }) {
       {initial}
     </div>
   );
-}
-
-interface ClaudeMemberRow {
-  name: string;
-  initial: string;
-  input: number;
-  output: number;
-  cacheRead: number;
-  total: number;
-  cost: number;
-  acceptanceRate: number;
-  avgDailySessions: number;
-  costTrend: number;
-}
-
-function aggregateMembers(data: ClaudeCodeDataPoint[]): ClaudeMemberRow[] {
-  const map = new Map<string, {
-    input: number; output: number; cacheRead: number; total: number; cost: number;
-    acceptSum: number; acceptCount: number; sessions: number; days: Set<string>;
-  }>();
-
-  for (const d of data) {
-    const email = d.actor?.email_address;
-    if (!email) continue;
-    const name = EMAIL_TO_NAME[email] ?? email.split("@")[0];
-    const e = map.get(name) ?? { input: 0, output: 0, cacheRead: 0, total: 0, cost: 0, acceptSum: 0, acceptCount: 0, sessions: 0, days: new Set() };
-    e.input += d.input_tokens ?? 0;
-    e.output += d.output_tokens ?? 0;
-    e.cacheRead += d.cache_read_tokens ?? 0;
-    e.cost += (d.estimated_cost_usd_cents ?? 0) / 100;
-    e.sessions += d.session_count ?? 0;
-    if (d.tool_acceptance_rate != null) { e.acceptSum += d.tool_acceptance_rate * (d.session_count ?? 1); e.acceptCount += d.session_count ?? 1; }
-    if (d.date) e.days.add(d.date);
-    e.total = e.input + e.output + e.cacheRead;
-    map.set(name, e);
-  }
-
-  return Array.from(map.entries())
-    .map(([name, v]) => ({
-      name,
-      initial: name[0].toUpperCase(),
-      input: v.input, output: v.output, cacheRead: v.cacheRead, total: v.total, cost: v.cost,
-      acceptanceRate: v.acceptCount > 0 ? v.acceptSum / v.acceptCount : 0,
-      avgDailySessions: v.days.size > 0 ? Math.round(v.sessions / v.days.size) : 0,
-      costTrend: parseFloat(((Math.random() - 0.4) * 30).toFixed(1)), // mock trend
-    }))
-    .sort((a, b) => b.total - a.total);
 }
 
 // ── Claude Code 테이블 ──────────────────────────────
