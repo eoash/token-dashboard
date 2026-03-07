@@ -40,7 +40,12 @@ if [ -z "$GIT_EMAIL" ] || ! echo "$GIT_EMAIL" | grep -q "@eoeoeo.net"; then
     echo "[!] 이메일을 입력하지 않았습니다."
     exit 1
   fi
-  GIT_EMAIL="${EMAIL_ID}@eoeoeo.net"
+  # 풀 이메일 입력 시 중복 도메인 방지
+  if echo "$EMAIL_ID" | grep -q "@"; then
+    GIT_EMAIL="$EMAIL_ID"
+  else
+    GIT_EMAIL="${EMAIL_ID}@eoeoeo.net"
+  fi
   git config --global user.email "$GIT_EMAIL"
   echo "-> git email 설정 완료: $GIT_EMAIL"
 fi
