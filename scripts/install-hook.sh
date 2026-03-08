@@ -69,11 +69,11 @@ echo "      -> $HOOK_FILE"
 # 3. settings.json에 Stop hook 등록 (자동 업데이트 명령)
 echo "[2/7] Claude Code Stop hook 등록 중..."
 
-python3 -c "
+HOOK_CMD_ENV="$HOOK_CMD" python3 -c "
 import json, os
 
 path = os.path.expanduser('~/.claude/settings.json')
-hook_cmd = '''$HOOK_CMD'''
+hook_cmd = os.environ['HOOK_CMD_ENV']
 
 # settings.json 읽기 (없으면 빈 객체)
 data = {}
