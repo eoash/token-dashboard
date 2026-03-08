@@ -6,16 +6,16 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "<synthetic>",
-      "date": "2026-02-16",
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-17",
       "session_count": 3,
       "lines_of_code": 0,
-      "commits": 2,
+      "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 9624146,
+      "output_tokens": 67418,
+      "cache_read_tokens": 8864768,
       "cache_creation_tokens": 0
     },
     {
@@ -24,52 +24,16 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-opus-4-6",
-      "date": "2026-02-16",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 454,
-      "output_tokens": 2661,
-      "cache_read_tokens": 22489655,
-      "cache_creation_tokens": 1758187
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-16",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 1167,
-      "output_tokens": 451,
-      "cache_read_tokens": 8413104,
-      "cache_creation_tokens": 335119
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-02-17",
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-18",
       "session_count": 5,
       "lines_of_code": 0,
-      "commits": 1,
+      "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 110436278,
+      "output_tokens": 461588,
+      "cache_read_tokens": 106242560,
       "cache_creation_tokens": 0
     },
     {
@@ -78,53 +42,17 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-opus-4-6",
-      "date": "2026-02-17",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 94421,
-      "output_tokens": 4519,
-      "cache_read_tokens": 36435557,
-      "cache_creation_tokens": 1709551
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-17",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 210,
-      "output_tokens": 60,
-      "cache_read_tokens": 782408,
-      "cache_creation_tokens": 198632
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-18",
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-19",
       "session_count": 1,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 15527,
-      "output_tokens": 963,
-      "cache_read_tokens": 24584601,
-      "cache_creation_tokens": 2030998
+      "input_tokens": 55251105,
+      "output_tokens": 196081,
+      "cache_read_tokens": 53398912,
+      "cache_creation_tokens": 0
     },
     {
       "actor": {
@@ -132,17 +60,17 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-19",
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-20",
       "session_count": 2,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 1322,
-      "output_tokens": 669,
-      "cache_read_tokens": 13869958,
-      "cache_creation_tokens": 878904
+      "input_tokens": 69024511,
+      "output_tokens": 184875,
+      "cache_read_tokens": 66160256,
+      "cache_creation_tokens": 0
     },
     {
       "actor": {
@@ -150,160 +78,16 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-20",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 1998,
-      "output_tokens": 807,
-      "cache_read_tokens": 23804839,
-      "cache_creation_tokens": 1427549
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
+      "model": "gpt-5.3-codex",
       "date": "2026-02-21",
-      "session_count": 1,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 0
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-02-21",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 2478,
-      "output_tokens": 1025,
-      "cache_read_tokens": 30548630,
-      "cache_creation_tokens": 942736
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-02-22",
-      "session_count": 1,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 0
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-02-22",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 226,
-      "output_tokens": 88,
-      "cache_read_tokens": 1341885,
-      "cache_creation_tokens": 201410
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-02-25",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 0
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-02-25",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 466,
-      "output_tokens": 286,
-      "cache_read_tokens": 5949332,
-      "cache_creation_tokens": 591842
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-02-28",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 24078,
-      "output_tokens": 385,
-      "cache_read_tokens": 11169725,
-      "cache_creation_tokens": 762975
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-03-02",
       "session_count": 5,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 164574759,
+      "output_tokens": 554309,
+      "cache_read_tokens": 154308096,
       "cache_creation_tokens": 0
     },
     {
@@ -312,17 +96,17 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-03-02",
-      "session_count": 0,
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-25",
+      "session_count": 3,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 928,
-      "output_tokens": 515,
-      "cache_read_tokens": 11365810,
-      "cache_creation_tokens": 729223
+      "input_tokens": 25629755,
+      "output_tokens": 121931,
+      "cache_read_tokens": 24186112,
+      "cache_creation_tokens": 0
     },
     {
       "actor": {
@@ -330,70 +114,16 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-opus-4-6",
-      "date": "2026-03-02",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 238,
-      "output_tokens": 11450,
-      "cache_read_tokens": 11174869,
-      "cache_creation_tokens": 505770
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-sonnet-4-5-20250929",
-      "date": "2026-03-02",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 186,
-      "output_tokens": 50,
-      "cache_read_tokens": 1759157,
-      "cache_creation_tokens": 570802
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-opus-4-6",
-      "date": "2026-03-03",
+      "model": "gpt-5.3-codex",
+      "date": "2026-02-28",
       "session_count": 1,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 55,
-      "output_tokens": 382,
-      "cache_read_tokens": 2829297,
-      "cache_creation_tokens": 740918
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-03-04",
-      "session_count": 8,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 174609706,
+      "output_tokens": 608629,
+      "cache_read_tokens": 165608704,
       "cache_creation_tokens": 0
     },
     {
@@ -402,17 +132,17 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-opus-4-6",
-      "date": "2026-03-04",
-      "session_count": 0,
+      "model": "gpt-5.3-codex",
+      "date": "2026-03-02",
+      "session_count": 1,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 44769,
-      "output_tokens": 523826,
-      "cache_read_tokens": 207752619,
-      "cache_creation_tokens": 5948605
+      "input_tokens": 69429774,
+      "output_tokens": 233799,
+      "cache_read_tokens": 65591680,
+      "cache_creation_tokens": 0
     },
     {
       "actor": {
@@ -420,17 +150,53 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-haiku-4-5-20251001",
+      "model": "gpt-5.3-codex",
+      "date": "2026-03-03",
+      "session_count": 4,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 776583,
+      "output_tokens": 15211,
+      "cache_read_tokens": 660992,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "gpt-5.3-codex",
+      "date": "2026-03-04",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 117324,
+      "output_tokens": 752,
+      "cache_read_tokens": 98176,
+      "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "gpt-5.3-codex",
       "date": "2026-03-05",
       "session_count": 1,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 40,
-      "output_tokens": 4860,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 205812
+      "input_tokens": 6590998,
+      "output_tokens": 28373,
+      "cache_read_tokens": 6339584,
+      "cache_creation_tokens": 0
     },
     {
       "actor": {
@@ -438,16 +204,16 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "<synthetic>",
-      "date": "2026-03-06",
+      "model": "gpt-5.3-codex",
+      "date": "2026-03-07",
       "session_count": 1,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 1037833,
+      "output_tokens": 6635,
+      "cache_read_tokens": 884480,
       "cache_creation_tokens": 0
     },
     {
@@ -456,89 +222,17 @@
         "id": "chiri@eoeoeo.net",
         "email_address": "chiri@eoeoeo.net"
       },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-03-06",
-      "session_count": 0,
+      "model": "gpt-5.3-codex",
+      "date": "2026-03-08",
+      "session_count": 4,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 90,
-      "output_tokens": 6993,
-      "cache_read_tokens": 201342,
-      "cache_creation_tokens": 326438
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "<synthetic>",
-      "date": "2026-03-07",
-      "session_count": 2,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "cache_read_tokens": 0,
+      "input_tokens": 4761111,
+      "output_tokens": 18416,
+      "cache_read_tokens": 4348416,
       "cache_creation_tokens": 0
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-03-07",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 548,
-      "output_tokens": 98472,
-      "cache_read_tokens": 4394121,
-      "cache_creation_tokens": 636767
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-haiku-4-5-20251001",
-      "date": "2026-03-08",
-      "session_count": 3,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 20,
-      "output_tokens": 2066,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 205036
-    },
-    {
-      "actor": {
-        "type": "user",
-        "id": "chiri@eoeoeo.net",
-        "email_address": "chiri@eoeoeo.net"
-      },
-      "model": "claude-opus-4-6",
-      "date": "2026-03-08",
-      "session_count": 0,
-      "lines_of_code": 0,
-      "commits": 0,
-      "pull_requests": 0,
-      "tool_acceptance_rate": 0,
-      "input_tokens": 93,
-      "output_tokens": 324,
-      "cache_read_tokens": 1552075,
-      "cache_creation_tokens": 221591
     }
   ]
 }
