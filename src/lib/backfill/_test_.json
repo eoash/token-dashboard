@@ -1,0 +1,18 @@
+{
+  "data": [
+    {
+      "actor": {
+        "type": "user",
+        "id": "_test_@eoeoeo.net",
+        "email_address": "_test_@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-01-01",
+      "session_count": 1,
+      "input_tokens": 100,
+      "output_tokens": 50,
+      "cache_read_tokens": 0,
+      "cache_creation_tokens": 0
+    }
+  ]
+}
