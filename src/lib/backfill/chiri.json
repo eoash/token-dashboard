@@ -566,15 +566,15 @@
       },
       "model": "claude-haiku-4-5-20251001",
       "date": "2026-03-08",
-      "session_count": 3,
+      "session_count": 5,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 20,
-      "output_tokens": 2066,
-      "cache_read_tokens": 0,
-      "cache_creation_tokens": 205036
+      "input_tokens": 11690,
+      "output_tokens": 370036,
+      "cache_read_tokens": 79624286,
+      "cache_creation_tokens": 2445155
     },
     {
       "actor": {
@@ -589,10 +589,10 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 93,
-      "output_tokens": 324,
-      "cache_read_tokens": 1552075,
-      "cache_creation_tokens": 221591
+      "input_tokens": 172,
+      "output_tokens": 1973,
+      "cache_read_tokens": 5306781,
+      "cache_creation_tokens": 617791
     },
     {
       "actor": {
