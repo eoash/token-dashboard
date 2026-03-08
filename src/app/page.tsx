@@ -57,40 +57,23 @@ export default function OverviewPage() {
               title="Avg Daily Sessions"
               value={String(overview.avgDailySessions)}
               subtitle="sessions per day"
-              unavailable
-              tooltip="하루 평균 Claude 세션 수. 현재 OTel 메트릭에서 세션 카운트를 지원하지 않아 추적 불가 상태입니다."
+              tooltip="하루 평균 Claude 세션 수입니다."
             />
           </div>
 
           {/* KPI Cards — Row 2 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <KpiCard
-              title="Accepted Lines"
-              value={overview.totalLines.toLocaleString()}
-              subtitle="lines of code accepted"
-              unavailable
-              tooltip="Claude가 제안한 코드 중 팀원이 실제로 수락한 라인 수. 현재 미추적 상태입니다."
-            />
-            <KpiCard
-              title="Acceptance Rate"
-              value={`${(overview.avgAcceptanceRate * 100).toFixed(1)}%`}
-              subtitle="tool suggestion accepted"
-              unavailable
-              tooltip="Claude의 도구 호출(편집·생성 등) 중 팀원이 승인한 비율. 현재 미추적 상태입니다."
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <KpiCard
               title="Total Commits"
               value={overview.totalCommits.toLocaleString()}
               subtitle="commits in period"
-              unavailable
-              tooltip="Claude 세션에서 발생한 Git 커밋 수. 현재 미추적 상태입니다."
+              tooltip="Claude 세션에서 발생한 Git 커밋 수입니다."
             />
             <KpiCard
               title="Pull Requests"
               value={overview.totalPRs.toLocaleString()}
-              subtitle="PRs merged"
-              unavailable
-              tooltip="Claude 지원으로 머지된 PR 수. 현재 미추적 상태입니다."
+              subtitle="PRs created"
+              tooltip="Claude 세션에서 생성된 PR 수입니다."
             />
           </div>
 

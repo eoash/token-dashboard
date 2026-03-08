@@ -73,13 +73,21 @@ function parseVal(v: string): number {
   return isNaN(n) ? 0 : Math.round(n);
 }
 
+/** 이메일 정규화: 이중 도메인(a@b@c) 방지 + lowercase */
+function sanitizeEmail(email: string): string {
+  const parts = email.toLowerCase().split("@");
+  if (parts.length >= 2) return `${parts[0]}@${parts[1]}`;
+  return email.toLowerCase();
+}
+
 function emptyDataPoint(
   email: string,
   model: string,
   date: string
 ): ClaudeCodeDataPoint {
+  const clean = sanitizeEmail(email);
   return {
-    actor: { type: "user", id: email, email_address: email },
+    actor: { type: "user", id: clean, email_address: clean },
     model,
     date,
     session_count: 0,

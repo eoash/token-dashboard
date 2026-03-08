@@ -27,7 +27,11 @@ export async function POST(req: NextRequest) {
   }
 
   // 이메일에서 username 추출 (파일명용)
-  const username = body.email.split("@")[0].replace(/[^a-zA-Z0-9._-]/g, "_");
+  const raw = body.email.split("@")[0].replace(/[^a-zA-Z0-9._-]/g, "_");
+  const username = raw.replace(/\.\./g, "_");
+  if (!username || username.length > 64) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
   const filePath = `src/lib/backfill/${username}.json`;
   const content = JSON.stringify({ data: body.data }, null, 2);
   const b64Content = Buffer.from(content).toString("base64");
@@ -69,8 +73,9 @@ export async function POST(req: NextRequest) {
 
   if (!res.ok) {
     const err = await res.text();
+    console.error(`GitHub API error ${res.status}:`, err);
     return NextResponse.json(
-      { error: `GitHub API error: ${res.status}`, detail: err },
+      { error: `GitHub API error: ${res.status}` },
       { status: 502 }
     );
   }

@@ -11,7 +11,14 @@ export function getDataSource(): DataSource {
   return "mock";
 }
 
-/** backfill/ 디렉토리의 모든 JSON을 읽어서 병합 */
+/** 이메일 정규화: 이중 도메인(a@b@c) 방지 + lowercase */
+function sanitizeEmail(email: string): string {
+  const parts = email.toLowerCase().split("@");
+  if (parts.length >= 2) return `${parts[0]}@${parts[1]}`;
+  return email.toLowerCase();
+}
+
+/** backfill/ 디렉토리의 모든 JSON을 읽어서 병합 + sanitize */
 function loadAllBackfill(): ClaudeCodeDataPoint[] {
   const dir = path.join(process.cwd(), "src/lib/backfill");
   if (!fs.existsSync(dir)) return [];
@@ -24,10 +31,19 @@ function loadAllBackfill(): ClaudeCodeDataPoint[] {
       const raw = fs.readFileSync(path.join(dir, file), "utf-8");
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed.data)) {
-        all.push(...parsed.data);
+        for (const d of parsed.data) {
+          // sanitize emails
+          if (d.actor?.email_address) {
+            d.actor.email_address = sanitizeEmail(d.actor.email_address);
+          }
+          if (d.actor?.id) {
+            d.actor.id = sanitizeEmail(d.actor.id);
+          }
+          all.push(d);
+        }
       }
-    } catch {
-      // skip invalid files
+    } catch (e) {
+      console.warn(`backfill: failed to parse ${file}:`, e);
     }
   }
 
@@ -36,14 +52,42 @@ function loadAllBackfill(): ClaudeCodeDataPoint[] {
 
 const backfillData = loadAllBackfill();
 
-/** backfill의 마지막 날짜 — 이 날짜 이전은 JSON에서, 이후는 Prometheus에서 */
-const BACKFILL_END = process.env.BACKFILL_END || (() => {
+/** ISO date 문자열에 N일 추가 */
+function addDays(dateStr: string, days: number): string {
+  const d = new Date(dateStr + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+/** 유저별 backfill 마지막 날짜 계산 */
+function buildPerUserCutoff(): Map<string, string> {
+  const cutoffs = new Map<string, string>();
+  for (const d of backfillData) {
+    const email = d.actor?.email_address ?? d.actor?.id ?? "";
+    const existing = cutoffs.get(email) ?? "";
+    if (d.date > existing) cutoffs.set(email, d.date);
+  }
+  return cutoffs;
+}
+
+const perUserCutoff = buildPerUserCutoff();
+
+/** 글로벌 backfill end (가장 최근 날짜) — 호환용 */
+const BACKFILL_END = (() => {
   const dates = backfillData.map((d) => d.date);
   return dates.length > 0 ? dates.sort().pop()! : "";
 })();
 
 export function getBackfillEnd(): string {
   return BACKFILL_END;
+}
+
+/** <synthetic> 태그 제거 전처리 (이메일 + 모델) */
+function filterSynthetic(data: ClaudeCodeDataPoint[]): ClaudeCodeDataPoint[] {
+  return data.filter((d) => {
+    const email = d.actor?.email_address ?? d.actor?.id ?? "";
+    return !email.includes("<synthetic>") && d.model !== "<synthetic>";
+  });
 }
 
 export async function fetchAnalytics(params: {
@@ -57,22 +101,31 @@ export async function fetchAnalytics(params: {
     return getMockAnalytics();
   }
 
-  // Prometheus + backfill JSON 병합
-  // BACKFILL_END 이전 → backfill JSON만 사용
-  // BACKFILL_END 이후 → Prometheus만 사용
-  // (OTel deltatocumulative가 과거 데이터를 오늘에 합산하므로 구간을 분리)
+  // Prometheus + backfill JSON 병합 (유저별 cutoff)
   const promData = await fetchFromPrometheus(params);
 
-  const promPoints = BACKFILL_END
-    ? promData.data.filter((d) => d.date > BACKFILL_END)
-    : promData.data;
+  // Prometheus 데이터: 해당 유저의 cutoff + 1일 이후만 사용
+  // (OTel delta→cumulative 변환으로 카운터 첫째 날 increase([1d]) 외삽이 부정확)
+  const promPoints = promData.data.filter((d) => {
+    const email = d.actor?.email_address ?? d.actor?.id ?? "";
+    const cutoff = perUserCutoff.get(email) ?? "";
+    if (!cutoff) return true;
+    const graceCutoff = addDays(cutoff, 1);
+    return d.date > graceCutoff;
+  });
 
-  const backfillPoints = backfillData.filter(
-    (d) =>
+  // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
+  const backfillPoints = backfillData.filter((d) => {
+    const email = d.actor?.email_address ?? d.actor?.id ?? "";
+    const cutoff = perUserCutoff.get(email) ?? "";
+    return (
       d.date >= params.start_date &&
       d.date <= params.end_date &&
-      d.date <= BACKFILL_END
-  );
+      d.date <= cutoff
+    );
+  });
 
-  return { data: [...backfillPoints, ...promPoints] };
+  const merged = filterSynthetic([...backfillPoints, ...promPoints]);
+
+  return { data: merged };
 }
