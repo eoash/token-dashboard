@@ -17,10 +17,8 @@ interface BackfillEntry {
   date: string;
   input_tokens: number;
   output_tokens: number;
-  cached_input_tokens?: number;
   cache_read_tokens?: number;
-  reasoning_output_tokens?: number;
-  sessions?: number;
+  cache_creation_tokens?: number;
   model?: string;
 }
 
@@ -28,47 +26,25 @@ export async function GET() {
   try {
     const memberMap = new Map<string, { input: number; output: number; cached: number; reasoning: number }>();
 
-    // 1) backfill/codex/*.json (구 형식: cached_input_tokens 필드)
-    const codexDir = path.join(process.cwd(), "src/lib/backfill/codex");
-    if (fs.existsSync(codexDir)) {
-      for (const file of fs.readdirSync(codexDir).filter((f) => f.endsWith(".json"))) {
-        const username = file.replace(".json", "");
-        const email = `${username}@eoeoeo.net`;
-        const raw = JSON.parse(fs.readFileSync(path.join(codexDir, file), "utf-8"));
-        const entries: BackfillEntry[] = raw.data ?? [];
-
-        const m = memberMap.get(email) ?? { input: 0, output: 0, cached: 0, reasoning: 0 };
-        for (const e of entries) {
-          m.input += e.input_tokens ?? 0;
-          m.output += e.output_tokens ?? 0;
-          m.cached += e.cached_input_tokens ?? 0;
-          m.reasoning += e.reasoning_output_tokens ?? 0;
-        }
-        memberMap.set(email, m);
-      }
-    }
-
-    // 2) backfill/*.json에서 Codex 모델(gpt-*) 레코드 추출
+    // backfill/*.json에서 Codex 모델(gpt-*) 레코드 추출
     const backfillDir = path.join(process.cwd(), "src/lib/backfill");
-    if (fs.existsSync(backfillDir)) {
-      for (const file of fs.readdirSync(backfillDir).filter((f) => f.endsWith(".json"))) {
-        const username = file.replace(".json", "");
-        const email = `${username}@eoeoeo.net`;
-        const raw = JSON.parse(fs.readFileSync(path.join(backfillDir, file), "utf-8"));
-        const entries: BackfillEntry[] = (raw.data ?? []).filter(
-          (e: BackfillEntry) => e.model && e.model.startsWith("gpt-")
-        );
-        if (entries.length === 0) continue;
+    for (const file of fs.readdirSync(backfillDir).filter((f) => f.endsWith(".json"))) {
+      const username = file.replace(".json", "");
+      const email = `${username}@eoeoeo.net`;
+      const raw = JSON.parse(fs.readFileSync(path.join(backfillDir, file), "utf-8"));
+      const entries: BackfillEntry[] = (raw.data ?? []).filter(
+        (e: BackfillEntry) => e.model && e.model.startsWith("gpt-")
+      );
+      if (entries.length === 0) continue;
 
-        const m = memberMap.get(email) ?? { input: 0, output: 0, cached: 0, reasoning: 0 };
-        for (const e of entries) {
-          m.input += e.input_tokens ?? 0;
-          m.output += e.output_tokens ?? 0;
-          m.cached += e.cache_read_tokens ?? 0;
-          m.reasoning += e.reasoning_output_tokens ?? 0;
-        }
-        memberMap.set(email, m);
+      const m = memberMap.get(email) ?? { input: 0, output: 0, cached: 0, reasoning: 0 };
+      for (const e of entries) {
+        m.input += e.input_tokens ?? 0;
+        m.output += e.output_tokens ?? 0;
+        m.cached += e.cache_read_tokens ?? 0;
+        m.reasoning += e.cache_creation_tokens ?? 0;
       }
+      memberMap.set(email, m);
     }
 
     const data: CodexMemberRow[] = [];
