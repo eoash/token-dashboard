@@ -110,14 +110,14 @@ export async function fetchAnalytics(params: {
   // Prometheus + backfill JSON 병합 (유저별 cutoff)
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus 데이터: 해당 유저의 cutoff + 1일부터 사용
-  // (cutoff 당일은 backfill과 중복 + increase([1d]) 외삽이 부정확할 수 있음)
+  // Prometheus 데이터: 해당 유저의 cutoff + 2일 이후만 사용
+  // (카운터 첫 등장일의 increase([1d])는 외삽으로 부정확 → cutoff+1일도 건너뜀)
   const promPoints = promData.data.filter((d) => {
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const cutoff = perUserCutoff.get(email) ?? "";
     if (!cutoff) return true;
     const graceCutoff = addDays(cutoff, 1);
-    return d.date >= graceCutoff;
+    return d.date > graceCutoff;
   });
 
   // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
