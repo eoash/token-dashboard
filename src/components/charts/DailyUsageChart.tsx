@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
+import { useT } from "@/lib/contexts/LanguageContext";
 
 interface DailyUsageData {
   date: string;
@@ -50,9 +51,11 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
 }
 
 export default function DailyUsageChart({ data }: DailyUsageChartProps) {
+  const { t } = useT();
+
   return (
     <div className="rounded-xl bg-[#111111] p-6">
-      <h3 className="mb-4 text-lg font-semibold text-white">Daily Token Usage</h3>
+      <h3 className="mb-4 text-lg font-semibold text-white">{t("chart.dailyUsage")}</h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
@@ -71,42 +74,12 @@ export default function DailyUsageChart({ data }: DailyUsageChartProps) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#222" />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDate}
-              stroke="#666"
-              tick={{ fill: "#999", fontSize: 12 }}
-            />
-            <YAxis
-              tickFormatter={formatTokenAxis}
-              stroke="#666"
-              tick={{ fill: "#999", fontSize: 12 }}
-            />
+            <XAxis dataKey="date" tickFormatter={formatDate} stroke="#666" tick={{ fill: "#999", fontSize: 12 }} />
+            <YAxis tickFormatter={formatTokenAxis} stroke="#666" tick={{ fill: "#999", fontSize: 12 }} />
             <Tooltip content={CustomTooltip} />
-            <Area
-              type="monotone"
-              dataKey="cache_read_tokens"
-              stackId="1"
-              stroke="#8B5CF6"
-              fill="url(#cacheGrad)"
-              name="Cache Read"
-            />
-            <Area
-              type="monotone"
-              dataKey="output_tokens"
-              stackId="1"
-              stroke="#10B981"
-              fill="url(#outputGrad)"
-              name="Output"
-            />
-            <Area
-              type="monotone"
-              dataKey="input_tokens"
-              stackId="1"
-              stroke="#3B82F6"
-              fill="url(#inputGrad)"
-              name="Input"
-            />
+            <Area type="monotone" dataKey="cache_read_tokens" stackId="1" stroke="#8B5CF6" fill="url(#cacheGrad)" name={t("chart.cacheRead")} />
+            <Area type="monotone" dataKey="output_tokens" stackId="1" stroke="#10B981" fill="url(#outputGrad)" name={t("chart.output")} />
+            <Area type="monotone" dataKey="input_tokens" stackId="1" stroke="#3B82F6" fill="url(#inputGrad)" name={t("chart.input")} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

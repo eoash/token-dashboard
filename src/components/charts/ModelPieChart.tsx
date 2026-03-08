@@ -9,6 +9,7 @@ import {
   Legend,
 } from "recharts";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
+import { useT } from "@/lib/contexts/LanguageContext";
 
 interface ModelData {
   name: string;
@@ -33,6 +34,7 @@ function CustomTooltip({ active, payload }: TooltipContentProps<number, string>)
 }
 
 export default function ModelPieChart({ data }: ModelPieChartProps) {
+  const { t } = useT();
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   function formatTotal(val: number): string {
@@ -44,19 +46,11 @@ export default function ModelPieChart({ data }: ModelPieChartProps) {
 
   return (
     <div className="rounded-xl bg-[#111111] p-6">
-      <h3 className="mb-4 text-lg font-semibold text-white">Model Distribution</h3>
+      <h3 className="mb-4 text-lg font-semibold text-white">{t("chart.modelDist")}</h3>
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="45%"
-              innerRadius={60}
-              outerRadius={90}
-              dataKey="value"
-              stroke="none"
-            >
+            <Pie data={data} cx="50%" cy="45%" innerRadius={60} outerRadius={90} dataKey="value" stroke="none">
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
@@ -65,28 +59,13 @@ export default function ModelPieChart({ data }: ModelPieChartProps) {
             <Legend
               verticalAlign="bottom"
               iconType="circle"
-              formatter={(value: string) => (
-                <span className="text-sm text-neutral-300">{value}</span>
-              )}
+              formatter={(value: string) => <span className="text-sm text-neutral-300">{value}</span>}
             />
-            {/* Center text */}
-            <text
-              x="50%"
-              y="42%"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="fill-white text-xl font-bold"
-            >
+            <text x="50%" y="42%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-xl font-bold">
               {formatTotal(total)}
             </text>
-            <text
-              x="50%"
-              y="50%"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="fill-neutral-500 text-xs"
-            >
-              total tokens
+            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-neutral-500 text-xs">
+              {t("chart.totalTokens")}
             </text>
           </PieChart>
         </ResponsiveContainer>

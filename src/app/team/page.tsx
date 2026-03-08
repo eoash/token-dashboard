@@ -9,18 +9,18 @@ import { UNIQUE_MEMBERS } from "@/lib/constants";
 import { formatTokens, formatPercent } from "@/lib/utils";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { aggregateMember } from "@/lib/aggregators/team";
+import { useT } from "@/lib/contexts/LanguageContext";
 
 export default function TeamPage() {
+  const { t } = useT();
   const [selectedName, setSelectedName] = useState(UNIQUE_MEMBERS[0]?.name ?? "");
   const { data: rawData, loading, error } = useAnalytics();
-
   const memberData = aggregateMember(rawData, selectedName);
-  const memberName = selectedName;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-        <h1 className="text-2xl font-bold">Team</h1>
+        <h1 className="text-2xl font-bold">{t("nav.team")}</h1>
         <div className="flex items-center gap-3 flex-wrap">
           <DateRangePicker />
           <select
@@ -29,48 +29,29 @@ export default function TeamPage() {
             className="bg-[#111111] border border-[#333] rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-[#E8FF47]"
           >
             {UNIQUE_MEMBERS.map((m) => (
-              <option key={m.name} value={m.name}>
-                {m.name}
-              </option>
+              <option key={m.name} value={m.name}>{m.name}</option>
             ))}
           </select>
         </div>
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-400 text-sm">
-          {error}
-        </div>
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-red-400 text-sm">{error}</div>
       )}
 
       {loading ? (
-        <div className="text-gray-400 text-center py-12">Loading...</div>
+        <div className="text-gray-400 text-center py-12">{t("common.loading")}</div>
       ) : (
         <>
-          {/* KPI Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <KpiCard title="Total Tokens" value={formatTokens(memberData.totalTokens)} tooltip="이 팀원이 사용한 전체 토큰(입력+출력+캐시) 합계입니다." />
-            <KpiCard title="Cache Hit Rate" value={formatPercent(memberData.cacheHitRate)} tooltip="이 팀원의 캐시 재활용 비율. 높을수록 동일 컨텍스트 재전송이 줄어 효율적입니다." />
-            <KpiCard title="Sessions" value={String(memberData.sessions)} tooltip="이 팀원의 Claude Code 세션 수입니다." />
+            <KpiCard title={t("kpi.totalTokens")} value={formatTokens(memberData.totalTokens)} tooltip={t("team.tokens.tip")} />
+            <KpiCard title={t("kpi.cacheHitRate")} value={formatPercent(memberData.cacheHitRate)} tooltip={t("team.cacheHit.tip")} />
+            <KpiCard title={t("team.sessions")} value={String(memberData.sessions)} tooltip={t("team.sessions.tip")} />
           </div>
-
-          {/* Productivity */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <KpiCard
-              title="Commits"
-              value={String(memberData.commits)}
-              subtitle={`by ${memberName}`}
-              tooltip="이 팀원의 Claude 세션에서 발생한 Git 커밋 수입니다."
-            />
-            <KpiCard
-              title="Pull Requests"
-              value={String(memberData.pullRequests)}
-              subtitle={`by ${memberName}`}
-              tooltip="이 팀원이 Claude 세션에서 생성한 PR 수입니다."
-            />
+            <KpiCard title={t("kpi.totalCommits")} value={String(memberData.commits)} subtitle={`by ${selectedName}`} tooltip={t("team.commits.tip")} />
+            <KpiCard title={t("kpi.pullRequests")} value={String(memberData.pullRequests)} subtitle={`by ${selectedName}`} tooltip={t("team.prs.tip")} />
           </div>
-
-          {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <DailyUsageChart data={memberData.daily} />
