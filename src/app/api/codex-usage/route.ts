@@ -17,48 +17,69 @@ interface BackfillEntry {
   date: string;
   input_tokens: number;
   output_tokens: number;
-  cached_input_tokens: number;
-  reasoning_output_tokens: number;
+  cached_input_tokens?: number;
+  cache_read_tokens?: number;
+  reasoning_output_tokens?: number;
   sessions?: number;
   model?: string;
 }
 
 export async function GET() {
   try {
-    const codexDir = path.join(process.cwd(), "src/lib/backfill/codex");
+    const memberMap = new Map<string, { input: number; output: number; cached: number; reasoning: number }>();
 
-    if (!fs.existsSync(codexDir)) {
-      return NextResponse.json({ data: [] });
+    // 1) backfill/codex/*.json (구 형식: cached_input_tokens 필드)
+    const codexDir = path.join(process.cwd(), "src/lib/backfill/codex");
+    if (fs.existsSync(codexDir)) {
+      for (const file of fs.readdirSync(codexDir).filter((f) => f.endsWith(".json"))) {
+        const username = file.replace(".json", "");
+        const email = `${username}@eoeoeo.net`;
+        const raw = JSON.parse(fs.readFileSync(path.join(codexDir, file), "utf-8"));
+        const entries: BackfillEntry[] = raw.data ?? [];
+
+        const m = memberMap.get(email) ?? { input: 0, output: 0, cached: 0, reasoning: 0 };
+        for (const e of entries) {
+          m.input += e.input_tokens ?? 0;
+          m.output += e.output_tokens ?? 0;
+          m.cached += e.cached_input_tokens ?? 0;
+          m.reasoning += e.reasoning_output_tokens ?? 0;
+        }
+        memberMap.set(email, m);
+      }
     }
 
-    const files = fs.readdirSync(codexDir).filter((f) => f.endsWith(".json"));
-    const data: CodexMemberRow[] = [];
+    // 2) backfill/*.json에서 Codex 모델(gpt-*) 레코드 추출
+    const backfillDir = path.join(process.cwd(), "src/lib/backfill");
+    if (fs.existsSync(backfillDir)) {
+      for (const file of fs.readdirSync(backfillDir).filter((f) => f.endsWith(".json"))) {
+        const username = file.replace(".json", "");
+        const email = `${username}@eoeoeo.net`;
+        const raw = JSON.parse(fs.readFileSync(path.join(backfillDir, file), "utf-8"));
+        const entries: BackfillEntry[] = (raw.data ?? []).filter(
+          (e: BackfillEntry) => e.model && e.model.startsWith("gpt-")
+        );
+        if (entries.length === 0) continue;
 
-    for (const file of files) {
-      const username = file.replace(".json", "");
-      const raw = JSON.parse(fs.readFileSync(path.join(codexDir, file), "utf-8"));
-      const entries: BackfillEntry[] = raw.data ?? [];
-
-      let input = 0, output = 0, cached = 0, reasoning = 0;
-      for (const e of entries) {
-        input += e.input_tokens ?? 0;
-        output += e.output_tokens ?? 0;
-        cached += e.cached_input_tokens ?? 0;
-        reasoning += e.reasoning_output_tokens ?? 0;
+        const m = memberMap.get(email) ?? { input: 0, output: 0, cached: 0, reasoning: 0 };
+        for (const e of entries) {
+          m.input += e.input_tokens ?? 0;
+          m.output += e.output_tokens ?? 0;
+          m.cached += e.cache_read_tokens ?? 0;
+          m.reasoning += e.reasoning_output_tokens ?? 0;
+        }
+        memberMap.set(email, m);
       }
+    }
 
-      const total = input + output + cached + reasoning;
+    const data: CodexMemberRow[] = [];
+    for (const [email, m] of memberMap) {
+      const total = m.input + m.output + m.cached + m.reasoning;
       if (total === 0) continue;
-
-      // username → email → name 매핑
-      const email = `${username}@eoeoeo.net`;
-      const name = EMAIL_TO_NAME[email] ?? username;
-
-      data.push({ name, email, input, output, cached, reasoning, total });
+      const name = EMAIL_TO_NAME[email] ?? email.split("@")[0];
+      data.push({ name, email, ...m, total });
     }
 
     data.sort((a, b) => b.total - a.total);
-
     return NextResponse.json({ data });
   } catch (error) {
     console.warn("codex-usage API error:", error);

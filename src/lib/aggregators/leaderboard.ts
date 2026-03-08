@@ -19,7 +19,10 @@ export function aggregateMembers(data: ClaudeCodeDataPoint[]): ClaudeMemberRow[]
     acceptSum: number; acceptCount: number; sessions: number; days: Set<string>;
   }>();
 
-  for (const d of data) {
+  // Claude 탭이므로 Codex 모델 제외
+  const claudeOnly = data.filter((d) => !d.model.startsWith("gpt-"));
+
+  for (const d of claudeOnly) {
     const name = resolveActorName(d.actor);
     const e = map.get(name) ?? { input: 0, output: 0, cacheRead: 0, cacheCreation: 0, total: 0, acceptSum: 0, acceptCount: 0, sessions: 0, days: new Set() };
     e.input += d.input_tokens;
