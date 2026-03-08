@@ -181,6 +181,22 @@ const translations = {
     ko: "cache_read / cache_creation. 캐시를 얼마나 재활용하는지",
     en: "cache_read / cache_creation. How much cache is reused",
   },
+  "eff.reasoningRatio": { ko: "추론 비율", en: "Reasoning Ratio" },
+  "eff.reasoningRatio.sub": { ko: "추론 / 출력", en: "reasoning / output" },
+  "eff.reasoningRatio.tip": {
+    ko: "출력 토큰 중 추론(thinking) 비중. Codex는 응답 전 내부 추론을 수행하며, 이 비율이 높으면 더 깊이 사고한 후 답변한 것입니다.",
+    en: "Proportion of reasoning (thinking) tokens in output. Higher means more deliberation before responding.",
+  },
+  "eff.codexNote": {
+    ko: "Codex는 캐시 구조가 Claude와 다릅니다. Cache Efficiency(생성 대비 재사용) 대신 Reasoning Ratio(추론 토큰 비율)를 표시합니다.",
+    en: "Codex has a different caching model than Claude. Reasoning Ratio is shown instead of Cache Efficiency.",
+  },
+  "eff.noDaily": {
+    ko: "일별 추이 데이터가 부족합니다",
+    en: "Not enough daily trend data",
+  },
+  "eff.activeUsers": { ko: "사용자 수", en: "Active Users" },
+  "eff.activeUsers.sub": { ko: "도구 사용 팀원", en: "tool users" },
 
   // ── Setup page ──
   "setup.title": { ko: "설치 가이드", en: "Setup Guide" },
