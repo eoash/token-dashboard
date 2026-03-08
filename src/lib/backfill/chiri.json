@@ -13,7 +13,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 9624146,
+      "input_tokens": 759378,
       "output_tokens": 67418,
       "cache_read_tokens": 8864768,
       "cache_creation_tokens": 0
@@ -31,7 +31,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 110436278,
+      "input_tokens": 4193718,
       "output_tokens": 461588,
       "cache_read_tokens": 106242560,
       "cache_creation_tokens": 0
@@ -49,7 +49,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 55251105,
+      "input_tokens": 1852193,
       "output_tokens": 196081,
       "cache_read_tokens": 53398912,
       "cache_creation_tokens": 0
@@ -67,7 +67,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 69024511,
+      "input_tokens": 2864255,
       "output_tokens": 184875,
       "cache_read_tokens": 66160256,
       "cache_creation_tokens": 0
@@ -85,7 +85,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 164574759,
+      "input_tokens": 10266663,
       "output_tokens": 554309,
       "cache_read_tokens": 154308096,
       "cache_creation_tokens": 0
@@ -103,7 +103,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 25629755,
+      "input_tokens": 1443643,
       "output_tokens": 121931,
       "cache_read_tokens": 24186112,
       "cache_creation_tokens": 0
@@ -121,7 +121,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 174609706,
+      "input_tokens": 9001002,
       "output_tokens": 608629,
       "cache_read_tokens": 165608704,
       "cache_creation_tokens": 0
@@ -139,7 +139,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 69429774,
+      "input_tokens": 3838094,
       "output_tokens": 233799,
       "cache_read_tokens": 65591680,
       "cache_creation_tokens": 0
@@ -157,7 +157,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 776583,
+      "input_tokens": 115591,
       "output_tokens": 15211,
       "cache_read_tokens": 660992,
       "cache_creation_tokens": 0
@@ -175,7 +175,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 117324,
+      "input_tokens": 19148,
       "output_tokens": 752,
       "cache_read_tokens": 98176,
       "cache_creation_tokens": 0
@@ -193,7 +193,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 6590998,
+      "input_tokens": 251414,
       "output_tokens": 28373,
       "cache_read_tokens": 6339584,
       "cache_creation_tokens": 0
@@ -211,7 +211,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 1037833,
+      "input_tokens": 153353,
       "output_tokens": 6635,
       "cache_read_tokens": 884480,
       "cache_creation_tokens": 0
@@ -229,7 +229,7 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 5202109,
+      "input_tokens": 493885,
       "output_tokens": 21244,
       "cache_read_tokens": 4708224,
       "cache_creation_tokens": 0

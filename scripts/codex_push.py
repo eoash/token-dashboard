@@ -76,9 +76,12 @@ def parse_sessions(sessions_dir: str) -> list[dict]:
             continue
 
         day = daily[date]
-        day["input_tokens"] += last_token.get("input_tokens", 0)
+        raw_input = last_token.get("input_tokens", 0)
+        cached = last_token.get("cached_input_tokens", 0)
+        # Codex reports input_tokens inclusive of cached — subtract to get pure input
+        day["input_tokens"] += raw_input - cached
         day["output_tokens"] += last_token.get("output_tokens", 0)
-        day["cached_input_tokens"] += last_token.get("cached_input_tokens", 0)
+        day["cached_input_tokens"] += cached
         day["reasoning_output_tokens"] += last_token.get("reasoning_output_tokens", 0)
         day["sessions"] += 1
         if model:

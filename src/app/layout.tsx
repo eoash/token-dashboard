@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EO Studio Token Dashboard",
-  description: "Token usage and utilization dashboard for EO Studio",
+  title: "AI Native — EO Studio Dashboard",
+  description: "AI Native culture dashboard for EO Studio",
 };
 
 export default function RootLayout({
