@@ -81,13 +81,13 @@ function ClaudeTable({ period }: { period: Period }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[#1e1e1e]">
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium w-10">#</th>
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium">{t("lb.developer")}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE R</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium min-w-[180px]">{t("lb.total")}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("lb.cacheHit")}</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE R</th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium min-w-[120px] md:min-w-[180px] md:px-4">{t("lb.total")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("lb.cacheHit")}</th>
             </tr>
           </thead>
           <tbody>
@@ -113,25 +113,25 @@ function ClaudeTable({ period }: { period: Period }) {
                     </tr>
                   )}
                   <tr className={`border-b border-[#1a1a1a] transition-colors ${isTop3 ? "bg-[#E8FF47]/[0.03] hover:bg-[#E8FF47]/[0.07]" : "hover:bg-[#161616]"} ${isBelowAvg ? "opacity-50" : ""}`}>
-                    <td className="px-4 py-4 text-sm">{isTop3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
-                    <td className="px-4 py-4">
-                      <div className="flex items-center gap-3">
+                    <td className="px-3 py-3 text-sm md:px-4 md:py-4">{isTop3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
+                    <td className="px-3 py-3 md:px-4 md:py-4">
+                      <div className="flex items-center gap-2 md:gap-3">
                         <Avatar name={row.name} initial={row.initial} color={isTop3 ? "#E8FF47" : AVATAR_COLORS[i % AVATAR_COLORS.length]} />
-                        <span className={`font-medium ${isTop3 ? "text-white" : "text-neutral-300"}`}>{row.name}</span>
+                        <span className={`font-medium text-sm md:text-base ${isTop3 ? "text-white" : "text-neutral-300"}`}>{row.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
-                    <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
-                    <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cacheRead)}</td>
-                    <td className="px-4 py-4 text-right">
-                      <div className="flex items-center justify-end gap-3">
-                        <div className="w-24 h-2 rounded-full bg-[#1a1a1a] overflow-hidden">
+                    <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
+                    <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
+                    <td className="hidden lg:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cacheRead)}</td>
+                    <td className="px-3 py-3 text-right md:px-4 md:py-4">
+                      <div className="flex items-center justify-end gap-2 md:gap-3">
+                        <div className="w-16 md:w-24 h-2 rounded-full bg-[#1a1a1a] overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-500" style={{ width: `${barWidth}%`, backgroundColor: isTop3 ? "#E8FF47" : isBelowAvg ? "#555" : "#888" }} />
                         </div>
-                        <span className="text-white font-mono text-sm font-medium min-w-[60px] text-right">{formatTokens(row.total)}</span>
+                        <span className="text-white font-mono text-xs md:text-sm font-medium min-w-[50px] md:min-w-[60px] text-right">{formatTokens(row.total)}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-4 text-right">
+                    <td className="hidden sm:table-cell px-4 py-4 text-right">
                       <span className="font-mono text-sm font-bold text-[#E8FF47]">{formatPercent(row.cacheHitRate)}</span>
                     </td>
                   </tr>
@@ -193,13 +193,13 @@ function CodexTable() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[#1e1e1e]">
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium w-10">#</th>
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium">{t("lb.developer")}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHED</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">REASONING</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("lb.total")}</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHED</th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">REASONING</th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4">{t("lb.total")}</th>
             </tr>
           </thead>
           <tbody>
@@ -209,19 +209,19 @@ function CodexTable() {
               <tr><td colSpan={7} className="px-4 py-12 text-center text-neutral-600">{t("lb.noDataCodex")}</td></tr>
             ) : rows.map((row, i) => (
               <tr key={row.email} className="border-b border-[#1a1a1a] hover:bg-[#161616] transition-colors">
-                <td className="px-4 py-4 text-sm">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-3">
+                <td className="px-3 py-3 text-sm md:px-4 md:py-4">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
+                <td className="px-3 py-3 md:px-4 md:py-4">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <Avatar name={row.name} initial={row.name[0]} color={AVATAR_COLORS[i % AVATAR_COLORS.length]} />
-                    <span className="font-medium text-white">{row.name}</span>
+                    <span className="font-medium text-white text-sm md:text-base">{row.name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cached)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.reasoning)}</td>
-                <td className="px-4 py-4 text-right">
-                  <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>{formatTokens(row.total)}</span>
+                <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
+                <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
+                <td className="hidden lg:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cached)}</td>
+                <td className="hidden lg:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.reasoning)}</td>
+                <td className="px-3 py-3 text-right md:px-4 md:py-4">
+                  <span className="font-mono text-xs md:text-sm font-bold" style={{ color: accentColor }}>{formatTokens(row.total)}</span>
                 </td>
               </tr>
             ))}
@@ -280,13 +280,13 @@ function GeminiTable() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[#1e1e1e]">
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium w-10">#</th>
-              <th className="px-4 py-3 text-left text-xs text-neutral-600 font-medium">{t("lb.developer")}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">THOUGHT</th>
-              <th className="px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("lb.total")}</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
+              <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE</th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">THOUGHT</th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4">{t("lb.total")}</th>
             </tr>
           </thead>
           <tbody>
@@ -296,19 +296,19 @@ function GeminiTable() {
               <tr><td colSpan={7} className="px-4 py-12 text-center text-neutral-600">{t("lb.noDataGemini")}</td></tr>
             ) : rows.map((row, i) => (
               <tr key={row.email} className="border-b border-[#1a1a1a] hover:bg-[#161616] transition-colors">
-                <td className="px-4 py-4 text-sm">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
-                <td className="px-4 py-4">
-                  <div className="flex items-center gap-3">
+                <td className="px-3 py-3 text-sm md:px-4 md:py-4">{i < 3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
+                <td className="px-3 py-3 md:px-4 md:py-4">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <Avatar name={row.name} initial={row.name[0]} color={AVATAR_COLORS[i % AVATAR_COLORS.length]} />
-                    <span className="font-medium text-white">{row.name}</span>
+                    <span className="font-medium text-white text-sm md:text-base">{row.name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cache)}</td>
-                <td className="px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.thought)}</td>
-                <td className="px-4 py-4 text-right">
-                  <span className="font-mono text-sm font-bold" style={{ color: accentColor }}>{formatTokens(row.total)}</span>
+                <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.input)}</td>
+                <td className="hidden sm:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.output)}</td>
+                <td className="hidden lg:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.cache)}</td>
+                <td className="hidden lg:table-cell px-4 py-4 text-right text-neutral-400 font-mono text-sm">{formatTokens(row.thought)}</td>
+                <td className="px-3 py-3 text-right md:px-4 md:py-4">
+                  <span className="font-mono text-xs md:text-sm font-bold" style={{ color: accentColor }}>{formatTokens(row.total)}</span>
                 </td>
               </tr>
             ))}
