@@ -233,10 +233,11 @@ else:
     data['telemetry'] = {**existing, **new_telemetry}
     with open(path, 'w') as f:
         json.dump(data, f, indent=2)
-    if existing.get('otlpEndpoint'):
-        print(f'      -> endpoint 업데이트: {existing[\"otlpEndpoint\"]} → {otel_endpoint}')
+    old_ep = existing.get('otlpEndpoint', '')
+    if old_ep:
+        print('      -> endpoint 업데이트: ' + old_ep + ' → ' + otel_endpoint)
     else:
-        print(f'      -> 텔레메트리 설정 완료: {otel_endpoint}')
+        print('      -> 텔레메트리 설정 완료: ' + otel_endpoint)
 "
 else
   echo "      Gemini CLI 미설치. 설치 후 install-hook.sh를 다시 실행하면 자동 설정됩니다."
