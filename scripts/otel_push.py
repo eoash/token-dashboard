@@ -52,7 +52,7 @@ def parse_transcript(transcript_path: str) -> list[dict]:
 
 
 def count_bash_commands(transcript_path: str):
-    """transcript에서 git commit / gh pr create 실행 횟수 카운트"""
+    """transcript에서 git commit / gh pr create 실행 횟수 카운트 (fallback용)"""
     commits = 0
     prs = 0
     try:
@@ -77,6 +77,35 @@ def count_bash_commands(transcript_path: str):
     except (IOError, OSError):
         pass
     return commits, prs
+
+
+def count_git_activity(transcript_path: str, user_email: str):
+    """git log 기반 세션 중 실제 커밋 카운트.
+    transcript 파일 생성 시점 이후의 커밋을 git history에서 직접 조회.
+    Claude Code 밖에서 만든 커밋도 포함되므로 전 팀원 커버 가능.
+    """
+    import subprocess
+    import datetime
+
+    # 세션 시작 시간: transcript 파일 생성 시간
+    try:
+        stat = os.stat(transcript_path)
+        start_time = getattr(stat, "st_birthtime", stat.st_ctime)
+        start_iso = datetime.datetime.fromtimestamp(start_time).isoformat()
+    except Exception:
+        return 0
+
+    # git log로 세션 중 커밋 카운트
+    try:
+        result = subprocess.run(
+            ["git", "log", "--oneline", f"--after={start_iso}", f"--author={user_email}"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return len(result.stdout.strip().split("\n"))
+    except Exception:
+        pass
+    return 0
 
 
 def aggregate_tokens(entries: list[dict]) -> dict:
@@ -292,7 +321,7 @@ def detect_user_email() -> str:
     return "unknown"
 
 
-BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_v2_done")
+BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_v3_done")
 BACKFILL_SCRIPT_URL = "https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/generate_backfill.py"
 BACKFILL_API_URL = "https://token-dashboard-iota.vercel.app/api/backfill"
 
@@ -340,7 +369,7 @@ def maybe_rebackfill(user_email: str):
                 # marker 파일 생성 — 다음부터 실행 안 함
                 os.makedirs(os.path.dirname(BACKFILL_MARKER), exist_ok=True)
                 with open(BACKFILL_MARKER, "w", encoding="utf-8") as m:
-                    m.write("v2")
+                    m.write("v3")
     except Exception:
         pass  # 실패해도 메인 로직에 영향 없음
     finally:
@@ -384,17 +413,21 @@ def main():
     # 3. 비용 추정
     costs = estimate_cost(totals)
 
-    # 4. 커밋/PR 카운트
-    commits, prs = count_bash_commands(transcript_path)
-
-    # 5. 사용자 이메일
+    # 4. 사용자 이메일 (git activity 조회에 필요하므로 먼저 감지)
     user_email = detect_user_email()
+
+    # 5. 커밋/PR 카운트
+    #    git log 기반 (실제 커밋) vs transcript 기반 (Claude Code 내 커밋)
+    #    둘 중 큰 값 사용 → git log가 더 정확하지만, fallback 보장
+    git_commits = count_git_activity(transcript_path, user_email)
+    transcript_commits, prs = count_bash_commands(transcript_path)
+    commits = max(git_commits, transcript_commits)
 
     # 6. OTLP payload 생성 & 전송
     payload = build_otlp_payload(totals, costs, user_email, session_id, commits, prs)
     push_metrics(payload)
 
-    # 7. 1회성 re-backfill (commits/sessions 누락 수정)
+    # 7. 1회성 re-backfill
     maybe_rebackfill(user_email)
 
 

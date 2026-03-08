@@ -113,6 +113,26 @@ def parse_transcripts(files):
     return results, dict(commits_by_date), dict(prs_by_date), dict(sessions_by_date)
 
 
+def count_git_commits_by_date(email: str, dates: list[str]) -> dict[str, int]:
+    """git log 기반 날짜별 실제 커밋 카운트.
+    transcript에 기록되지 않은 커밋(터미널/IDE 직접 커밋)도 포함.
+    """
+    git_commits = {}
+    for date in dates:
+        try:
+            result = subprocess.run(
+                ["git", "log", "--oneline", "--all",
+                 f"--after={date}T00:00:00", f"--before={date}T23:59:59",
+                 f"--author={email}"],
+                capture_output=True, text=True, timeout=5,
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                git_commits[date] = len(result.stdout.strip().split("\n"))
+        except Exception:
+            pass
+    return git_commits
+
+
 def aggregate(entries, email, commits_by_date=None, prs_by_date=None, sessions_by_date=None):
     """date × model 별 합산 → ClaudeCodeDataPoint[] 형태"""
     commits_by_date = commits_by_date or {}
@@ -129,6 +149,14 @@ def aggregate(entries, email, commits_by_date=None, prs_by_date=None, sessions_b
         agg[key]["output_tokens"] += e["output_tokens"]
         agg[key]["cache_read_tokens"] += e["cache_read_tokens"]
         agg[key]["cache_creation_tokens"] += e["cache_creation_tokens"]
+
+    # git log 기반 커밋 카운트 병합 (transcript 기반과 max 사용)
+    all_dates = sorted(set(date for date, _ in agg.keys()))
+    git_commits_by_date = count_git_commits_by_date(email, all_dates)
+    for date in all_dates:
+        transcript_val = commits_by_date.get(date, 0)
+        git_val = git_commits_by_date.get(date, 0)
+        commits_by_date[date] = max(transcript_val, git_val)
 
     data = []
     seen_dates = set()
