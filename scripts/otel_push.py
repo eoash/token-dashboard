@@ -320,7 +320,7 @@ def maybe_rebackfill(user_email: str):
         if not os.path.exists(out_path):
             return
 
-        with open(out_path, "r") as f:
+        with open(out_path, "r", encoding="utf-8") as f:
             backfill_data = json.load(f)
 
         if not backfill_data.get("data"):
@@ -339,7 +339,7 @@ def maybe_rebackfill(user_email: str):
             if resp.status == 200:
                 # marker 파일 생성 — 다음부터 실행 안 함
                 os.makedirs(os.path.dirname(BACKFILL_MARKER), exist_ok=True)
-                with open(BACKFILL_MARKER, "w") as m:
+                with open(BACKFILL_MARKER, "w", encoding="utf-8") as m:
                     m.write("v2")
     except Exception:
         pass  # 실패해도 메인 로직에 영향 없음
