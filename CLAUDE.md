@@ -91,7 +91,12 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 
 ### Prometheus
 - `increase([1d])` 외삽 주의: 카운터 첫째 날 데이터 부족 시 24시간으로 외삽 → cutoff+1일 grace period 필수
+- **grace period `>` 절대 `>=`로 바꾸지 말 것**: 카운터 첫 등장일에 increase()가 전체 누적값을 외삽함 (실사례: ash 3/8 실제 622K → 외삽 6.9M, 10배 스파이크). `data-source.ts`의 `d.date > graceCutoff`는 의도적 설계
 - Gemini 등 간헐적 메트릭: `last_over_time(metric[30d])`로 staleness 방지 (5분 규칙)
+
+### Backfill cutoff
+- **cutoff 계산에 Codex(gpt-*) 모델 포함 금지**: Codex backfill이 Claude cutoff를 오염시켜 Prometheus 데이터가 필터링됨 (실사례: ash Codex 3/8 데이터가 cutoff=3/8로 설정 → Claude 3/8 Prometheus 데이터 소실). `isCodexModel()` 가드 필수
+- **backfill 누락 시 generate_backfill.py로 로컬 transcript에서 보충**: `python3 scripts/generate_backfill.py --out /tmp/result.json` → 해당 날짜 데이터 추출하여 ash.json에 수동 추가
 
 ### OTel Collector
 - `metrics_url_path: /` — Gemini v0.32 HTTP 버그 우회. v0.33 이후 `/v1/metrics` 복원 필요
