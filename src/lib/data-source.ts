@@ -59,10 +59,16 @@ function addDays(dateStr: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** 유저별 backfill 마지막 날짜 계산 */
+/** Codex 모델 여부 (gpt-* 계열은 /api/codex-usage에서 별도 서빙) */
+function isCodexModel(model: string): boolean {
+  return model.startsWith("gpt-");
+}
+
+/** 유저별 backfill 마지막 날짜 계산 (Claude 모델만, Codex 제외) */
 function buildPerUserCutoff(): Map<string, string> {
   const cutoffs = new Map<string, string>();
   for (const d of backfillData) {
+    if (isCodexModel(d.model)) continue;
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const existing = cutoffs.get(email) ?? "";
     if (d.date > existing) cutoffs.set(email, d.date);
@@ -104,14 +110,14 @@ export async function fetchAnalytics(params: {
   // Prometheus + backfill JSON 병합 (유저별 cutoff)
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus 데이터: 해당 유저의 cutoff + 1일 이후만 사용
-  // (OTel delta→cumulative 변환으로 카운터 첫째 날 increase([1d]) 외삽이 부정확)
+  // Prometheus 데이터: 해당 유저의 cutoff + 1일부터 사용
+  // (cutoff 당일은 backfill과 중복 + increase([1d]) 외삽이 부정확할 수 있음)
   const promPoints = promData.data.filter((d) => {
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const cutoff = perUserCutoff.get(email) ?? "";
     if (!cutoff) return true;
     const graceCutoff = addDays(cutoff, 1);
-    return d.date > graceCutoff;
+    return d.date >= graceCutoff;
   });
 
   // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
