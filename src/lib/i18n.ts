@@ -86,7 +86,7 @@ const translations = {
   "lb.members": { ko: "명", en: " members" },
   "lb.autoRefresh": { ko: "자동 새로고침: 30초", en: "Auto-refresh: 30s" },
   "lb.noDataCodex": { ko: "Codex 사용 데이터가 없습니다", en: "No Codex usage data available" },
-  "lb.codexNote": { ko: "Codex는 input에 cached tokens이 포함되어 Claude와 토큰 집계 방식이 다릅니다. 단순 수치 비교 시 주의가 필요합니다.", en: "Codex includes cached tokens in input counts, unlike Claude. Direct token comparisons between tools require caution." },
+  "lb.codexNote": { ko: "Codex는 Claude와 토큰 집계 방식이 달라 input이 더 높게 표시될 수 있습니다. 도구 간 단순 수치 비교 시 참고해주세요.", en: "Codex counts tokens differently from Claude, so input may appear higher. Keep this in mind when comparing across tools." },
   "lb.noDataGemini": { ko: "Gemini CLI 사용 데이터가 없습니다", en: "No Gemini CLI usage data available" },
   "lb.mockMode": {
     ko: "샘플 데이터로 표시 중 — PROMETHEUS_URL 설정 후 실제 데이터를 확인하세요",
