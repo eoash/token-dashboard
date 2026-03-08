@@ -115,7 +115,8 @@ export async function fetchFromPrometheus(params: {
   const end = (endDay > now ? now : endDay).toISOString();
   const startDay = new Date(`${params.start_date}T00:00:00Z`);
   // start를 end 기준 역산: step 정렬을 NOW에 맞춤
-  const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / 86400000);
+  // 단일 날짜 조회(daysDiff=0)시 최소 1일 보장 → 0폭 윈도우 방지
+  const daysDiff = Math.max(1, Math.round((endDay.getTime() - startDay.getTime()) / 86400000));
   const rollingStart = new Date(now.getTime() - daysDiff * 86400 * 1000);
   const start = rollingStart.toISOString();
 
