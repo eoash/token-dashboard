@@ -104,6 +104,11 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 ### Backfill API
 - path traversal 차단 필수 (사용자 입력 파일명 검증)
 - error detail 클라이언트에 노출 금지
+- **덮어쓰기 금지**: backfill POST는 반드시 기존 데이터와 date+model 키로 merge해야 함. replace 시 다른 소스(Claude/Codex) 데이터 소실됨 (2026-03-08 jemin·chiri 데이터 소실 사고)
+
+### Codex 토큰 시맨틱
+- Codex `input_tokens`는 `cached_input_tokens` 포함 (Claude와 다름). 순수 input = `input_tokens - cached_input_tokens`
+- backfill 저장 시 반드시 차감 후 저장. 미차감 시 output ratio 등 효율 지표가 0에 수렴
 
 ### recharts
 - Tooltip 타입: `TooltipContentProps<number, string>` → `any` 사용이 실용적
