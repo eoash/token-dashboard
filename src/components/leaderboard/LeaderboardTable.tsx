@@ -185,6 +185,9 @@ function CodexTable() {
 
   return (
     <>
+      <div className="mx-6 mt-3 mb-2 rounded-lg border border-[#10A37F]/20 bg-[#10A37F]/5 px-4 py-2.5 text-xs text-neutral-400 leading-relaxed">
+        <span className="text-[#10A37F] font-medium">Note</span> — {t("lb.codexNote" as TranslationKey)}
+      </div>
       {lastUpdated && <p className="text-xs text-neutral-600 px-6 pb-2">Updated {lastUpdated}</p>}
       {error && (
         <div className="mx-6 mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-red-400 text-xs">{error}</div>
