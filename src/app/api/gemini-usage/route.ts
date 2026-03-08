@@ -44,9 +44,10 @@ async function queryInstant(query: string): Promise<PromInstantResult[]> {
 
 export async function GET() {
   try {
-    // 전체 누적값 조회 (instant query — counter 총합)
+    // last_over_time: Gemini CLI 종료 후 Prometheus staleness(5분)로 사라지는 문제 방지
+    // 30일 범위에서 마지막 값을 가져옴
     const results = await queryInstant(
-      'sum by (user_email, type) (gemini_cli_token_usage_total)'
+      'sum by (user_email, type) (last_over_time(gemini_cli_token_usage_total[30d]))'
     );
 
     // user_email별로 type 합산
