@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { formatTokens, formatPercent } from "@/lib/utils";
 import { aggregateMembers, type ClaudeMemberRow } from "@/lib/aggregators/leaderboard";
 import { NAME_TO_AVATAR } from "@/lib/constants";
+import InfoTip from "@/components/InfoTip";
 import { useT } from "@/lib/contexts/LanguageContext";
 import type { TranslationKey } from "@/lib/i18n";
 import type { GeminiMemberRow } from "@/app/api/gemini-usage/route";
@@ -83,11 +84,11 @@ function ClaudeTable({ period }: { period: Period }) {
             <tr className="border-b border-[#1e1e1e]">
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE R</th>
-              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium min-w-[120px] md:min-w-[180px] md:px-4">{t("lb.total")}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("lb.cacheHit")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.input").toUpperCase()}<InfoTip below text={t("lb.input.tip")} /></span></th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.output").toUpperCase()}<InfoTip below text={t("lb.output.tip")} /></span></th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.cacheRead").toUpperCase()}<InfoTip below text={t("lb.cacheRead.tip")} /></span></th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium min-w-[120px] md:min-w-[180px] md:px-4"><span className="inline-flex items-center justify-end">{t("lb.total")}<InfoTip below text={t("lb.total.tip")} /></span></th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("lb.cacheHit")}<InfoTip below text={t("lb.cacheHit.tip")} /></span></th>
             </tr>
           </thead>
           <tbody>
@@ -198,11 +199,11 @@ function CodexTable() {
             <tr className="border-b border-[#1e1e1e]">
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHED</th>
-              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">REASONING</th>
-              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4">{t("lb.total")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.input").toUpperCase()}<InfoTip below text={t("lb.input.tip")} /></span></th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.output").toUpperCase()}<InfoTip below text={t("lb.output.tip")} /></span></th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">CACHED<InfoTip below text={t("lb.cached.tip")} /></span></th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">REASONING<InfoTip below text={t("lb.reasoning.tip")} /></span></th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4"><span className="inline-flex items-center justify-end">{t("lb.total")}<InfoTip below text={t("lb.total.tip")} /></span></th>
             </tr>
           </thead>
           <tbody>
@@ -285,11 +286,11 @@ function GeminiTable() {
             <tr className="border-b border-[#1e1e1e]">
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium w-10 md:px-4">#</th>
               <th className="px-3 py-3 text-left text-xs text-neutral-600 font-medium md:px-4">{t("lb.developer")}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.input").toUpperCase()}</th>
-              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">{t("chart.output").toUpperCase()}</th>
-              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">CACHE</th>
-              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium">THOUGHT</th>
-              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4">{t("lb.total")}</th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.input").toUpperCase()}<InfoTip below text={t("lb.input.tip")} /></span></th>
+              <th className="hidden sm:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">{t("chart.output").toUpperCase()}<InfoTip below text={t("lb.output.tip")} /></span></th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">CACHE<InfoTip below text={t("lb.geminiCache.tip")} /></span></th>
+              <th className="hidden lg:table-cell px-4 py-3 text-right text-xs text-neutral-600 font-medium"><span className="inline-flex items-center justify-end">THOUGHT<InfoTip below text={t("lb.thought.tip")} /></span></th>
+              <th className="px-3 py-3 text-right text-xs text-neutral-600 font-medium md:px-4"><span className="inline-flex items-center justify-end">{t("lb.total")}<InfoTip below text={t("lb.total.tip")} /></span></th>
             </tr>
           </thead>
           <tbody>
