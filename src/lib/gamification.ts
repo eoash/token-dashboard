@@ -53,80 +53,80 @@ export const LEVELS: LevelInfo[] = [
   { level: 5, requiredXp: 500_000,    titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "⚡" },
   { level: 6, requiredXp: 2_000_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🛡️" },
   { level: 7, requiredXp: 10_000_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🔥" },
-  { level: 8, requiredXp: 50_000_000, titleKo: "레전드",         titleEn: "Legend",       icon: "🌟" },
+  { level: 8, requiredXp: 50_000_000, titleKo: "AI 네이티브",     titleEn: "AI Native",    icon: "🌟" },
 ];
 
-// === Achievements (38) — Startup × Space SF ===
+// === Achievements (38) — AI Explorer's Log ===
 export const ACHIEVEMENTS: Achievement[] = [
-  // Launch Prep (4)
-  { id: "first-light",     name: "Ignition",           category: "onboarding", icon: "🔥", conditionKo: "첫 토큰 사용",          conditionEn: "First token usage" },
-  { id: "first-commit",    name: "First Orbit",        category: "onboarding", icon: "🛰️", conditionKo: "AI로 첫 커밋",          conditionEn: "First AI commit" },
-  { id: "first-pr",        name: "Docking",            category: "onboarding", icon: "🔗", conditionKo: "AI로 첫 PR",            conditionEn: "First AI PR" },
-  { id: "level-up",        name: "Launch Clearance",   category: "onboarding", icon: "✅", conditionKo: "Lv.2 달성",             conditionEn: "Reach Lv.2" },
+  // First Steps (4)
+  { id: "first-light",     name: "First Contact",      category: "onboarding", icon: "🔭", conditionKo: "첫 토큰 사용",          conditionEn: "First token usage" },
+  { id: "first-commit",    name: "First Mark",         category: "onboarding", icon: "🏁", conditionKo: "AI로 첫 커밋",          conditionEn: "First AI commit" },
+  { id: "first-pr",        name: "First Report",       category: "onboarding", icon: "📋", conditionKo: "AI로 첫 PR",            conditionEn: "First AI PR" },
+  { id: "level-up",        name: "Base Camp",          category: "onboarding", icon: "⛺", conditionKo: "Lv.2 달성",             conditionEn: "Reach Lv.2" },
 
-  // Flight Log (13)
-  { id: "streak-2",        name: "Afterburner",        category: "streak",     icon: "🔥", conditionKo: "2일 연속 사용",          conditionEn: "2 consecutive days" },
-  { id: "streak-3",        name: "Escape Velocity",    category: "streak",     icon: "💨", conditionKo: "3일 연속 사용",          conditionEn: "3 consecutive days" },
-  { id: "streak-5",        name: "Hyperdrive",         category: "streak",     icon: "⚡", conditionKo: "5일 연속 사용",          conditionEn: "5 consecutive days" },
-  { id: "streak-7",        name: "Light Speed",        category: "streak",     icon: "💫", conditionKo: "7일 연속 사용",          conditionEn: "7 consecutive days" },
-  { id: "streak-14",       name: "Warp Factor 2",      category: "streak",     icon: "🌀", conditionKo: "14일 연속 사용",         conditionEn: "14 consecutive days" },
-  { id: "streak-30",       name: "Interstellar",       category: "streak",     icon: "🌌", conditionKo: "30일 연속 사용",         conditionEn: "30 consecutive days" },
-  { id: "streak-60",       name: "Deep Space",         category: "streak",     icon: "🕳️", conditionKo: "60일 연속 사용",         conditionEn: "60 consecutive days" },
-  { id: "streak-100",      name: "Andromeda",          category: "streak",     icon: "🌌", conditionKo: "100일 연속 사용",        conditionEn: "100 consecutive days" },
-  { id: "streak-150",      name: "Nebula Walker",      category: "streak",     icon: "🌫️", conditionKo: "150일 연속 사용",        conditionEn: "150 consecutive days" },
-  { id: "streak-200",      name: "Cosmic Drifter",     category: "streak",     icon: "☄️", conditionKo: "200일 연속 사용",        conditionEn: "200 consecutive days" },
-  { id: "streak-365",      name: "Event Horizon",      category: "streak",     icon: "🕳️", conditionKo: "365일 연속 사용",        conditionEn: "365 consecutive days" },
-  { id: "streak-500",      name: "Eternal Orbit",      category: "streak",     icon: "♾️", conditionKo: "500일 연속 사용",        conditionEn: "500 consecutive days" },
-  { id: "streak-1000",     name: "Big Bang",           category: "streak",     icon: "💥", conditionKo: "1000일 연속 사용",       conditionEn: "1000 consecutive days" },
+  // Field Log (13)
+  { id: "streak-2",        name: "Two Steps",          category: "streak",     icon: "👣", conditionKo: "2일 연속 사용",          conditionEn: "2 consecutive days" },
+  { id: "streak-3",        name: "Trail Found",        category: "streak",     icon: "🔍", conditionKo: "3일 연속 사용",          conditionEn: "3 consecutive days" },
+  { id: "streak-5",        name: "Steady Pace",        category: "streak",     icon: "🥾", conditionKo: "5일 연속 사용",          conditionEn: "5 consecutive days" },
+  { id: "streak-7",        name: "Weekly Log",         category: "streak",     icon: "📓", conditionKo: "7일 연속 사용",          conditionEn: "7 consecutive days" },
+  { id: "streak-14",       name: "Deep Trail",         category: "streak",     icon: "🗺️", conditionKo: "14일 연속 사용",         conditionEn: "14 consecutive days" },
+  { id: "streak-30",       name: "Expedition",         category: "streak",     icon: "🏕️", conditionKo: "30일 연속 사용",         conditionEn: "30 consecutive days" },
+  { id: "streak-60",       name: "Long March",         category: "streak",     icon: "🚶", conditionKo: "60일 연속 사용",         conditionEn: "60 consecutive days" },
+  { id: "streak-100",      name: "Cartographer",       category: "streak",     icon: "🗺️", conditionKo: "100일 연속 사용",        conditionEn: "100 consecutive days" },
+  { id: "streak-150",      name: "Chronicler",         category: "streak",     icon: "📜", conditionKo: "150일 연속 사용",        conditionEn: "150 consecutive days" },
+  { id: "streak-200",      name: "Wayfinder",          category: "streak",     icon: "🧭", conditionKo: "200일 연속 사용",        conditionEn: "200 consecutive days" },
+  { id: "streak-365",      name: "Year One",           category: "streak",     icon: "📅", conditionKo: "365일 연속 사용",        conditionEn: "365 consecutive days" },
+  { id: "streak-500",      name: "Living Map",         category: "streak",     icon: "🌐", conditionKo: "500일 연속 사용",        conditionEn: "500 consecutive days" },
+  { id: "streak-1000",     name: "Eternal Log",        category: "streak",     icon: "♾️", conditionKo: "1000일 연속 사용",       conditionEn: "1000 consecutive days" },
 
-  // Fuel (5)
-  { id: "vol-100k",        name: "Full Tank",          category: "volume",     icon: "⛽", conditionKo: "일일 output 100K",       conditionEn: "Daily output 100K" },
-  { id: "vol-1m",          name: "Rocket Fuel",        category: "volume",     icon: "🚀", conditionKo: "일일 output 1M",         conditionEn: "Daily output 1M" },
-  { id: "vol-5m",          name: "Nuclear Fusion",     category: "volume",     icon: "☢️", conditionKo: "일일 output 5M",         conditionEn: "Daily output 5M" },
-  { id: "vol-10m",         name: "Antimatter",         category: "volume",     icon: "⚛️", conditionKo: "일일 output 10M",        conditionEn: "Daily output 10M" },
-  { id: "vol-20m",         name: "Dark Energy",        category: "volume",     icon: "🌑", conditionKo: "일일 output 20M",        conditionEn: "Daily output 20M" },
+  // Energy Source (5)
+  { id: "vol-100k",        name: "Spark",              category: "volume",     icon: "✨", conditionKo: "일일 output 100K",       conditionEn: "Daily output 100K" },
+  { id: "vol-1m",          name: "Generator",          category: "volume",     icon: "⚙️", conditionKo: "일일 output 1M",         conditionEn: "Daily output 1M" },
+  { id: "vol-5m",          name: "Reactor",            category: "volume",     icon: "⚛️", conditionKo: "일일 output 5M",         conditionEn: "Daily output 5M" },
+  { id: "vol-10m",         name: "Supernova",          category: "volume",     icon: "💥", conditionKo: "일일 output 10M",        conditionEn: "Daily output 10M" },
+  { id: "vol-20m",         name: "Singularity Burst",  category: "volume",     icon: "🌑", conditionKo: "일일 output 20M",        conditionEn: "Daily output 20M" },
 
-  // Cargo (4)
-  { id: "commits-50",      name: "Supply Pod",         category: "cumulative", icon: "📦", conditionKo: "누적 커밋 50건",         conditionEn: "50 cumulative commits" },
-  { id: "commits-200",     name: "Space Station",      category: "cumulative", icon: "🛰️", conditionKo: "누적 커밋 200건",        conditionEn: "200 cumulative commits" },
-  { id: "commits-500",     name: "Colony Ship",        category: "cumulative", icon: "🚢", conditionKo: "누적 커밋 500건",        conditionEn: "500 cumulative commits" },
-  { id: "prs-50",          name: "Fleet Admiral",      category: "cumulative", icon: "⭐", conditionKo: "누적 PR 50건",           conditionEn: "50 cumulative PRs" },
+  // Discoveries (4)
+  { id: "commits-50",      name: "Sample Collected",   category: "cumulative", icon: "🧪", conditionKo: "누적 커밋 50건",         conditionEn: "50 cumulative commits" },
+  { id: "commits-200",     name: "Archive Built",      category: "cumulative", icon: "🗄️", conditionKo: "누적 커밋 200건",        conditionEn: "200 cumulative commits" },
+  { id: "commits-500",     name: "Library",            category: "cumulative", icon: "📚", conditionKo: "누적 커밋 500건",        conditionEn: "500 cumulative commits" },
+  { id: "prs-50",          name: "Published",          category: "cumulative", icon: "📰", conditionKo: "누적 PR 50건",           conditionEn: "50 cumulative PRs" },
 
-  // Multi-Engine (3)
-  { id: "dual-wielder",    name: "Twin Engine",        category: "multi",      icon: "🔧", conditionKo: "2개 도구 사용",          conditionEn: "2 tools used" },
-  { id: "triple-threat",   name: "Tri-Thruster",       category: "multi",      icon: "🔱", conditionKo: "3개 도구 모두 사용",     conditionEn: "All 3 tools used" },
-  { id: "polyglot",        name: "Universal Translator", category: "multi",    icon: "🌐", conditionKo: "3개 이상 모델 사용",     conditionEn: "3+ models used" },
+  // Multi-Tool (3)
+  { id: "dual-wielder",    name: "Dual Lens",          category: "multi",      icon: "🔍", conditionKo: "2개 도구 사용",          conditionEn: "2 tools used" },
+  { id: "triple-threat",   name: "Swiss Knife",        category: "multi",      icon: "🔧", conditionKo: "3개 도구 모두 사용",     conditionEn: "All 3 tools used" },
+  { id: "polyglot",        name: "Polyglot",           category: "multi",      icon: "🌐", conditionKo: "3개 이상 모델 사용",     conditionEn: "3+ models used" },
 
-  // Mission Commander (4)
-  { id: "weekly-champ-1",  name: "Mission Leader",     category: "champion",   icon: "🎖️", conditionKo: "주간 1위 1회",           conditionEn: "Weekly #1 once" },
-  { id: "weekly-champ-3",  name: "Fleet Commander",    category: "champion",   icon: "🏅", conditionKo: "주간 1위 3회 연속",      conditionEn: "Weekly #1 3x consecutive" },
-  { id: "weekly-champ-10", name: "Star Admiral",       category: "champion",   icon: "⭐", conditionKo: "주간 1위 누적 10회",     conditionEn: "Weekly #1 10x total" },
-  { id: "weekly-champ-20", name: "Galactic Emperor",   category: "champion",   icon: "👑", conditionKo: "주간 1위 누적 20회",     conditionEn: "Weekly #1 20x total" },
+  // Expedition Lead (4)
+  { id: "weekly-champ-1",  name: "Point Person",       category: "champion",   icon: "🎯", conditionKo: "주간 1위 1회",           conditionEn: "Weekly #1 once" },
+  { id: "weekly-champ-3",  name: "Lead Scout",         category: "champion",   icon: "🏅", conditionKo: "주간 1위 3회 연속",      conditionEn: "Weekly #1 3x consecutive" },
+  { id: "weekly-champ-10", name: "Chief Explorer",     category: "champion",   icon: "⭐", conditionKo: "주간 1위 누적 10회",     conditionEn: "Weekly #1 10x total" },
+  { id: "weekly-champ-20", name: "Grand Navigator",    category: "champion",   icon: "👑", conditionKo: "주간 1위 누적 20회",     conditionEn: "Weekly #1 20x total" },
 
-  // Time Zone (3)
-  { id: "night-owl",       name: "Red Eye Flight",     category: "time",       icon: "🌙", conditionKo: "자정~6시 활동",          conditionEn: "Activity 00:00-06:00" },
-  { id: "early-bird",      name: "Dawn Patrol",        category: "time",       icon: "🌅", conditionKo: "6시~8시 활동",           conditionEn: "Activity 06:00-08:00" },
-  { id: "weekend-warrior", name: "Weekend Mission",    category: "time",       icon: "🛸", conditionKo: "주말 활동",              conditionEn: "Weekend activity" },
+  // Night Watch (3)
+  { id: "night-owl",       name: "Midnight Recon",     category: "time",       icon: "🌙", conditionKo: "자정~6시 활동",          conditionEn: "Activity 00:00-06:00" },
+  { id: "early-bird",      name: "Dawn Watch",         category: "time",       icon: "🌅", conditionKo: "6시~8시 활동",           conditionEn: "Activity 06:00-08:00" },
+  { id: "weekend-warrior", name: "Off-Grid Expedition", category: "time",      icon: "🏕️", conditionKo: "주말 활동",              conditionEn: "Weekend activity" },
 
-  // Altitude (2)
-  { id: "wizard-class",    name: "Frontiersman",       category: "milestone",  icon: "⚡", conditionKo: "Lv.5 파이오니어 달성",   conditionEn: "Reach Lv.5 Pioneer" },
-  { id: "transcendence",   name: "Living Legend",      category: "milestone",  icon: "🌟", conditionKo: "Lv.8 레전드 달성",       conditionEn: "Reach Lv.8 Legend" },
+  // Transformation (2)
+  { id: "wizard-class",    name: "Awakening",          category: "milestone",  icon: "⚡", conditionKo: "Lv.5 파이오니어 달성",   conditionEn: "Reach Lv.5 Pioneer" },
+  { id: "transcendence",   name: "AI Native",          category: "milestone",  icon: "🌟", conditionKo: "Lv.8 AI Native 달성",    conditionEn: "Reach Lv.8 AI Native" },
 ];
 
 // Category display order & labels
 export const ACHIEVEMENT_CATEGORIES = [
-  { key: "onboarding",  labelKo: "발사 준비",   labelEn: "Launch Prep" },
-  { key: "streak",       labelKo: "비행 기록",   labelEn: "Flight Log" },
-  { key: "volume",       labelKo: "연료",        labelEn: "Fuel" },
-  { key: "cumulative",   labelKo: "적재량",      labelEn: "Cargo" },
-  { key: "multi",        labelKo: "멀티 엔진",   labelEn: "Multi-Engine" },
-  { key: "champion",     labelKo: "미션 커맨더", labelEn: "Mission Commander" },
-  { key: "time",         labelKo: "비행 시간",   labelEn: "Flight Time" },
-  { key: "milestone",    labelKo: "고도",        labelEn: "Altitude" },
+  { key: "onboarding",  labelKo: "첫 발자국",   labelEn: "First Steps" },
+  { key: "streak",       labelKo: "탐사 일지",   labelEn: "Field Log" },
+  { key: "volume",       labelKo: "에너지원",    labelEn: "Energy Source" },
+  { key: "cumulative",   labelKo: "탐사 성과",   labelEn: "Discoveries" },
+  { key: "multi",        labelKo: "멀티툴",      labelEn: "Multi-Tool" },
+  { key: "champion",     labelKo: "선봉대장",    labelEn: "Expedition Lead" },
+  { key: "time",         labelKo: "야간 탐사",   labelEn: "Night Watch" },
+  { key: "milestone",    labelKo: "변환점",      labelEn: "Transformation" },
 ] as const;
 
 // === Manual Promotion ===
-// Lv.7(Legendary), Lv.8(AI Native)는 XP 충족 + 심사 통과 필요
+// Lv.7(Trailblazer), Lv.8(AI Native)는 XP 충족 + 심사 통과 필요
 // 심사 기준: AI로 만든 프로덕트 결과물 평가 + 팀 동료 추천
 //   - Lv.7: AI 활용 프로덕트 1개 이상 완성 + 팀 내 발표/데모
 //   - Lv.8: AI 활용 프로덕트 3개 이상 + 외부 공유 가능 수준 + 팀 투표 과반

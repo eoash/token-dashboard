@@ -16,7 +16,7 @@ export default function AchievementGrid({ earnedAchievements }: Props) {
     <div className="rounded-xl border border-[#222] bg-[#111111] p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-white">
-          {isKo ? "미션 로그" : "Mission Log"}
+          {isKo ? "탐사 기록" : "Field Records"}
         </h2>
         <span className="text-xs font-mono text-gray-400">
           {earnedAchievements.length}/{ACHIEVEMENTS.length}
@@ -44,7 +44,7 @@ export default function AchievementGrid({ earnedAchievements }: Props) {
                       <div
                         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
                           earned
-                            ? "bg-[#E8FF47]/[0.07] border border-[#E8FF47]/20 text-white"
+                            ? "bg-[#00E87A]/[0.07] border border-[#00E87A]/20 text-white"
                             : "bg-[#0A0A0A] border border-[#1a1a1a] text-gray-600"
                         }`}
                       >
