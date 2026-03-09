@@ -1,0 +1,184 @@
+{
+  "data": [
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-09",
+      "session_count": 3,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 471,
+      "output_tokens": 2821,
+      "cache_read_tokens": 1970107,
+      "cache_creation_tokens": 95693
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 21,
+      "output_tokens": 313,
+      "cache_read_tokens": 133971,
+      "cache_creation_tokens": 33185
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-10",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 90,
+      "output_tokens": 297,
+      "cache_read_tokens": 175690,
+      "cache_creation_tokens": 17586
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-11",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 60,
+      "output_tokens": 26,
+      "cache_read_tokens": 183278,
+      "cache_creation_tokens": 60394
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-19",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 5508,
+      "output_tokens": 42887,
+      "cache_read_tokens": 52658208,
+      "cache_creation_tokens": 1282858
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-19",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 667,
+      "output_tokens": 24583,
+      "cache_read_tokens": 15622427,
+      "cache_creation_tokens": 308626
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-20",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 2,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1392,
+      "output_tokens": 28161,
+      "cache_read_tokens": 16666107,
+      "cache_creation_tokens": 856796
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-26",
+      "session_count": 3,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 20,
+      "output_tokens": 8,
+      "cache_read_tokens": 20750,
+      "cache_creation_tokens": 47756
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 3384,
+      "output_tokens": 1080,
+      "cache_read_tokens": 14707011,
+      "cache_creation_tokens": 751299
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "june@eoeoeo.net",
+        "email_address": "june@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-03-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 646,
+      "output_tokens": 9367,
+      "cache_read_tokens": 4642639,
+      "cache_creation_tokens": 453036
+    }
+  ]
+}
