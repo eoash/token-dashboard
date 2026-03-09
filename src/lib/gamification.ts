@@ -44,16 +44,16 @@ export interface UserProfile {
   daysSinceLastActivity: number;
 }
 
-// === Level Table (Startup × Space SF) ===
+// === Level Table (Space Explorer Ranks) ===
 export const LEVELS: LevelInfo[] = [
-  { level: 1, requiredXp: 0,          titleKo: "지상 크루",   titleEn: "Ground Crew",   icon: "🌱" },
-  { level: 2, requiredXp: 500,        titleKo: "리프트오프",  titleEn: "Liftoff",       icon: "🚀" },
-  { level: 3, requiredXp: 5_000,      titleKo: "궤도 진입",   titleEn: "In Orbit",      icon: "🛰️" },
-  { level: 4, requiredXp: 50_000,     titleKo: "스케일업",    titleEn: "Scale-up",      icon: "⚡" },
-  { level: 5, requiredXp: 500_000,    titleKo: "유니콘",      titleEn: "Unicorn",       icon: "🦄" },
-  { level: 6, requiredXp: 2_000_000,  titleKo: "테라포머",    titleEn: "Terraformer",   icon: "🌍" },
-  { level: 7, requiredXp: 10_000_000, titleKo: "보이저",      titleEn: "Voyager",       icon: "🛸" },
-  { level: 8, requiredXp: 50_000_000, titleKo: "특이점",      titleEn: "Singularity",   icon: "🧬" },
+  { level: 1, requiredXp: 0,          titleKo: "스카우트",       titleEn: "Scout",        icon: "🔭" },
+  { level: 2, requiredXp: 500,        titleKo: "레인저",         titleEn: "Ranger",       icon: "🏹" },
+  { level: 3, requiredXp: 5_000,      titleKo: "탐험가",         titleEn: "Explorer",     icon: "🧭" },
+  { level: 4, requiredXp: 50_000,     titleKo: "패스파인더",     titleEn: "Pathfinder",   icon: "🛤️" },
+  { level: 5, requiredXp: 500_000,    titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "⚡" },
+  { level: 6, requiredXp: 2_000_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🛡️" },
+  { level: 7, requiredXp: 10_000_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🔥" },
+  { level: 8, requiredXp: 50_000_000, titleKo: "레전드",         titleEn: "Legend",       icon: "🌟" },
 ];
 
 // === Achievements (38) — Startup × Space SF ===
@@ -109,8 +109,8 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: "weekend-warrior", name: "Weekend Mission",    category: "time",       icon: "🛸", conditionKo: "주말 활동",              conditionEn: "Weekend activity" },
 
   // Altitude (2)
-  { id: "wizard-class",    name: "Stratosphere",       category: "milestone",  icon: "🦄", conditionKo: "Lv.5 유니콘 달성",       conditionEn: "Reach Lv.5 Unicorn" },
-  { id: "transcendence",   name: "Singularity",        category: "milestone",  icon: "🧬", conditionKo: "Lv.8 특이점 달성",       conditionEn: "Reach Lv.8 Singularity" },
+  { id: "wizard-class",    name: "Frontiersman",       category: "milestone",  icon: "⚡", conditionKo: "Lv.5 파이오니어 달성",   conditionEn: "Reach Lv.5 Pioneer" },
+  { id: "transcendence",   name: "Living Legend",      category: "milestone",  icon: "🌟", conditionKo: "Lv.8 레전드 달성",       conditionEn: "Reach Lv.8 Legend" },
 ];
 
 // Category display order & labels
