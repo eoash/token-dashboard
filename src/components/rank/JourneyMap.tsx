@@ -12,7 +12,7 @@ export default function JourneyMap({ profile }: Props) {
 
   return (
     <div
-      className="rounded-xl border border-[#222] bg-[#111111] p-5 overflow-x-auto"
+      className="rounded-xl border border-[#222] bg-[#111111] pt-10 pb-5 px-5 overflow-x-auto"
       style={{
         backgroundImage: "radial-gradient(circle, #222 1px, transparent 1px)",
         backgroundSize: "32px 32px",

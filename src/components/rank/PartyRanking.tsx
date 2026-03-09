@@ -28,10 +28,20 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
 
   let rank = 0;
 
+  const showGroupHeaders = grouped.length > 1;
+
   return (
     <div className="rounded-xl border border-[#222] bg-[#111111] p-5">
       <h2 className="text-base font-semibold text-white mb-3">
         {isKo ? "탐험대" : "Expedition"}
+        {!showGroupHeaders && grouped.length === 1 && (
+          <span className="ml-2 text-xs font-normal" style={{ color: LEVELS.find(l => l.level === grouped[0][0])?.color[0] ?? "#666" }}>
+            {LEVELS.find(l => l.level === grouped[0][0])?.icon}{" "}
+            {isKo
+              ? LEVELS.find(l => l.level === grouped[0][0])?.titleKo
+              : LEVELS.find(l => l.level === grouped[0][0])?.titleEn}
+          </span>
+        )}
       </h2>
       <div className="overflow-x-auto">
         <table className="w-full text-base" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -39,8 +49,8 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
             <tr className="text-gray-500 text-xs border-b border-[#222]">
               <th className="text-left py-2 w-8 text-sm">#</th>
               <th className="text-left py-2 text-sm">{isKo ? "탐험가" : "Explorer"}</th>
-              <th className="text-center py-2 w-16 text-sm">Lv</th>
-              <th className="text-left py-2 hidden sm:table-cell text-sm">{isKo ? "칭호" : "Title"}</th>
+              <th className="text-left py-2 text-sm hidden sm:table-cell">{isKo ? "다음 레벨" : "Next Lv"}</th>
+              <th className="text-center py-2 w-20 text-sm">{isKo ? "활동" : "Activity"}</th>
               <th className="text-right py-2 text-sm">XP</th>
             </tr>
           </thead>
@@ -58,6 +68,7 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
                   selectedName={selectedName}
                   onSelect={onSelect}
                   isKo={isKo}
+                  showHeader={showGroupHeaders}
                   afterRender={(count) => { rank += count; }}
                 />
               );
@@ -70,7 +81,7 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
 }
 
 function GroupRows({
-  lvInfo, color, members, startRank, selectedName, onSelect, isKo, afterRender,
+  lvInfo, color, members, startRank, selectedName, onSelect, isKo, showHeader, afterRender,
 }: {
   lvInfo: { level: number; icon: string; titleKo: string; titleEn: string; color: [string, string] };
   color: string;
@@ -79,6 +90,7 @@ function GroupRows({
   selectedName?: string;
   onSelect: (name: string) => void;
   isKo: boolean;
+  showHeader: boolean;
   afterRender: (count: number) => void;
 }) {
   afterRender(members.length);
@@ -86,19 +98,28 @@ function GroupRows({
 
   return (
     <>
-      {/* Group Header */}
-      <tr>
-        <td colSpan={5} className="pt-4 pb-1">
-          <div className="flex items-center gap-2 text-xs font-medium" style={{ color }}>
-            <span>{lvInfo.icon}</span>
-            <span>{title}</span>
-            <span className="text-gray-600">({members.length})</span>
-          </div>
-        </td>
-      </tr>
+      {/* Group Header — hidden when only one level group exists */}
+      {showHeader && (
+        <tr>
+          <td colSpan={5} className="pt-4 pb-1">
+            <div className="flex items-center gap-2 text-xs font-medium" style={{ color }}>
+              <span>{lvInfo.icon}</span>
+              <span>{title}</span>
+              <span className="text-gray-600">({members.length})</span>
+            </div>
+          </td>
+        </tr>
+      )}
       {members.map((p, i) => {
         const r = startRank + i + 1;
         const isSelected = p.name === selectedName;
+        const isMaxLevel = !p.nextLevel;
+        const streakLabel = p.currentStreak > 0
+          ? `🔥${p.currentStreak}d`
+          : p.daysSinceLastActivity <= 1
+            ? "✓"
+            : `${p.daysSinceLastActivity}d`;
+
         return (
           <tr
             key={p.email}
@@ -125,11 +146,38 @@ function GroupRows({
                 </span>
               </div>
             </td>
-            <td className="py-2.5 text-center">
-              <span className="text-sm font-mono" style={{ color }}>{p.level.level}</span>
-            </td>
+            {/* Progress to next level */}
             <td className="py-2.5 hidden sm:table-cell">
-              <span className="text-sm text-gray-400">{p.level.icon} {isKo ? p.level.titleKo : p.level.titleEn}</span>
+              {isMaxLevel ? (
+                <span className="text-xs font-mono text-gray-500">MAX</span>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden max-w-24">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${p.progressPercent}%`,
+                        background: `linear-gradient(90deg, ${color}, ${lvInfo.color[1]})`,
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs font-mono text-gray-500 w-8">{p.progressPercent}%</span>
+                </div>
+              )}
+            </td>
+            {/* Activity: streak or days since last */}
+            <td className="py-2.5 text-center">
+              <span className={`text-xs font-mono ${
+                p.currentStreak > 0
+                  ? "text-orange-400"
+                  : p.daysSinceLastActivity <= 1
+                    ? "text-green-500"
+                    : p.daysSinceLastActivity >= 7
+                      ? "text-gray-600"
+                      : "text-gray-500"
+              }`}>
+                {streakLabel}
+              </span>
             </td>
             <td className="py-2.5 text-right">
               <span className={`text-sm font-mono ${isSelected ? "text-[#00E87A]" : "text-gray-400"}`}>
