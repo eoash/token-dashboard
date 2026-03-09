@@ -43,14 +43,14 @@ export interface UserProfile {
 
 // === Level Table ===
 export const LEVELS: LevelInfo[] = [
-  { level: 1, requiredXp: 0,       titleKo: "코드 새싹",   titleEn: "Code Sprout",  icon: "🌱" },
-  { level: 2, requiredXp: 50,      titleKo: "견습 코더",   titleEn: "Apprentice",   icon: "⚡" },
-  { level: 3, requiredXp: 200,     titleKo: "코드 기사",   titleEn: "Code Knight",  icon: "⚔️" },
-  { level: 4, requiredXp: 1_000,   titleKo: "마법 개발자", titleEn: "Arcane Dev",   icon: "🔮" },
-  { level: 5, requiredXp: 5_000,   titleKo: "코드 마법사", titleEn: "Code Wizard",  icon: "🧙" },
-  { level: 6, requiredXp: 25_000,  titleKo: "대마법사",    titleEn: "Archmage",     icon: "🌟" },
-  { level: 7, requiredXp: 80_000,  titleKo: "전설의 코더", titleEn: "Legendary",    icon: "👑" },
-  { level: 8, requiredXp: 200_000, titleKo: "AI 네이티브", titleEn: "AI Native",    icon: "🐉" },
+  { level: 1, requiredXp: 0,         titleKo: "코드 새싹",   titleEn: "Code Sprout",  icon: "🌱" },
+  { level: 2, requiredXp: 100,       titleKo: "견습 코더",   titleEn: "Apprentice",   icon: "⚡" },
+  { level: 3, requiredXp: 500,       titleKo: "코드 기사",   titleEn: "Code Knight",  icon: "⚔️" },
+  { level: 4, requiredXp: 2_000,     titleKo: "마법 개발자", titleEn: "Arcane Dev",   icon: "🔮" },
+  { level: 5, requiredXp: 10_000,    titleKo: "코드 마법사", titleEn: "Code Wizard",  icon: "🧙" },
+  { level: 6, requiredXp: 50_000,    titleKo: "대마법사",    titleEn: "Archmage",     icon: "🌟" },
+  { level: 7, requiredXp: 200_000,   titleKo: "전설의 코더", titleEn: "Legendary",    icon: "👑" },
+  { level: 8, requiredXp: 1_000_000, titleKo: "AI 네이티브", titleEn: "AI Native",    icon: "🐉" },
 ];
 
 // === Achievements (38) ===
@@ -290,7 +290,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const { current: currentStreak, max: maxStreak } = calcStreak(activeDates);
 
     // XP calculation
-    const tokenXp = Math.floor(totalTokens / 5_000);
+    const tokenXp = Math.floor(totalTokens / 10_000);
     const dayXp = activeDays * 50;
     const commitXp = totalCommits * 10;
     const prXp = totalPRs * 30;
