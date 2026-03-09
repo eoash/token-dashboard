@@ -44,7 +44,7 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
           </span>
         )}
       </h2>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-visible">
         <table className="w-full text-base table-fixed" style={{ fontVariantNumeric: "tabular-nums" }}>
           <colgroup>
             <col className="w-8" />
@@ -59,11 +59,11 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
               <th className="text-left py-2 text-sm">{isKo ? "탐험가" : "Explorer"}</th>
               <th className="text-left py-2 text-sm hidden sm:table-cell">
                 {isKo ? "다음 레벨" : "Next Lv"}
-                <InfoTip text={isKo ? "현재 레벨에서 다음 레벨까지의 XP 진행률" : "XP progress from current level to next"} />
+                <InfoTip text={isKo ? "현재 레벨에서 다음 레벨까지의 XP 진행률" : "XP progress from current level to next"} below />
               </th>
               <th className="text-center py-2 text-sm">
                 {isKo ? "활동" : "Activity"}
-                <InfoTip text={isKo ? "🔥Nd = 연속 사용일 · ✓ = 오늘/어제 활동 · Nd = 비활동 일수" : "🔥Nd = streak · ✓ = active today · Nd = days inactive"} wide />
+                <InfoTip text={isKo ? "🔥Nd = 연속 사용일 · ✓ = 오늘/어제 활동 · Nd = 비활동 일수" : "🔥Nd = streak · ✓ = active today · Nd = days inactive"} wide below />
               </th>
               <th className="text-right py-2 text-sm">XP</th>
             </tr>
