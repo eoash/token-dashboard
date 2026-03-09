@@ -133,7 +133,7 @@ export default function ActivityTimeline({ profile, data }: Props) {
           [LOG] {isKo ? "\uCD5C\uADFC 14\uC77C \uD65C\uB3D9 \uC5C6\uC74C." : "No activity in last 14 days."}
         </p>
       ) : (
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 max-h-48 overflow-y-auto">
           {events.map((ev, i) => (
             <p key={i} className="text-xs font-mono text-gray-400">
               {ev.label}
