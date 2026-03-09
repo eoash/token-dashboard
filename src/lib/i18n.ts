@@ -10,6 +10,7 @@ const translations = {
   "nav.models": { ko: "Models", en: "Models" },
   "nav.utilization": { ko: "Utilization", en: "Utilization" },
   "nav.efficiency": { ko: "Efficiency", en: "Efficiency" },
+  "nav.rank": { ko: "Rank", en: "Rank" },
   "nav.setup": { ko: "설치 가이드", en: "Setup Guide" },
 
   // ── Common ──

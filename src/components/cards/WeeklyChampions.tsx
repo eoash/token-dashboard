@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { NAME_TO_AVATAR } from "@/lib/constants";
 import { formatTokens } from "@/lib/utils";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 import { resolveActorName } from "@/lib/constants";
 import { startOfWeek, format, parseISO } from "date-fns";
 import { useT } from "@/lib/contexts/LanguageContext";
+import { buildProfiles } from "@/lib/gamification";
 
 interface WeeklyChampion {
   week: string;
@@ -59,8 +61,14 @@ function getWeeklyChampions(data: ClaudeCodeDataPoint[]): WeeklyChampion[] {
 }
 
 export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] }) {
-  const { t } = useT();
+  const { t, locale } = useT();
   const champions = useMemo(() => getWeeklyChampions(data), [data]);
+  const profiles = useMemo(() => buildProfiles(data), [data]);
+  const levelMap = useMemo(() => {
+    const map = new Map<string, { level: number; icon: string }>();
+    for (const p of profiles) map.set(p.name, { level: p.level.level, icon: p.level.icon });
+    return map;
+  }, [profiles]);
 
   if (champions.length === 0) return null;
 
@@ -86,6 +94,11 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
               </div>
             )}
             <span className={`text-sm font-medium flex-1 ${i === 0 ? "text-white" : "text-gray-300"}`}>
+              {levelMap.get(c.name) && (
+                <span className="text-[10px] text-gray-500 mr-1">
+                  {levelMap.get(c.name)!.icon}Lv.{levelMap.get(c.name)!.level}
+                </span>
+              )}
               {c.name}
             </span>
             <span className={`text-xs font-mono ${i === 0 ? "text-[#E8FF47]" : "text-gray-500"}`}>
@@ -94,6 +107,12 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
           </div>
         ))}
       </div>
+      <Link
+        href="/rank"
+        className="mt-3 block text-center text-xs text-gray-500 hover:text-[#E8FF47] transition-colors"
+      >
+        ⚔️ {locale === "ko" ? "모험가 길드 →" : "Adventurer's Guild →"}
+      </Link>
     </div>
   );
 }

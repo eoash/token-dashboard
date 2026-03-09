@@ -13,6 +13,7 @@ const menuItems: { labelKey: TranslationKey; href: string }[] = [
   { labelKey: "nav.models", href: "/models" },
   { labelKey: "nav.utilization", href: "/utilization" },
   { labelKey: "nav.efficiency", href: "/efficiency" },
+  { labelKey: "nav.rank", href: "/rank" },
 ];
 
 export default function Sidebar() {
