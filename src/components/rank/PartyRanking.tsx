@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import type { UserProfile } from "@/lib/gamification";
 import { LEVELS } from "@/lib/gamification";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, formatTokens } from "@/lib/utils";
 import { useT } from "@/lib/contexts/LanguageContext";
 
 interface Props {
@@ -135,15 +135,30 @@ function GroupRows({
             <td className="py-2.5">
               <div className="flex items-center gap-2">
                 {p.avatar ? (
-                  <img src={p.avatar} alt={p.name} className="w-7 h-7 rounded-full flex-shrink-0" />
+                  <img src={p.avatar} alt={p.name} className="w-8 h-8 rounded-full flex-shrink-0" />
                 ) : (
-                  <div className="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-400 flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs text-gray-400 flex-shrink-0">
                     {p.name[0]}
                   </div>
                 )}
-                <span className={`font-medium ${isSelected ? "text-white" : "text-gray-300"}`}>
-                  {p.name}
-                </span>
+                <div className="min-w-0">
+                  <span className={`font-medium ${isSelected ? "text-white" : "text-gray-300"}`}>
+                    {p.name}
+                  </span>
+                  <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-600">
+                    <span>{formatTokens(p.totalTokens)}</span>
+                    <span>·</span>
+                    <span>{p.activeDays}d</span>
+                    <span>·</span>
+                    <span>🏆{p.earnedAchievements.length}</span>
+                    {p.tools.size > 0 && (
+                      <>
+                        <span>·</span>
+                        <span className="text-gray-700">{[...p.tools].join(" · ")}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </td>
             {/* Progress to next level */}
