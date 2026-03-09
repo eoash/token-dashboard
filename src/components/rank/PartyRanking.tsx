@@ -44,13 +44,20 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
         )}
       </h2>
       <div className="overflow-x-auto">
-        <table className="w-full text-base" style={{ fontVariantNumeric: "tabular-nums" }}>
+        <table className="w-full text-base table-fixed" style={{ fontVariantNumeric: "tabular-nums" }}>
+          <colgroup>
+            <col className="w-8" />
+            <col className="w-[35%]" />
+            <col className="w-[30%] hidden sm:table-column" />
+            <col className="w-16" />
+            <col className="w-[20%]" />
+          </colgroup>
           <thead>
             <tr className="text-gray-500 text-xs border-b border-[#222]">
-              <th className="text-left py-2 w-8 text-sm">#</th>
+              <th className="text-left py-2 text-sm">#</th>
               <th className="text-left py-2 text-sm">{isKo ? "탐험가" : "Explorer"}</th>
               <th className="text-left py-2 text-sm hidden sm:table-cell">{isKo ? "다음 레벨" : "Next Lv"}</th>
-              <th className="text-center py-2 w-20 text-sm">{isKo ? "활동" : "Activity"}</th>
+              <th className="text-center py-2 text-sm">{isKo ? "활동" : "Activity"}</th>
               <th className="text-right py-2 text-sm">XP</th>
             </tr>
           </thead>
@@ -167,7 +174,7 @@ function GroupRows({
                 <span className="text-xs font-mono text-gray-500">MAX</span>
               ) : (
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden max-w-24">
+                  <div className="flex-1 h-1.5 bg-[#1a1a1a] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
