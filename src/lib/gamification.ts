@@ -278,7 +278,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const models = new Set<string>();
 
     for (const d of points) {
-      totalTokens += d.input_tokens + d.output_tokens;
+      totalTokens += d.input_tokens + d.output_tokens + d.cache_read_tokens;
       totalCommits += d.commits;
       totalPRs += d.pull_requests;
       if (d.date) activeDates.push(d.date);
@@ -290,7 +290,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const { current: currentStreak, max: maxStreak } = calcStreak(activeDates);
 
     // XP calculation
-    const tokenXp = Math.floor(totalTokens / 10_000);
+    const tokenXp = Math.floor(totalTokens / 1_000);
     const dayXp = activeDays * 50;
     const commitXp = totalCommits * 10;
     const prXp = totalPRs * 30;
