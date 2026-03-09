@@ -6,6 +6,16 @@ import { useState, useEffect } from "react";
 import { useT } from "@/lib/contexts/LanguageContext";
 import type { TranslationKey } from "@/lib/i18n";
 
+const menuIcons: Record<string, React.ReactNode> = {
+  "/": (/* grid */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="1.5" width="5" height="5" rx="1"/><rect x="9.5" y="1.5" width="5" height="5" rx="1"/><rect x="1.5" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg>),
+  "/leaderboard": (/* trophy */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2h6v5a3 3 0 0 1-6 0V2z"/><path d="M5 4H3a1 1 0 0 0-1 1v1a2 2 0 0 0 2 2h1"/><path d="M11 4h2a1 1 0 0 1 1 1v1a2 2 0 0 1-2 2h-1"/><path d="M8 10v2"/><path d="M5 14h6"/></svg>),
+  "/members": (/* users */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="5" r="2.5"/><path d="M1.5 14c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/><circle cx="11.5" cy="5.5" r="1.8"/><path d="M14.5 14c0-2 -1.3-3.2-3-3.5"/></svg>),
+  "/models": (/* cpu */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="8" height="8" rx="1"/><path d="M6.5 1.5v2M9.5 1.5v2M6.5 12.5v2M9.5 12.5v2M1.5 6.5h2M1.5 9.5h2M12.5 6.5h2M12.5 9.5h2"/></svg>),
+  "/utilization": (/* bar chart */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 14V8M6 14V4M10 14V6M14 14V2"/></svg>),
+  "/efficiency": (/* zap */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 1.5L3 9h5l-1 5.5L13 7H8l.5-5.5z"/></svg>),
+  "/rank": (/* rocket */ <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1.5c0 0-4 3-4 8l1.5 2.5h5L12 9.5c0-5-4-8-4-8z"/><circle cx="8" cy="6.5" r="1.2"/><path d="M6 12l-1.5 2.5M10 12l1.5 2.5"/></svg>),
+};
+
 const menuItems: { labelKey: TranslationKey; href: string }[] = [
   { labelKey: "nav.overview", href: "/" },
   { labelKey: "nav.leaderboard", href: "/leaderboard" },
@@ -54,12 +64,13 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 ${
                 isActive
                   ? "bg-[#E8FF47]/10 text-[#E8FF47]"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               }`}
             >
+              <span className="shrink-0 opacity-70">{menuIcons[item.href]}</span>
               {t(item.labelKey)}
             </Link>
           );
@@ -70,12 +81,15 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2 px-2 mt-auto">
         <Link
           href="/setup"
-          className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 ${
             pathname.startsWith("/setup")
               ? "bg-[#E8FF47]/10 text-[#E8FF47]"
               : "text-gray-400 hover:text-white hover:bg-white/5"
           }`}
         >
+          <span className="shrink-0 opacity-70">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="2.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4"/></svg>
+          </span>
           {t("nav.setup")}
         </Link>
 
