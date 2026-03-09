@@ -17,14 +17,14 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
   return (
     <div className="rounded-xl border border-[#222] bg-[#111111] p-5">
       <h2 className="text-sm font-semibold text-white mb-4">
-        {isKo ? "파티 랭킹" : "Party Ranking"}
+        {isKo ? "크루 랭킹" : "Crew Ranking"}
       </h2>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-gray-500 text-xs border-b border-[#222]">
               <th className="text-left py-2 w-8">#</th>
-              <th className="text-left py-2">{isKo ? "모험가" : "Adventurer"}</th>
+              <th className="text-left py-2">{isKo ? "크루" : "Crew"}</th>
               <th className="text-center py-2 w-16">Lv</th>
               <th className="text-left py-2 hidden sm:table-cell">{isKo ? "칭호" : "Title"}</th>
               <th className="text-right py-2">XP</th>

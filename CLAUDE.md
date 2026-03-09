@@ -80,7 +80,8 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 | `src/components/layout/AnnouncementBanner.tsx` | 공지 배너 (id별 localStorage dismiss) |
 | `src/components/layout/DateRangePicker.tsx` | 날짜 범위 선택 |
 | `src/components/layout/Sidebar.tsx` | 좌측 네비게이션 (모바일 드로어) |
-| `scripts/install-hook.sh` | 팀원용 원라이너 설치 (7단계) |
+| `scripts/install-hook.sh` | 팀원용 원라이너 설치 Mac/Linux (7단계) |
+| `scripts/install-hook.ps1` | 팀원용 원라이너 설치 Windows (7단계) |
 | `scripts/otel_push.py` | Claude Code Stop hook |
 | `scripts/codex_push.py` | Codex 세션 로그 → API 전송 |
 | `scripts/remind_install.py` | 미설치 팀원 Slack DM (cron 매일 13:00) |
@@ -101,10 +102,15 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 ### OTel Collector
 - `metrics_url_path: /` — Gemini v0.32 HTTP 버그 우회. v0.33 이후 `/v1/metrics` 복원 필요
 
-### install-hook.sh (셸→Python)
+### install-hook.sh / install-hook.ps1 (셸→Python)
 - `python3 -c "..."` 안에서 triple-quote + 변수 → 충돌 위험. 환경변수로 전달 후 `os.environ[]`로 읽기
 - f-string `\"` 이스케이프 → `.get()` 또는 문자열 연결로 대체
 - Windows: `PYTHONUTF8=1` + `encoding='utf-8'` 필수
+- **Windows 설치 명령어**: `powershell -Command "irm URL | iex"` 형태로 래핑 필수. 단순 `irm URL | iex`만 안내하면 사용자가 `irm URL`만 실행하여 스크립트 본문이 출력만 됨
+
+### 팀원 아이덴티티 (constants.ts)
+- **chankim = 김찬호, chanhee = 김찬희** — 두 사람은 다른 팀원. 이메일·Slack ID·아바타 혼동 주의
+- remind_install.py의 TEAM 목록과 constants.ts의 TEAM_MEMBERS 동기화 필수
 
 ### Backfill API
 - path traversal 차단 필수 (사용자 입력 파일명 검증)

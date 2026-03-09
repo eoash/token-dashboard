@@ -111,7 +111,7 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
         href="/rank"
         className="mt-3 block text-center text-xs text-gray-500 hover:text-[#E8FF47] transition-colors"
       >
-        ⚔️ {locale === "ko" ? "모험가 길드 →" : "Adventurer's Guild →"}
+        🚀 {locale === "ko" ? "Mission Control →" : "Mission Control →"}
       </Link>
     </div>
   );

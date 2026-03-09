@@ -58,12 +58,12 @@ export default function RankPage() {
       {/* Page Title */}
       <div>
         <h1 className="text-xl font-bold text-white flex items-center gap-2">
-          ⚔️ {isKo ? "모험가 길드" : "Adventurer's Guild"}
+          🚀 {isKo ? "Mission Control" : "Mission Control"}
         </h1>
         <p className="text-xs text-gray-500 mt-1">
           {isKo
-            ? "AI 도구 사용량 기반 RPG 레벨 & 업적 시스템"
-            : "RPG levels & achievements based on AI tool usage"}
+            ? "AI 도구 사용량 기반 스타트업 × 우주 레벨 & 업적 시스템"
+            : "Startup × Space levels & achievements based on AI tool usage"}
         </p>
       </div>
 

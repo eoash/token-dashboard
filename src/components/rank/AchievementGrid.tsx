@@ -16,7 +16,7 @@ export default function AchievementGrid({ earnedAchievements }: Props) {
     <div className="rounded-xl border border-[#222] bg-[#111111] p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-white">
-          {isKo ? "업적 도감" : "Achievement Collection"}
+          {isKo ? "미션 로그" : "Mission Log"}
         </h2>
         <span className="text-xs font-mono text-gray-400">
           {earnedAchievements.length}/{ACHIEVEMENTS.length}
