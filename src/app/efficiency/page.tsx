@@ -55,7 +55,7 @@ function InfoTip({ text, wide, below }: { text: string; wide?: boolean; below?: 
 }
 
 const TOOL_TABS: { key: EfficiencyTool; label: string; color: string }[] = [
-  { key: "claude", label: "Claude Code", color: "#E8FF47" },
+  { key: "claude", label: "Claude Code", color: "#00E87A" },
   { key: "codex", label: "Codex", color: "#10A37F" },
   { key: "all", label: "All", color: "#FFFFFF" },
 ];
@@ -124,7 +124,7 @@ function ClaudeEfficiencyContent({ eff, t }: { eff: EfficiencyAggregation; t: (k
         <KpiCard title={t("eff.cacheEff")} value={`${eff.avgCacheEfficiency.toFixed(1)}x`} subtitle={t("eff.cacheEff.sub")} tooltip={t("eff.cacheEff.tip")} />
       </div>
 
-      <DailyChart daily={eff.daily} accentColor="#E8FF47" t={t} />
+      <DailyChart daily={eff.daily} accentColor="#00E87A" t={t} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <MemberBarChart
@@ -132,13 +132,13 @@ function ClaudeEfficiencyContent({ eff, t }: { eff: EfficiencyAggregation; t: (k
           dataKey="cacheHitRate"
           title={t("eff.cacheHitByMember")}
           tipText={t("eff.cacheHitByMember.tip")}
-          color="#E8FF47"
+          color="#00E87A"
           formatX={formatPct}
           domain={[0, 1]}
           tooltipContent={(m: MemberEfficiency) => (
             <>
               <p className="font-medium text-sm mb-1">{m.name}</p>
-              <p className="text-sm text-[#E8FF47]">{t("lb.cacheHit")}: {formatPct(m.cacheHitRate)}</p>
+              <p className="text-sm text-[#00E87A]">{t("lb.cacheHit")}: {formatPct(m.cacheHitRate)}</p>
               <p className="text-sm text-gray-400">{t("lb.total")}: {formatTokens(m.totalTokens)}</p>
             </>
           )}
@@ -181,7 +181,7 @@ function ClaudeEfficiencyContent({ eff, t }: { eff: EfficiencyAggregation; t: (k
                 <tr key={m.name} className="border-b border-[#1a1a1a]">
                   <td className="py-3 font-medium">{m.name}</td>
                   <td className="text-right text-gray-400">{formatTokens(m.totalTokens)}</td>
-                  <td className="text-right text-[#E8FF47]">{formatPct(m.cacheHitRate)}</td>
+                  <td className="text-right text-[#00E87A]">{formatPct(m.cacheHitRate)}</td>
                   <td className="text-right text-[#3B82F6]">{m.outputRatio.toFixed(1)}x</td>
                   <td className="text-right text-[#10B981]">{m.cacheEfficiency.toFixed(1)}x</td>
                 </tr>

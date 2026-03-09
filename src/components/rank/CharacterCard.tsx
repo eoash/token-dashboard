@@ -21,16 +21,16 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
       {/* Header: Avatar + Name + Level */}
       <div className="flex items-center gap-4 mb-5">
         {profile.avatar ? (
-          <img src={profile.avatar} alt={profile.name} className="w-14 h-14 rounded-full ring-2 ring-[#E8FF47]/30" />
+          <img src={profile.avatar} alt={profile.name} className="w-14 h-14 rounded-full ring-2 ring-[#00E87A]/30" />
         ) : (
-          <div className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center text-xl text-gray-400 ring-2 ring-[#E8FF47]/30">
+          <div className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center text-xl text-gray-400 ring-2 ring-[#00E87A]/30">
             {profile.name[0]}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-lg font-bold text-white">{profile.name}</span>
-            <span className="text-xs font-mono text-[#E8FF47] bg-[#E8FF47]/10 px-2 py-0.5 rounded">
+            <span className="text-xs font-mono text-[#00E87A] bg-[#00E87A]/10 px-2 py-0.5 rounded">
               Lv.{profile.level.level}
             </span>
           </div>
@@ -52,12 +52,12 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
               {formatNumber(profile.xpInLevel)} / {formatNumber(profile.xpToNext)} → Lv.{profile.nextLevel.level} {nextTitle}
             </span>
           ) : (
-            <span className="text-[#E8FF47] font-mono">MAX</span>
+            <span className="text-[#00E87A] font-mono">MAX</span>
           )}
         </div>
         <div className="w-full h-2.5 bg-[#1a1a1a] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#E8FF47] rounded-full transition-all duration-500"
+            className="h-full bg-[#00E87A] rounded-full transition-all duration-500"
             style={{ width: `${profile.progressPercent}%` }}
           />
         </div>

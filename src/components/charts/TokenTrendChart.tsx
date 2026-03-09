@@ -50,7 +50,7 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
 }
 
 export default function TokenTrendChart({ data, label, color }: TokenTrendChartProps) {
-  const lineColor = color ?? "#E8FF47";
+  const lineColor = color ?? "#00E87A";
   return (
     <div className="rounded-xl bg-[#111111] p-6">
       <h3 className="mb-4 text-lg font-semibold text-white flex items-center gap-2">

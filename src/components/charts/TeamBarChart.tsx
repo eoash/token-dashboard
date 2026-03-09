@@ -32,7 +32,7 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps<number, s
   return (
     <div className="rounded-lg border border-neutral-700 bg-neutral-900 p-3 shadow-lg">
       <p className="mb-1 text-sm font-medium text-white">{label}</p>
-      <p className="text-sm text-[#E8FF47]">
+      <p className="text-sm text-[#00E87A]">
         Tokens: {Number(entry.value).toLocaleString()}
       </p>
     </div>
@@ -65,7 +65,7 @@ export default function TeamBarChart({ data }: TeamBarChartProps) {
               width={50}
             />
             <Tooltip content={CustomTooltip} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
-            <Bar dataKey="tokens" fill="#E8FF47" radius={[0, 4, 4, 0]} barSize={24} />
+            <Bar dataKey="tokens" fill="#00E87A" radius={[0, 4, 4, 0]} barSize={24} />
           </BarChart>
         </ResponsiveContainer>
       </div>

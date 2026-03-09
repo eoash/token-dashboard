@@ -36,7 +36,7 @@ export default function TeamPage() {
           <select
             value={selectedName}
             onChange={(e) => setSelectedName(e.target.value)}
-            className="bg-[#111111] border border-[#333] rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-[#E8FF47]"
+            className="bg-[#111111] border border-[#333] rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-[#00E87A]"
           >
             {UNIQUE_MEMBERS.map((m) => (
               <option key={m.name} value={m.name}>{m.name}</option>

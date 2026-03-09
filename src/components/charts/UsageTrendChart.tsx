@@ -86,8 +86,8 @@ export default function UsageTrendChart({ data }: UsageTrendChartProps) {
               type="monotone"
               dataKey="output"
               stackId="1"
-              stroke="#E8FF47"
-              fill="#E8FF4730"
+              stroke="#00E87A"
+              fill="#00E87A30"
               name="Output"
             />
           </AreaChart>

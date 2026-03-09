@@ -13,7 +13,7 @@ interface TeamRankingCardProps {
 }
 
 const MEDALS = ["🥇", "🥈", "🥉"];
-const RANK_COLORS = ["#E8FF47", "#C0C0C0", "#CD7F32", "#6B7280", "#6B7280"];
+const RANK_COLORS = ["#00E87A", "#C0C0C0", "#CD7F32", "#6B7280", "#6B7280"];
 
 function formatTokens(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;

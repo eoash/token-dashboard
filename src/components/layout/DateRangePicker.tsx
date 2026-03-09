@@ -39,7 +39,7 @@ export default function DateRangePicker() {
             onClick={() => applyPreset(p.days, `Last ${p.days} days`)}
             className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
               isPresetActive(p.days)
-                ? "bg-[#E8FF47] text-black"
+                ? "bg-[#00E87A] text-black"
                 : "text-neutral-400 hover:text-white"
             }`}
           >
@@ -53,7 +53,7 @@ export default function DateRangePicker() {
           value={range.start}
           max={range.end}
           onChange={(e) => setRange({ start: e.target.value, end: range.end, label: "Custom" })}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-[#E8FF47] [color-scheme:dark]"
+          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-[#00E87A] [color-scheme:dark]"
         />
         <span className="text-xs text-gray-600">~</span>
         <input
@@ -62,7 +62,7 @@ export default function DateRangePicker() {
           min={range.start}
           max={today}
           onChange={(e) => setRange({ start: range.start, end: e.target.value, label: "Custom" })}
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-[#E8FF47] [color-scheme:dark]"
+          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-md px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-[#00E87A] [color-scheme:dark]"
         />
       </div>
       <span className="text-xs text-gray-500">{range.label}</span>

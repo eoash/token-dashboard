@@ -30,13 +30,13 @@ const BANNERS: BannerItem[] = [
 ];
 
 const typeStyles: Record<BannerItem["type"], { border: string; bg: string; hoverBg: string; badgeKey: TranslationKey }> = {
-  setup:  { border: "border-[#E8FF47]/20", bg: "bg-[#E8FF47]/5",  hoverBg: "hover:bg-[#E8FF47]/10", badgeKey: "announce.new" },
+  setup:  { border: "border-[#00E87A]/20", bg: "bg-[#00E87A]/5",  hoverBg: "hover:bg-[#00E87A]/10", badgeKey: "announce.new" },
   update: { border: "border-[#3B82F6]/20", bg: "bg-[#3B82F6]/5",  hoverBg: "hover:bg-[#3B82F6]/10", badgeKey: "announce.update" },
   info:   { border: "border-gray-500/20",  bg: "bg-gray-500/5",   hoverBg: "hover:bg-gray-500/10",  badgeKey: "announce.info" },
 };
 
 const badgeColors: Record<BannerItem["type"], string> = {
-  setup: "text-[#E8FF47]",
+  setup: "text-[#00E87A]",
   update: "text-[#3B82F6]",
   info: "text-gray-400",
 };

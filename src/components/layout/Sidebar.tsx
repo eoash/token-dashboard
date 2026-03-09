@@ -66,7 +66,7 @@ export default function Sidebar() {
               href={item.href}
               className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 ${
                 isActive
-                  ? "bg-[#E8FF47]/10 text-[#E8FF47]"
+                  ? "bg-[#00E87A]/10 text-[#00E87A]"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -83,7 +83,7 @@ export default function Sidebar() {
           href="/setup"
           className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2.5 ${
             pathname.startsWith("/setup")
-              ? "bg-[#E8FF47]/10 text-[#E8FF47]"
+              ? "bg-[#00E87A]/10 text-[#00E87A]"
               : "text-gray-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -99,7 +99,7 @@ export default function Sidebar() {
             onClick={() => setLocale("ko")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
               locale === "ko"
-                ? "bg-[#E8FF47]/10 text-[#E8FF47]"
+                ? "bg-[#00E87A]/10 text-[#00E87A]"
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
@@ -110,7 +110,7 @@ export default function Sidebar() {
             onClick={() => setLocale("en")}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
               locale === "en"
-                ? "bg-[#E8FF47]/10 text-[#E8FF47]"
+                ? "bg-[#00E87A]/10 text-[#00E87A]"
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >

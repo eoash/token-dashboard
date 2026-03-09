@@ -46,18 +46,18 @@ export default function SetupPage() {
       <p className="text-gray-400 text-sm mb-8">{t("setup.desc")}</p>
 
       {/* Install command */}
-      <div className="rounded-xl border border-[#E8FF47]/30 bg-[#E8FF47]/5 p-6 mb-8">
+      <div className="rounded-xl border border-[#00E87A]/30 bg-[#00E87A]/5 p-6 mb-8">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold tracking-wider text-[#E8FF47] uppercase">
+            <span className="text-xs font-semibold tracking-wider text-[#00E87A] uppercase">
               {t("setup.installCmd")}
             </span>
-            <div className="flex rounded-md overflow-hidden border border-[#E8FF47]/20 ml-2">
+            <div className="flex rounded-md overflow-hidden border border-[#00E87A]/20 ml-2">
               <button
                 onClick={() => { setOs("mac"); setCopied(false); }}
                 className={`text-[10px] px-2.5 py-1 font-medium transition-colors cursor-pointer ${
                   os === "mac"
-                    ? "bg-[#E8FF47]/20 text-[#E8FF47]"
+                    ? "bg-[#00E87A]/20 text-[#00E87A]"
                     : "text-gray-500 hover:text-gray-300"
                 }`}
               >
@@ -67,7 +67,7 @@ export default function SetupPage() {
                 onClick={() => { setOs("win"); setCopied(false); }}
                 className={`text-[10px] px-2.5 py-1 font-medium transition-colors cursor-pointer ${
                   os === "win"
-                    ? "bg-[#E8FF47]/20 text-[#E8FF47]"
+                    ? "bg-[#00E87A]/20 text-[#00E87A]"
                     : "text-gray-500 hover:text-gray-300"
                 }`}
               >
@@ -77,7 +77,7 @@ export default function SetupPage() {
           </div>
           <button
             onClick={handleCopy}
-            className="text-xs px-3 py-1.5 rounded-md bg-[#E8FF47]/10 text-[#E8FF47] hover:bg-[#E8FF47]/20 transition-colors cursor-pointer"
+            className="text-xs px-3 py-1.5 rounded-md bg-[#00E87A]/10 text-[#00E87A] hover:bg-[#00E87A]/20 transition-colors cursor-pointer"
           >
             {copied ? t("common.copied") : t("common.copy")}
           </button>
@@ -93,7 +93,7 @@ export default function SetupPage() {
         <div className="flex flex-wrap gap-3">
           {prereqs.map((p) => (
             <div key={p.name} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-sm">
-              <span className="text-[#E8FF47] font-mono font-semibold">{p.name}</span>
+              <span className="text-[#00E87A] font-mono font-semibold">{p.name}</span>
               <span className="text-gray-500">—</span>
               <span className="text-gray-400 text-xs">{p.check}</span>
             </div>
@@ -106,7 +106,7 @@ export default function SetupPage() {
       <div className="grid gap-3 mb-8">
         {steps.map((s) => (
           <div key={s.num} className="flex items-start gap-4 rounded-xl border border-[#222] bg-[#111111] p-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#E8FF47]/10 text-[#E8FF47] flex items-center justify-center text-sm font-bold">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00E87A]/10 text-[#00E87A] flex items-center justify-center text-sm font-bold">
               {s.num}
             </div>
             <div className="flex-1 min-w-0">
@@ -125,7 +125,7 @@ export default function SetupPage() {
         <h2 className="text-sm font-semibold text-white mb-3">{t("setup.afterInstall")}</h2>
         <div className="space-y-2 text-sm text-gray-400">
           <div className="flex items-start gap-2">
-            <span className="text-[#E8FF47] mt-0.5">●</span>
+            <span className="text-[#00E87A] mt-0.5">●</span>
             <span><strong className="text-white">Claude Code</strong> — {t("setup.claude.after")}</span>
           </div>
           <div className="flex items-start gap-2">

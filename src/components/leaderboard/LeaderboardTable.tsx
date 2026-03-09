@@ -112,11 +112,11 @@ function ClaudeTable({ period }: { period: Period }) {
                       </td>
                     </tr>
                   )}
-                  <tr className={`border-b border-[#1a1a1a] transition-colors ${isTop3 ? "bg-[#E8FF47]/[0.03] hover:bg-[#E8FF47]/[0.07]" : "hover:bg-[#161616]"} ${isBelowAvg ? "opacity-50" : ""}`}>
+                  <tr className={`border-b border-[#1a1a1a] transition-colors ${isTop3 ? "bg-[#00E87A]/[0.03] hover:bg-[#00E87A]/[0.07]" : "hover:bg-[#161616]"} ${isBelowAvg ? "opacity-50" : ""}`}>
                     <td className="px-3 py-3 text-sm md:px-4 md:py-4">{isTop3 ? MEDAL[i] : <span className="text-neutral-600">{i + 1}</span>}</td>
                     <td className="px-3 py-3 md:px-4 md:py-4">
                       <div className="flex items-center gap-2 md:gap-3">
-                        <Avatar name={row.name} initial={row.initial} color={isTop3 ? "#E8FF47" : AVATAR_COLORS[i % AVATAR_COLORS.length]} />
+                        <Avatar name={row.name} initial={row.initial} color={isTop3 ? "#00E87A" : AVATAR_COLORS[i % AVATAR_COLORS.length]} />
                         <span className={`font-medium text-sm md:text-base ${isTop3 ? "text-white" : "text-neutral-300"}`}>{row.name}</span>
                       </div>
                     </td>
@@ -126,13 +126,13 @@ function ClaudeTable({ period }: { period: Period }) {
                     <td className="px-3 py-3 text-right md:px-4 md:py-4">
                       <div className="flex items-center justify-end gap-2 md:gap-3">
                         <div className="w-16 md:w-24 h-2 rounded-full bg-[#1a1a1a] overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${barWidth}%`, backgroundColor: isTop3 ? "#E8FF47" : isBelowAvg ? "#555" : "#888" }} />
+                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${barWidth}%`, backgroundColor: isTop3 ? "#00E87A" : isBelowAvg ? "#555" : "#888" }} />
                         </div>
                         <span className="text-white font-mono text-xs md:text-sm font-medium min-w-[50px] md:min-w-[60px] text-right">{formatTokens(row.total)}</span>
                       </div>
                     </td>
                     <td className="hidden sm:table-cell px-4 py-4 text-right">
-                      <span className="font-mono text-sm font-bold text-[#E8FF47]">{formatPercent(row.cacheHitRate)}</span>
+                      <span className="font-mono text-sm font-bold text-[#00E87A]">{formatPercent(row.cacheHitRate)}</span>
                     </td>
                   </tr>
                 </React.Fragment>
@@ -333,7 +333,7 @@ export default function LeaderboardTable() {
   const [period, setPeriod] = useState<Period>("30d");
 
   const AI_TOOLS: { key: AiTool; label: string; color: string }[] = [
-    { key: "claude", label: "Claude Code", color: "#E8FF47" },
+    { key: "claude", label: "Claude Code", color: "#00E87A" },
     { key: "gemini", label: "Gemini",      color: "#4285F4" },
     { key: "codex",  label: "Codex",       color: "#10A37F" },
   ];

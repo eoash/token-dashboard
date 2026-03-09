@@ -80,10 +80,10 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
           <div
             key={c.week}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg ${
-              i === 0 ? "bg-[#E8FF47]/5 border border-[#E8FF47]/20" : "bg-white/[0.02]"
+              i === 0 ? "bg-[#00E87A]/5 border border-[#00E87A]/20" : "bg-white/[0.02]"
             }`}
           >
-            <span className={`text-xs font-mono w-24 flex-shrink-0 ${i === 0 ? "text-[#E8FF47]" : "text-gray-500"}`}>
+            <span className={`text-xs font-mono w-24 flex-shrink-0 ${i === 0 ? "text-[#00E87A]" : "text-gray-500"}`}>
               {c.weekLabel}
             </span>
             {c.avatar ? (
@@ -101,7 +101,7 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
               )}
               {c.name}
             </span>
-            <span className={`text-xs font-mono ${i === 0 ? "text-[#E8FF47]" : "text-gray-500"}`}>
+            <span className={`text-xs font-mono ${i === 0 ? "text-[#00E87A]" : "text-gray-500"}`}>
               {formatTokens(c.tokens)}
             </span>
           </div>
@@ -109,7 +109,7 @@ export default function WeeklyChampions({ data }: { data: ClaudeCodeDataPoint[] 
       </div>
       <Link
         href="/rank"
-        className="mt-3 block text-center text-xs text-gray-500 hover:text-[#E8FF47] transition-colors"
+        className="mt-3 block text-center text-xs text-gray-500 hover:text-[#00E87A] transition-colors"
       >
         🚀 {locale === "ko" ? "Mission Control →" : "Mission Control →"}
       </Link>

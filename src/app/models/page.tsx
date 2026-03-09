@@ -76,7 +76,7 @@ export default function ModelsPage() {
                       <td className="text-right text-gray-400">{formatTokens(m.inputTokens)}</td>
                       <td className="text-right text-gray-400">{formatTokens(m.outputTokens)}</td>
                       <td className="text-right text-gray-400">{formatTokens(m.cacheTokens)}</td>
-                      <td className="text-right font-medium text-[#E8FF47]">{formatTokens(m.totalTokens)}</td>
+                      <td className="text-right font-medium text-[#00E87A]">{formatTokens(m.totalTokens)}</td>
                     </tr>
                   ))}
                 </tbody>
