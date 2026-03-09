@@ -383,6 +383,27 @@ function prog(current: number, target: number) {
   return { current: Math.min(current, target), target, percent: Math.min(100, Math.round((current / target) * 100)) };
 }
 
+// === Rarity ===
+export type Rarity = "common" | "rare" | "epic" | "legendary";
+
+// 전체 프로필 배열에서 각 업적의 달성률을 계산하여 레어도를 반환
+export function getAchievementRarity(achievementId: string, allProfiles: UserProfile[]): Rarity {
+  if (allProfiles.length === 0) return "common";
+  const earnedCount = allProfiles.filter(p => p.earnedAchievements.includes(achievementId)).length;
+  const rate = earnedCount / allProfiles.length;
+  if (rate < 0.1) return "legendary";
+  if (rate < 0.3) return "epic";
+  if (rate < 0.6) return "rare";
+  return "common";
+}
+
+export const RARITY_COLORS: Record<Rarity, string> = {
+  common: "",
+  rare: "#C0C0C0",
+  epic: "#A855F7",
+  legendary: "#F59E0B",
+};
+
 export function getAchievementProgress(achievementId: string, profile: UserProfile): { current: number; target: number; percent: number } | null {
   const streakMatch = achievementId.match(/^streak-(\d+)$/);
   if (streakMatch) { const t = Number(streakMatch[1]); return prog(profile.maxStreak, t); }

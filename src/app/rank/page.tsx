@@ -5,8 +5,11 @@ import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { buildProfiles } from "@/lib/gamification";
 import JourneyMap from "@/components/rank/JourneyMap";
 import CharacterCard from "@/components/rank/CharacterCard";
+import RadarComparison from "@/components/rank/RadarComparison";
 import PartyRanking from "@/components/rank/PartyRanking";
 import AchievementGrid from "@/components/rank/AchievementGrid";
+import ActivityTimeline from "@/components/rank/ActivityTimeline";
+import WeeklySummary from "@/components/rank/WeeklySummary";
 import { useT } from "@/lib/contexts/LanguageContext";
 
 const LS_KEY = "rank-selected-user";
@@ -90,8 +93,17 @@ export default function RankPage() {
         </select>
       </div>
 
-      {/* Character Card */}
-      <CharacterCard profile={selected} />
+      {/* CharacterCard + RadarComparison: 2-column */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <CharacterCard profile={selected} />
+        <RadarComparison profile={selected} allProfiles={profiles} />
+      </div>
+
+      {/* Weekly Summary */}
+      <WeeklySummary profile={selected} data={data} />
+
+      {/* Activity Timeline */}
+      <ActivityTimeline profile={selected} data={data} />
 
       {/* Party Ranking */}
       <PartyRanking
@@ -101,7 +113,7 @@ export default function RankPage() {
       />
 
       {/* Achievement Grid */}
-      <AchievementGrid earnedAchievements={selected.earnedAchievements} profile={selected} />
+      <AchievementGrid earnedAchievements={selected.earnedAchievements} profile={selected} allProfiles={profiles} />
     </div>
   );
 }
