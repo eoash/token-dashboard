@@ -100,7 +100,7 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 - **backfill 누락 시 generate_backfill.py로 로컬 transcript에서 보충**: `python3 scripts/generate_backfill.py --out /tmp/result.json` → 해당 날짜 데이터 추출하여 ash.json에 수동 추가
 
 ### OTel Collector
-- `metrics_url_path: /` — Gemini v0.32 HTTP 버그 우회. v0.33 이후 `/v1/metrics` 복원 필요
+- `metrics_url_path: /v1/metrics` — Gemini v0.33+ 표준 경로 복원 완료 (v0.32 버그 우회 해제)
 
 ### install-hook.sh / install-hook.ps1 (셸→Python)
 - `python3 -c "..."` 안에서 triple-quote + 변수 → 충돌 위험. 환경변수로 전달 후 `os.environ[]`로 읽기

@@ -14,8 +14,8 @@ import urllib.error
 from collections import defaultdict
 
 OTEL_ENDPOINT = "https://otel-collector-production-2dac.up.railway.app"
-# Gemini CLI v0.32 버그 우회: / 경로로 통일 (Collector metrics_url_path: / 와 매칭)
-OTLP_METRICS_PATH = "/"
+# Gemini CLI v0.33+ 표준 경로 복원 (v0.32 버그 우회 해제)
+OTLP_METRICS_PATH = "/v1/metrics"
 
 # 팀 메타데이터
 SERVICE_NAME = "claude-code"

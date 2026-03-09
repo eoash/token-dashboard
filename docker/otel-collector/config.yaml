@@ -9,9 +9,8 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
-        # Gemini CLI v0.32 버그 우회: /v1/metrics 대신 / 로 전송
-        # otel_push.py도 / 경로로 맞춤. v0.33+ 수정 후 /v1/metrics 복원 가능.
-        metrics_url_path: /
+        # Gemini CLI v0.33+ 표준 경로 복원 (v0.32 버그 우회 해제)
+        metrics_url_path: /v1/metrics
 
 processors:
   batch:
