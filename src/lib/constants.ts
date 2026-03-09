@@ -15,8 +15,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
   { email: "jy.lim@eoeoeo.net", name: "Jiyoon", avatar: "https://avatars.slack-edge.com/2025-09-18/9542670154084_9e7c78110c9a4ff94832_72.jpg" },
   { email: "cw.lim@eoeoeo.net", name: "Chanwoo", avatar: "https://avatars.slack-edge.com/2025-09-18/9524291207319_0c31cb66d5d1501aafcd_72.jpg" },
   // — Standard —
-  { email: "chankim@eoeoeo.net", name: "Chanho", avatar: "https://avatars.slack-edge.com/2026-02-28/10615371073553_bfef484b80d2b5af7550_72.jpg" },
-  { email: "chanhee@eoeoeo.net", name: "Chanhee" },
+  { email: "chankim@eoeoeo.net", name: "Chanho", avatar: "https://avatars.slack-edge.com/2026-02-05/10468440643313_b6eef88812def007ebcd_72.png" },
+  { email: "chanhee@eoeoeo.net", name: "Chanhee", avatar: "https://avatars.slack-edge.com/2026-02-28/10615371073553_bfef484b80d2b5af7550_72.jpg" },
   { email: "heejoo@eoeoeo.net", name: "Heejoo", avatar: "https://avatars.slack-edge.com/2025-11-26/9980651837799_5de589c7a820c8d3035f_72.png" },
   { email: "izzy@eoeoeo.net", name: "Izzy", avatar: "https://avatars.slack-edge.com/2025-09-17/9548321478705_9b12a80b514c735c69cc_72.jpg" },
   { email: "grace@eoeoeo.net", name: "Grace", avatar: "https://avatars.slack-edge.com/2025-09-18/9539341183558_899f08971fcc43011541_72.png" },
