@@ -1,7 +1,7 @@
 "use client";
 
 import type { UserProfile } from "@/lib/gamification";
-import { ACHIEVEMENTS } from "@/lib/gamification";
+import { ACHIEVEMENTS, AUTO_LEVEL_CAP, LEVELS } from "@/lib/gamification";
 import { formatTokens, formatNumber } from "@/lib/utils";
 import { useT } from "@/lib/contexts/LanguageContext";
 
@@ -61,6 +61,13 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
             style={{ width: `${profile.progressPercent}%` }}
           />
         </div>
+        {profile.level.level === AUTO_LEVEL_CAP && profile.progressPercent === 100 && (
+          <p className="text-[10px] text-gray-500 mt-1.5">
+            🔒 {isKo
+              ? "Lv.7 이상은 AI 프로덕트 결과물 심사 + 팀 추천이 필요합니다"
+              : "Lv.7+ requires product review + team nomination"}
+          </p>
+        )}
       </div>
 
       {/* Stats Grid */}

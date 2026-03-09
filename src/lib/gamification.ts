@@ -122,6 +122,19 @@ export const ACHIEVEMENT_CATEGORIES = [
   { key: "milestone",    labelKo: "레벨",      labelEn: "Level" },
 ] as const;
 
+// === Manual Promotion ===
+// Lv.7(Legendary), Lv.8(AI Native)는 XP 충족 + 심사 통과 필요
+// 심사 기준: AI로 만든 프로덕트 결과물 평가 + 팀 동료 추천
+//   - Lv.7: AI 활용 프로덕트 1개 이상 완성 + 팀 내 발표/데모
+//   - Lv.8: AI 활용 프로덕트 3개 이상 + 외부 공유 가능 수준 + 팀 투표 과반
+const PROMOTED_USERS: Record<string, number> = {
+  // "email@eoeoeo.net": 7,  // Lv.7 심사 통과
+  // "email@eoeoeo.net": 8,  // Lv.8 심사 통과
+};
+
+// XP만으로 자동 도달 가능한 최대 레벨
+export const AUTO_LEVEL_CAP = 6;
+
 // === Tool Detection ===
 function detectTool(model: string): "claude" | "codex" | "gemini" {
   if (model.startsWith("gpt")) return "codex";
@@ -130,11 +143,14 @@ function detectTool(model: string): "claude" | "codex" | "gemini" {
 }
 
 // === Level Resolver ===
-export function getLevel(xp: number): LevelInfo {
+export function getLevel(xp: number, email?: string): LevelInfo {
+  const promotedLevel = email ? PROMOTED_USERS[email.toLowerCase()] ?? 0 : 0;
   let result = LEVELS[0];
   for (const lv of LEVELS) {
-    if (xp >= lv.requiredXp) result = lv;
-    else break;
+    if (xp < lv.requiredXp) break;
+    // Lv.7+ requires manual promotion
+    if (lv.level > AUTO_LEVEL_CAP && lv.level > promotedLevel) break;
+    result = lv;
   }
   return result;
 }
@@ -298,7 +314,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const streakBonus = Math.floor(streakBonusDays * 50 * 0.5);
     const xp = tokenXp + dayXp + commitXp + prXp + streakBonus;
 
-    const level = getLevel(xp);
+    const level = getLevel(xp, email);
     const nextLevel = getNextLevel(level);
     const xpInLevel = xp - level.requiredXp;
     const xpToNext = nextLevel ? nextLevel.requiredXp - level.requiredXp : 0;
