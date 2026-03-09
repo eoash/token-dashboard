@@ -61,8 +61,15 @@ REMINDER_MESSAGE = """안녕하세요! :wave:
 Claude Code 토큰 사용량 대시보드에 아직 데이터가 없어서 리마인드 드립니다.
 
 터미널에서 아래 명령어 한 줄만 실행하면 자동 설정됩니다:
+
+*Mac / Linux:*
 ```
 curl -sL https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.sh | bash
+```
+
+*Windows (PowerShell):*
+```
+irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex
 ```
 
 :link: 대시보드: https://token-dashboard-iota.vercel.app
