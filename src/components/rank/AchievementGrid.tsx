@@ -204,11 +204,14 @@ export default function AchievementGrid({ earnedAchievements, profile, allProfil
                             </div>
                           )}
 
-                          {/* Earned: check + rarity badge */}
+                          {/* Earned: check + date + rarity badge */}
                           {earned && (
                             <div className="flex items-center gap-1.5">
                               <span className="text-[10px] text-[#00E87A]">
-                                {"✓ "}{isKo ? "획득" : "Earned"}
+                                {"✓ "}
+                                {profile.achievedAt[a.id]
+                                  ? profile.achievedAt[a.id].slice(5).replace("-", "/")
+                                  : isKo ? "획득" : "Earned"}
                               </span>
                               {rarity && rarity !== "common" && (
                                 <span

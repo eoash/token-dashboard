@@ -39,6 +39,7 @@ export interface UserProfile {
   currentStreak: number;
   maxStreak: number;
   earnedAchievements: string[];
+  achievedAt: Record<string, string>; // achievementId → ISO date (YYYY-MM-DD)
   tools: Set<string>;
   models: Set<string>;
   rawXp: number;           // decay 적용 전 원래 XP
@@ -289,6 +290,139 @@ function evaluateAchievements(profile: {
   return earned;
 }
 
+// === Achievement Date Tracker ===
+// 데이터를 시간순으로 리플레이하여 각 업적이 처음 달성된 날짜를 계산
+function computeAchievementDates(
+  points: ClaudeCodeDataPoint[],
+  championHistory: Map<string, string>,
+  userName: string,
+  email: string,
+): Record<string, string> {
+  const achievedAt: Record<string, string> = {};
+
+  // 날짜별 집계
+  const dailyAgg = new Map<string, { tokens: number; commits: number; prs: number; output: number; tools: Set<string>; models: Set<string> }>();
+  for (const d of points) {
+    if (!d.date) continue;
+    let day = dailyAgg.get(d.date);
+    if (!day) {
+      day = { tokens: 0, commits: 0, prs: 0, output: 0, tools: new Set(), models: new Set() };
+      dailyAgg.set(d.date, day);
+    }
+    day.tokens += d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    day.commits += d.commits;
+    day.prs += d.pull_requests;
+    day.output += d.output_tokens;
+    day.tools.add(detectTool(d.model));
+    day.models.add(d.model);
+  }
+
+  const sortedDates = [...dailyAgg.keys()].sort();
+  let runningTokens = 0, runningCommits = 0, runningPRs = 0;
+  const allTools = new Set<string>();
+  const allModels = new Set<string>();
+
+  // 스트릭 증분 추적
+  let currentStreak = 0, maxStreak = 0;
+  let prevDate: string | null = null;
+
+  const mark = (id: string, date: string) => {
+    if (!achievedAt[id]) achievedAt[id] = date;
+  };
+
+  for (const date of sortedDates) {
+    const day = dailyAgg.get(date)!;
+    runningTokens += day.tokens;
+    runningCommits += day.commits;
+    runningPRs += day.prs;
+    for (const t of day.tools) allTools.add(t);
+    for (const m of day.models) allModels.add(m);
+
+    // 스트릭 계산 (증분)
+    if (prevDate) {
+      const diffMs = new Date(date).getTime() - new Date(prevDate).getTime();
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+      currentStreak = diffDays === 1 ? currentStreak + 1 : 1;
+    } else {
+      currentStreak = 1;
+    }
+    maxStreak = Math.max(maxStreak, currentStreak);
+    prevDate = date;
+
+    // XP → 레벨 (decay 제외, 달성 시점 기준)
+    const tokenXp = Math.floor(runningTokens / 10_000);
+    const activeDays = new Set(sortedDates.slice(0, sortedDates.indexOf(date) + 1)).size;
+    const dayXp = activeDays * 50;
+    const commitXp = runningCommits * 10;
+    const prXp = runningPRs * 30;
+    const streakBonusDays = Math.max(0, maxStreak - 2);
+    const streakBonus = Math.floor(streakBonusDays * 50 * 0.5);
+    const xp = tokenXp + dayXp + commitXp + prXp + streakBonus;
+    const level = getLevel(xp, email);
+
+    // --- 업적 체크 ---
+    // Onboarding
+    mark("first-light", date);
+    if (runningCommits > 0) mark("first-commit", date);
+    if (runningPRs > 0) mark("first-pr", date);
+    if (level.level >= 2) mark("level-up", date);
+
+    // Streak
+    const sThresh = [2,3,5,7,14,30,60,100,150,200,365,500,1000];
+    const sIds = ["streak-2","streak-3","streak-5","streak-7","streak-14","streak-30","streak-60","streak-100","streak-150","streak-200","streak-365","streak-500","streak-1000"];
+    for (let i = 0; i < sThresh.length; i++) {
+      if (maxStreak >= sThresh[i]) mark(sIds[i], date);
+    }
+
+    // Volume (일일 output)
+    const vThresh = [100_000, 1_000_000, 5_000_000, 10_000_000, 20_000_000];
+    const vIds = ["vol-100k", "vol-1m", "vol-5m", "vol-10m", "vol-20m"];
+    for (let i = 0; i < vThresh.length; i++) {
+      if (day.output >= vThresh[i]) mark(vIds[i], date);
+    }
+
+    // Cumulative
+    if (runningCommits >= 50) mark("commits-50", date);
+    if (runningCommits >= 200) mark("commits-200", date);
+    if (runningCommits >= 500) mark("commits-500", date);
+    if (runningPRs >= 50) mark("prs-50", date);
+
+    // Multi-tool
+    if (allTools.size >= 2) mark("dual-wielder", date);
+    if (allTools.size >= 3) mark("triple-threat", date);
+    if (allModels.size >= 3) mark("polyglot", date);
+
+    // Weekend
+    const dayOfWeek = new Date(date).getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) mark("weekend-warrior", date);
+
+    // Level milestones
+    if (level.level >= 5) mark("wizard-class", date);
+    if (level.level >= 8) mark("transcendence", date);
+  }
+
+  // Champion 업적 — 주차별 시간순 처리
+  const sortedWeeks = [...championHistory.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  let champWins = 0, champConsecutive = 0, tempConsecutive = 0;
+  for (const [weekKey, winner] of sortedWeeks) {
+    if (winner === userName) {
+      champWins++;
+      tempConsecutive++;
+      champConsecutive = Math.max(champConsecutive, tempConsecutive);
+    } else {
+      tempConsecutive = 0;
+    }
+    if (champWins >= 1) mark("weekly-champ-1", weekKey);
+    if (champConsecutive >= 3) mark("weekly-champ-3", weekKey);
+    if (champWins >= 10) mark("weekly-champ-10", weekKey);
+    if (champWins >= 20) mark("weekly-champ-20", weekKey);
+  }
+
+  // Night/Early — 현재 데이터에 시간 정보 없음 (hardcoded false)
+
+  return achievedAt;
+}
+
 // === Main: Build All Profiles ===
 export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
   const userDataMap = new Map<string, ClaudeCodeDataPoint[]>();
@@ -366,11 +500,13 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
       hasWeekendActivity, hasNightActivity: false, hasEarlyActivity: false,
     });
 
+    const achievedAt = computeAchievementDates(points, champions, name, email);
+
     profiles.push({
       email, name, avatar: member?.avatar,
       xp, level, nextLevel, xpInLevel, xpToNext, progressPercent,
       totalTokens, activeDays, totalCommits, totalPRs,
-      currentStreak, maxStreak, earnedAchievements, tools, models,
+      currentStreak, maxStreak, earnedAchievements, achievedAt, tools, models,
       rawXp, decayDays, daysSinceLastActivity,
     });
   }

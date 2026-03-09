@@ -5,7 +5,6 @@ import type { UserProfile } from "@/lib/gamification";
 import { LEVELS } from "@/lib/gamification";
 import { formatNumber, formatTokens } from "@/lib/utils";
 import { useT } from "@/lib/contexts/LanguageContext";
-import InfoTip from "@/components/InfoTip";
 
 interface Props {
   profiles: UserProfile[];
@@ -44,7 +43,13 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
           </span>
         )}
       </h2>
-      <div className="overflow-x-auto overflow-y-visible">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-gray-600 mb-3">
+        <span>{isKo ? "다음 레벨 = 다음 레벨까지 XP 진행률" : "Next Lv = XP progress to next level"}</span>
+        <span>🔥 = {isKo ? "연속 사용일" : "streak"}</span>
+        <span>✓ = {isKo ? "오늘/어제 활동" : "active today"}</span>
+        <span><span className="text-gray-700">Nd</span> = {isKo ? "비활동 일수" : "days inactive"}</span>
+      </div>
+      <div className="overflow-x-auto">
         <table className="w-full text-base table-fixed" style={{ fontVariantNumeric: "tabular-nums" }}>
           <colgroup>
             <col className="w-8" />
@@ -57,14 +62,8 @@ export default function PartyRanking({ profiles, selectedName, onSelect }: Props
             <tr className="text-gray-500 text-xs border-b border-[#222]">
               <th className="text-left py-2 text-sm">#</th>
               <th className="text-left py-2 text-sm">{isKo ? "탐험가" : "Explorer"}</th>
-              <th className="text-left py-2 text-sm hidden sm:table-cell">
-                {isKo ? "다음 레벨" : "Next Lv"}
-                <InfoTip text={isKo ? "현재 레벨에서 다음 레벨까지의 XP 진행률" : "XP progress from current level to next"} below />
-              </th>
-              <th className="text-center py-2 text-sm">
-                {isKo ? "활동" : "Activity"}
-                <InfoTip text={isKo ? "🔥Nd = 연속 사용일 · ✓ = 오늘/어제 활동 · Nd = 비활동 일수" : "🔥Nd = streak · ✓ = active today · Nd = days inactive"} wide below />
-              </th>
+              <th className="text-left py-2 text-sm hidden sm:table-cell">{isKo ? "다음 레벨" : "Next Lv"}</th>
+              <th className="text-center py-2 text-sm">{isKo ? "활동" : "Activity"}</th>
               <th className="text-right py-2 text-sm">XP</th>
             </tr>
           </thead>

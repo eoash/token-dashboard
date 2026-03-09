@@ -39,14 +39,14 @@ export default function OverviewPage() {
         <div className="text-gray-400 text-center py-12">{t("common.loading")}</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
             <KpiCard title={t("kpi.totalTokens")} value={formatTokens(overview.totalTokens)} subtitle={t("kpi.totalTokens.sub")} tooltip={t("kpi.totalTokens.tip")} />
             <KpiCard title={t("kpi.cacheHitRate")} value={formatPercent(overview.cacheHitRate)} subtitle={t("kpi.cacheHitRate.sub")} tooltip={t("kpi.cacheHitRate.tip")} />
             <KpiCard title={t("kpi.activeUsers")} value={String(overview.activeUsers)} subtitle={t("kpi.activeUsers.sub")} tooltip={t("kpi.activeUsers.tip")} />
             <KpiCard title={t("kpi.avgDailySessions")} value={String(overview.avgDailySessions)} subtitle={t("kpi.avgDailySessions.sub")} tooltip={t("kpi.avgDailySessions.tip")} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6">
             <KpiCard title={t("kpi.totalCommits")} value={overview.totalCommits.toLocaleString()} subtitle={t("kpi.totalCommits.sub")} tooltip={t("kpi.totalCommits.tip")} />
             <KpiCard title={t("kpi.pullRequests")} value={overview.totalPRs.toLocaleString()} subtitle={t("kpi.pullRequests.sub")} tooltip={t("kpi.pullRequests.tip")} />
           </div>

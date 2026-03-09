@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { ACHIEVEMENTS } from "@/lib/gamification";
 import type { UserProfile } from "@/lib/gamification";
 import type { ClaudeCodeDataPoint } from "@/lib/types";
 import { resolveActorName } from "@/lib/constants";
@@ -97,6 +98,22 @@ export default function ActivityTimeline({ profile, data }: Props) {
           date,
           label: `[${mm}/${dd}] \u{1F6E0}\uFE0F ${tool} ${isKo ? "\uCCAB \uC0AC\uC6A9" : "first use"}`,
         });
+      }
+    }
+
+    // 4. Achievement unlock events (from achievedAt)
+    const achievementMap = new Map(ACHIEVEMENTS.map((a) => [a.id, a]));
+    for (const [id, date] of Object.entries(profile.achievedAt)) {
+      if (date >= cutoffStr) {
+        const ach = achievementMap.get(id);
+        if (ach) {
+          const mm = date.slice(5, 7);
+          const dd = date.slice(8, 10);
+          all.push({
+            date,
+            label: `[${mm}/${dd}] 🏆 ${ach.icon} ${ach.name} ${isKo ? "달성" : "unlocked"}`,
+          });
+        }
       }
     }
 

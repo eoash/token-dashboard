@@ -105,7 +105,7 @@ function DailyChart({ daily, accentColor, t }: {
 function ClaudeEfficiencyContent({ eff, t }: { eff: EfficiencyAggregation; t: (key: TranslationKey) => string }) {
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
         <KpiCard title={t("kpi.cacheHitRate")} value={formatPercent(eff.avgCacheHitRate)} subtitle={t("lb.teamAvg").toLowerCase()} tooltip={t("eff.cacheEff.tip")} />
         <KpiCard title={t("eff.outputRatio")} value={`${eff.avgOutputRatio.toFixed(1)}x`} subtitle={t("eff.outputRatio.sub")} tooltip={t("eff.outputRatio.tip")} />
         <KpiCard title={t("eff.cacheEff")} value={`${eff.avgCacheEfficiency.toFixed(1)}x`} subtitle={t("eff.cacheEff.sub")} tooltip={t("eff.cacheEff.tip")} />
@@ -190,7 +190,7 @@ function CodexEfficiencyContent({ eff, t }: { eff: CodexEfficiencyAggregation; t
         <span className="text-[#10A37F] font-medium">Note</span> — {t("eff.codexNote" as TranslationKey)}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
         <KpiCard title={t("kpi.cacheHitRate")} value={formatPercent(eff.avgCacheHitRate)} subtitle={t("lb.teamAvg").toLowerCase()} tooltip={t("kpi.cacheHitRate.tip")} />
         <KpiCard title={t("eff.outputRatio")} value={`${eff.avgOutputRatio.toFixed(1)}x`} subtitle={t("eff.outputRatio.sub")} tooltip={t("eff.outputRatio.tip")} />
         <KpiCard title={t("eff.reasoningRatio" as TranslationKey)} value={formatPercent(eff.avgReasoningRatio)} subtitle={t("eff.reasoningRatio.sub" as TranslationKey)} tooltip={t("eff.reasoningRatio.tip" as TranslationKey)} />

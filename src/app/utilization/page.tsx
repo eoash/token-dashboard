@@ -34,7 +34,7 @@ export default function UtilizationPage() {
         <div className="text-gray-400 text-center py-12">{t("common.loading")}</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-6">
             <KpiCard title={t("kpi.totalTokens")} value={formatTokens(util.totalTokens)} subtitle={t("kpi.totalTokens.sub")} tooltip={t("kpi.totalTokens.tip")} />
             <KpiCard title={t("kpi.cacheHitRate")} value={formatPercent(util.cacheHitRate)} subtitle={t("kpi.cacheHitRate.sub")} tooltip={t("kpi.cacheHitRate.tip")} />
             <KpiCard title={t("util.avgDailyTokens")} value={formatTokens(util.avgDailyTokens)} subtitle={t("util.avgDailyTokens.sub")} tooltip={t("util.avgDailyTokens.tip")} />
