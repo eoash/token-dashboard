@@ -78,14 +78,22 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
         <StatBox label="PR" value={formatNumber(profile.totalPRs)} />
       </div>
 
-      {/* Streak */}
-      <div className="flex items-center gap-4 mb-4 text-xs">
+      {/* Streak + Decay */}
+      <div className="flex items-center gap-4 mb-4 text-xs flex-wrap">
         <span className="text-gray-400">
           🔥 {isKo ? "현재 스트릭" : "Current Streak"}: <span className="text-white font-mono">{profile.currentStreak}{isKo ? "일" : "d"}</span>
         </span>
         <span className="text-gray-400">
           ⚡ {isKo ? "최장" : "Best"}: <span className="text-white font-mono">{profile.maxStreak}{isKo ? "일" : "d"}</span>
         </span>
+        {profile.decayDays > 0 && (
+          <span className="text-red-400">
+            📉 {isKo ? "비활동 감소 중" : "Decaying"}: -{profile.decayDays}{isKo ? "일" : "d"}
+            <span className="text-gray-500 ml-1">
+              ({formatNumber(profile.rawXp - profile.xp)} XP)
+            </span>
+          </span>
+        )}
       </div>
 
       {/* Achievement Preview */}

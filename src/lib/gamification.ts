@@ -39,6 +39,9 @@ export interface UserProfile {
   earnedAchievements: string[];
   tools: Set<string>;
   models: Set<string>;
+  rawXp: number;           // decay 적용 전 원래 XP
+  decayDays: number;       // 유예 후 감소 적용 일수 (0이면 감소 없음)
+  daysSinceLastActivity: number;
 }
 
 // === Level Table ===
@@ -134,6 +137,18 @@ const PROMOTED_USERS: Record<string, number> = {
 
 // XP만으로 자동 도달 가능한 최대 레벨
 export const AUTO_LEVEL_CAP = 6;
+
+// === XP Decay ===
+// 7일 유예 후 매일 현재 XP의 1%씩 감소 (복리)
+const DECAY_GRACE_DAYS = 7;
+const DECAY_RATE_PER_DAY = 0.01;
+
+function applyDecay(xp: number, daysSinceLastActivity: number): { decayedXp: number; decayDays: number } {
+  if (daysSinceLastActivity <= DECAY_GRACE_DAYS) return { decayedXp: xp, decayDays: 0 };
+  const decayDays = daysSinceLastActivity - DECAY_GRACE_DAYS;
+  const decayedXp = Math.floor(xp * Math.pow(1 - DECAY_RATE_PER_DAY, decayDays));
+  return { decayedXp, decayDays };
+}
 
 // === Tool Detection ===
 function detectTool(model: string): "claude" | "codex" | "gemini" {
@@ -312,7 +327,18 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const prXp = totalPRs * 30;
     const streakBonusDays = Math.max(0, maxStreak - 2);
     const streakBonus = Math.floor(streakBonusDays * 50 * 0.5);
-    const xp = tokenXp + dayXp + commitXp + prXp + streakBonus;
+    const rawXp = tokenXp + dayXp + commitXp + prXp + streakBonus;
+
+    // XP Decay: 마지막 활동 후 7일 유예, 이후 일 1% 감소
+    const sortedDates = [...new Set(activeDates)].sort();
+    const lastActiveDate = sortedDates[sortedDates.length - 1];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const daysSinceLastActivity = lastActiveDate
+      ? Math.floor((today.getTime() - new Date(lastActiveDate).getTime()) / (1000 * 60 * 60 * 24))
+      : 0;
+    const { decayedXp, decayDays } = applyDecay(rawXp, daysSinceLastActivity);
+    const xp = decayedXp;
 
     const level = getLevel(xp, email);
     const nextLevel = getNextLevel(level);
@@ -343,6 +369,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
       xp, level, nextLevel, xpInLevel, xpToNext, progressPercent,
       totalTokens, activeDays, totalCommits, totalPRs,
       currentStreak, maxStreak, earnedAchievements, tools, models,
+      rawXp, decayDays, daysSinceLastActivity,
     });
   }
 
