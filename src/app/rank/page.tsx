@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 import { buildProfiles } from "@/lib/gamification";
+import JourneyMap from "@/components/rank/JourneyMap";
 import CharacterCard from "@/components/rank/CharacterCard";
 import PartyRanking from "@/components/rank/PartyRanking";
 import AchievementGrid from "@/components/rank/AchievementGrid";
@@ -18,7 +19,6 @@ export default function RankPage() {
 
   const [selectedName, setSelectedName] = useState<string>("");
 
-  // Restore last selection from localStorage
   useEffect(() => {
     const saved = localStorage.getItem(LS_KEY);
     if (saved && profiles.some((p) => p.name === saved)) {
@@ -54,18 +54,25 @@ export default function RankPage() {
   if (!selected) return null;
 
   return (
-    <div className="space-y-4">
+    <div
+      className="space-y-4"
+      style={{
+        backgroundImage: "radial-gradient(circle, #1a1a1a 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+      }}
+    >
       {/* Page Title */}
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          🔭 {isKo ? "Explorer's Log" : "Explorer's Log"}
+          📡 {isKo ? "Explorer's Log" : "Explorer's Log"}
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          {isKo
-            ? "AI 세계 탐사 기록 — Scout에서 AI Native까지의 여정"
-            : "AI World Expedition — From Scout to AI Native"}
+        <p className="text-sm font-mono text-gray-500 mt-1">
+          [LOG] Monitoring {profiles.length} explorers in AI territory
         </p>
       </div>
+
+      {/* Journey Map (Hero) */}
+      <JourneyMap profile={selected} />
 
       {/* User Selector (mobile) */}
       <div className="sm:hidden">
@@ -94,7 +101,7 @@ export default function RankPage() {
       />
 
       {/* Achievement Grid */}
-      <AchievementGrid earnedAchievements={selected.earnedAchievements} />
+      <AchievementGrid earnedAchievements={selected.earnedAchievements} profile={selected} />
     </div>
   );
 }

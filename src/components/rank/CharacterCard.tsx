@@ -1,7 +1,7 @@
 "use client";
 
 import type { UserProfile } from "@/lib/gamification";
-import { ACHIEVEMENTS, AUTO_LEVEL_CAP, LEVELS } from "@/lib/gamification";
+import { ACHIEVEMENTS, AUTO_LEVEL_CAP } from "@/lib/gamification";
 import { formatTokens, formatNumber } from "@/lib/utils";
 import { useT } from "@/lib/contexts/LanguageContext";
 
@@ -12,25 +12,44 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
   const nextTitle = profile.nextLevel
     ? isKo ? profile.nextLevel.titleKo : profile.nextLevel.titleEn
     : null;
+  const [from, to] = profile.level.color;
+  const isHighLevel = profile.level.level >= 7;
 
   const previewAchievements = profile.earnedAchievements.slice(0, 7);
   const remaining = profile.earnedAchievements.length - 7;
 
   return (
-    <div className="rounded-xl border border-[#222] bg-[#111111] p-6">
+    <div
+      className={`rounded-xl bg-[#111111] p-6 ${isHighLevel ? "animate-[pulse_3s_ease-in-out_infinite]" : ""}`}
+      style={{
+        border: "2px solid transparent",
+        borderImage: `linear-gradient(135deg, ${from}, ${to}) 1`,
+      }}
+    >
       {/* Header: Avatar + Name + Level */}
-      <div className="flex items-center gap-4 mb-5">
+      <div className="flex items-center gap-4 mb-2">
         {profile.avatar ? (
-          <img src={profile.avatar} alt={profile.name} className="w-16 h-16 rounded-full ring-2 ring-[#00E87A]/30" />
+          <img
+            src={profile.avatar}
+            alt={profile.name}
+            className="w-16 h-16 rounded-full"
+            style={{ boxShadow: `0 0 0 2px ${from}60` }}
+          />
         ) : (
-          <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center text-2xl text-gray-400 ring-2 ring-[#00E87A]/30">
+          <div
+            className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center text-2xl text-gray-400"
+            style={{ boxShadow: `0 0 0 2px ${from}60` }}
+          >
             {profile.name[0]}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xl font-bold text-white">{profile.name}</span>
-            <span className="text-sm font-mono text-[#00E87A] bg-[#00E87A]/10 px-2.5 py-0.5 rounded">
+            <span
+              className="text-sm font-mono px-2.5 py-0.5 rounded"
+              style={{ color: from, backgroundColor: `${from}18` }}
+            >
               Lv.{profile.level.level}
             </span>
           </div>
@@ -40,6 +59,11 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
           </div>
         </div>
       </div>
+
+      {/* System Log Flavor Text */}
+      <p className="text-xs font-mono text-gray-500 mb-5 pl-1">
+        {profile.level.logEn}
+      </p>
 
       {/* XP Bar */}
       <div className="mb-5">
@@ -52,13 +76,13 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
               {formatNumber(profile.xpInLevel)} / {formatNumber(profile.xpToNext)} → Lv.{profile.nextLevel.level} {nextTitle}
             </span>
           ) : (
-            <span className="text-[#00E87A] font-mono">MAX</span>
+            <span className="font-mono" style={{ color: from }}>MAX</span>
           )}
         </div>
         <div className="w-full h-2.5 bg-[#1a1a1a] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#00E87A] rounded-full transition-[width] duration-500"
-            style={{ width: `${profile.progressPercent}%` }}
+            className="h-full rounded-full transition-[width] duration-500"
+            style={{ width: `${profile.progressPercent}%`, background: `linear-gradient(90deg, ${from}, ${to})` }}
           />
         </div>
         {profile.level.level === AUTO_LEVEL_CAP && profile.progressPercent === 100 && (

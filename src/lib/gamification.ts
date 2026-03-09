@@ -9,6 +9,8 @@ export interface LevelInfo {
   titleKo: string;
   titleEn: string;
   icon: string;
+  color: [string, string]; // gradient [from, to]
+  logEn: string;           // system log flavor text
 }
 
 export interface Achievement {
@@ -46,14 +48,14 @@ export interface UserProfile {
 
 // === Level Table (Space Explorer Ranks) ===
 export const LEVELS: LevelInfo[] = [
-  { level: 1, requiredXp: 0,          titleKo: "스카우트",       titleEn: "Scout",        icon: "🔭" },
-  { level: 2, requiredXp: 500,        titleKo: "레인저",         titleEn: "Ranger",       icon: "🏹" },
-  { level: 3, requiredXp: 5_000,      titleKo: "탐험가",         titleEn: "Explorer",     icon: "🧭" },
-  { level: 4, requiredXp: 50_000,     titleKo: "패스파인더",     titleEn: "Pathfinder",   icon: "🛤️" },
-  { level: 5, requiredXp: 500_000,    titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "⚡" },
-  { level: 6, requiredXp: 2_000_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🛡️" },
-  { level: 7, requiredXp: 10_000_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🔥" },
-  { level: 8, requiredXp: 50_000_000, titleKo: "AI 네이티브",     titleEn: "AI Native",    icon: "🌟" },
+  { level: 1, requiredXp: 0,          titleKo: "스카우트",       titleEn: "Scout",        icon: "📡", color: ["#666","#888"],     logEn: "[LOG] New scout detected. Awaiting first contact." },
+  { level: 2, requiredXp: 500,        titleKo: "레인저",         titleEn: "Ranger",       icon: "🛰️", color: ["#4A9EFF","#6BB5FF"], logEn: "[LOG] Basic tools acquired. Field operations authorized." },
+  { level: 3, requiredXp: 5_000,      titleKo: "탐험가",         titleEn: "Explorer",     icon: "🌍", color: ["#00E87A","#4AFFA0"], logEn: "[LOG] Explorer protocol active. Mapping uncharted territory." },
+  { level: 4, requiredXp: 50_000,     titleKo: "패스파인더",     titleEn: "Pathfinder",   icon: "🧬", color: ["#00CED1","#48D1CC"], logEn: "[LOG] Unique path divergence detected. Self-navigation engaged." },
+  { level: 5, requiredXp: 500_000,    titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "☄️", color: ["#A855F7","#C084FC"], logEn: "[LOG] Breakthrough pattern identified. New methods emerging." },
+  { level: 6, requiredXp: 2_000_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🚀", color: ["#F59E0B","#FBBF24"], logEn: "[LOG] Vanguard status confirmed. Leading expedition team." },
+  { level: 7, requiredXp: 10_000_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🌌", color: ["#EF4444","#F97316"], logEn: "[LOG] ⚠ Anomaly: Subject producing AI-native artifacts." },
+  { level: 8, requiredXp: 50_000_000, titleKo: "AI 네이티브",     titleEn: "AI Native",    icon: "✦",  color: ["#E8FF47","#00E87A"], logEn: "[LOG] ★ Transformation complete. Human-AI boundary dissolved." },
 ];
 
 // === Achievements (38) — AI Explorer's Log ===
@@ -109,8 +111,8 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: "weekend-warrior", name: "Off-Grid Expedition", category: "time",      icon: "🏕️", conditionKo: "주말 활동",              conditionEn: "Weekend activity" },
 
   // Transformation (2)
-  { id: "wizard-class",    name: "Awakening",          category: "milestone",  icon: "⚡", conditionKo: "Lv.5 파이오니어 달성",   conditionEn: "Reach Lv.5 Pioneer" },
-  { id: "transcendence",   name: "AI Native",          category: "milestone",  icon: "🌟", conditionKo: "Lv.8 AI Native 달성",    conditionEn: "Reach Lv.8 AI Native" },
+  { id: "wizard-class",    name: "Awakening",          category: "milestone",  icon: "☄️", conditionKo: "Lv.5 파이오니어 달성",   conditionEn: "Reach Lv.5 Pioneer" },
+  { id: "transcendence",   name: "AI Native",          category: "milestone",  icon: "✦",  conditionKo: "Lv.8 AI Native 달성",    conditionEn: "Reach Lv.8 AI Native" },
 ];
 
 // Category display order & labels
@@ -374,4 +376,28 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
   }
 
   return profiles.sort((a, b) => b.xp - a.xp);
+}
+
+// === Achievement Progress Helper ===
+function prog(current: number, target: number) {
+  return { current: Math.min(current, target), target, percent: Math.min(100, Math.round((current / target) * 100)) };
+}
+
+export function getAchievementProgress(achievementId: string, profile: UserProfile): { current: number; target: number; percent: number } | null {
+  const streakMatch = achievementId.match(/^streak-(\d+)$/);
+  if (streakMatch) { const t = Number(streakMatch[1]); return prog(profile.maxStreak, t); }
+  if (achievementId === "commits-50") return prog(profile.totalCommits, 50);
+  if (achievementId === "commits-200") return prog(profile.totalCommits, 200);
+  if (achievementId === "commits-500") return prog(profile.totalCommits, 500);
+  if (achievementId === "prs-50") return prog(profile.totalPRs, 50);
+  if (achievementId === "first-light") return prog(profile.totalTokens > 0 ? 1 : 0, 1);
+  if (achievementId === "first-commit") return prog(profile.totalCommits > 0 ? 1 : 0, 1);
+  if (achievementId === "first-pr") return prog(profile.totalPRs > 0 ? 1 : 0, 1);
+  if (achievementId === "level-up") return prog(profile.level.level >= 2 ? 1 : 0, 1);
+  if (achievementId === "dual-wielder") return prog(profile.tools.size, 2);
+  if (achievementId === "triple-threat") return prog(profile.tools.size, 3);
+  if (achievementId === "polyglot") return prog(profile.models.size, 3);
+  if (achievementId === "wizard-class") return prog(profile.level.level, 5);
+  if (achievementId === "transcendence") return prog(profile.level.level, 8);
+  return null;
 }
