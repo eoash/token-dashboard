@@ -2,7 +2,7 @@
 # Claude Code / Codex / Gemini CLI 토큰 사용량을 자동으로 대시보드에 수집합니다.
 #
 # 사용법:
-#   irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex
+#   powershell -Command "irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex"
 
 $ErrorActionPreference = "Stop"
 

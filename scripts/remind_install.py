@@ -69,7 +69,7 @@ curl -sL https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/in
 
 *Windows (PowerShell):*
 ```
-irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex
+powershell -Command "irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex"
 ```
 
 :link: 대시보드: https://token-dashboard-iota.vercel.app

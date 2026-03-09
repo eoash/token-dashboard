@@ -3,15 +3,20 @@
 import { useState } from "react";
 import { useT } from "@/lib/contexts/LanguageContext";
 
-const INSTALL_CMD =
+const INSTALL_CMD_MAC =
   "curl -sL https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.sh | bash";
+const INSTALL_CMD_WIN =
+  'powershell -Command "irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex"';
 
 export default function SetupPage() {
   const { t } = useT();
   const [copied, setCopied] = useState(false);
+  const [os, setOs] = useState<"mac" | "win">("mac");
+
+  const installCmd = os === "mac" ? INSTALL_CMD_MAC : INSTALL_CMD_WIN;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(INSTALL_CMD);
+    navigator.clipboard.writeText(installCmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -43,9 +48,33 @@ export default function SetupPage() {
       {/* Install command */}
       <div className="rounded-xl border border-[#E8FF47]/30 bg-[#E8FF47]/5 p-6 mb-8">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold tracking-wider text-[#E8FF47] uppercase">
-            {t("setup.installCmd")}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold tracking-wider text-[#E8FF47] uppercase">
+              {t("setup.installCmd")}
+            </span>
+            <div className="flex rounded-md overflow-hidden border border-[#E8FF47]/20 ml-2">
+              <button
+                onClick={() => { setOs("mac"); setCopied(false); }}
+                className={`text-[10px] px-2.5 py-1 font-medium transition-colors cursor-pointer ${
+                  os === "mac"
+                    ? "bg-[#E8FF47]/20 text-[#E8FF47]"
+                    : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                Mac / Linux
+              </button>
+              <button
+                onClick={() => { setOs("win"); setCopied(false); }}
+                className={`text-[10px] px-2.5 py-1 font-medium transition-colors cursor-pointer ${
+                  os === "win"
+                    ? "bg-[#E8FF47]/20 text-[#E8FF47]"
+                    : "text-gray-500 hover:text-gray-300"
+                }`}
+              >
+                Windows
+              </button>
+            </div>
+          </div>
           <button
             onClick={handleCopy}
             className="text-xs px-3 py-1.5 rounded-md bg-[#E8FF47]/10 text-[#E8FF47] hover:bg-[#E8FF47]/20 transition-colors cursor-pointer"
@@ -54,7 +83,7 @@ export default function SetupPage() {
           </button>
         </div>
         <code className="block text-sm font-mono text-white break-all leading-relaxed select-all">
-          {INSTALL_CMD}
+          {installCmd}
         </code>
       </div>
 
