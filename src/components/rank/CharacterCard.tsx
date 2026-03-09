@@ -21,29 +21,29 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
       {/* Header: Avatar + Name + Level */}
       <div className="flex items-center gap-4 mb-5">
         {profile.avatar ? (
-          <img src={profile.avatar} alt={profile.name} className="w-14 h-14 rounded-full ring-2 ring-[#00E87A]/30" />
+          <img src={profile.avatar} alt={profile.name} className="w-16 h-16 rounded-full ring-2 ring-[#00E87A]/30" />
         ) : (
-          <div className="w-14 h-14 rounded-full bg-gray-700 flex items-center justify-center text-xl text-gray-400 ring-2 ring-[#00E87A]/30">
+          <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center text-2xl text-gray-400 ring-2 ring-[#00E87A]/30">
             {profile.name[0]}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-lg font-bold text-white">{profile.name}</span>
-            <span className="text-xs font-mono text-[#00E87A] bg-[#00E87A]/10 px-2 py-0.5 rounded">
+            <span className="text-xl font-bold text-white">{profile.name}</span>
+            <span className="text-sm font-mono text-[#00E87A] bg-[#00E87A]/10 px-2.5 py-0.5 rounded">
               Lv.{profile.level.level}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span className="text-base">{profile.level.icon}</span>
-            <span className="text-sm text-gray-300">{title}</span>
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className="text-lg">{profile.level.icon}</span>
+            <span className="text-base text-gray-300">{title}</span>
           </div>
         </div>
       </div>
 
       {/* XP Bar */}
       <div className="mb-5">
-        <div className="flex justify-between text-xs mb-1.5">
+        <div className="flex justify-between text-xs mb-1.5" style={{ fontVariantNumeric: "tabular-nums" }}>
           <span className="text-gray-400 font-mono">
             XP {formatNumber(profile.xp)}
           </span>
@@ -57,7 +57,7 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
         </div>
         <div className="w-full h-2.5 bg-[#1a1a1a] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#00E87A] rounded-full transition-all duration-500"
+            className="h-full bg-[#00E87A] rounded-full transition-[width] duration-500"
             style={{ width: `${profile.progressPercent}%` }}
           />
         </div>
@@ -71,7 +71,7 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
         <StatBox label={isKo ? "토큰" : "Tokens"} value={formatTokens(profile.totalTokens)} />
         <StatBox label={isKo ? "활동일" : "Active Days"} value={String(profile.activeDays)} />
         <StatBox label={isKo ? "커밋" : "Commits"} value={formatNumber(profile.totalCommits)} />
@@ -118,9 +118,9 @@ export default function CharacterCard({ profile }: { profile: UserProfile }) {
 
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#0A0A0A] rounded-lg px-3 py-2.5 text-center">
-      <div className="text-sm font-mono text-white">{value}</div>
-      <div className="text-[10px] text-gray-500 mt-0.5">{label}</div>
+    <div className="bg-[#0A0A0A] rounded-lg px-3 py-3 text-center">
+      <div className="text-base font-mono text-white">{value}</div>
+      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
     </div>
   );
 }

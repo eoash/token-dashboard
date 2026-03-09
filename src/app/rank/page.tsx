@@ -38,7 +38,7 @@ export default function RankPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
-        {isKo ? "불러오는 중..." : "Loading..."}
+        {isKo ? "불러오는 중\u2026" : "Loading\u2026"}
       </div>
     );
   }
@@ -54,13 +54,13 @@ export default function RankPage() {
   if (!selected) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Page Title */}
       <div>
-        <h1 className="text-xl font-bold text-white flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
           🔭 {isKo ? "Explorer's Log" : "Explorer's Log"}
         </h1>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 mt-1">
           {isKo
             ? "AI 세계 탐사 기록 — Scout에서 AI Native까지의 여정"
             : "AI World Expedition — From Scout to AI Native"}
@@ -72,6 +72,7 @@ export default function RankPage() {
         <select
           value={selectedName}
           onChange={(e) => handleSelect(e.target.value)}
+          aria-label={isKo ? "탐험가 선택" : "Select explorer"}
           className="w-full bg-[#111] border border-[#333] rounded-lg px-3 py-2 text-sm text-white"
         >
           {profiles.map((p) => (
