@@ -86,13 +86,6 @@ function computeDailyIncrease(
   for (const s of rawSeries) {
     const dailyIncrease = new Map<string, number>();
 
-    // Reset recovery: OTel Collector 재시작 시 카운터가 0부터 재누적.
-    // sum by 집계에서 stale 시리즈 탈락(음의 delta) 후, 새 시리즈가
-    // 이전 최고값까지 "따라잡는" 구간의 양의 delta는 이중 집계이므로 무시.
-    // 카운터가 리셋 전 최고값을 초과해야 진짜 새 데이터.
-    let peakBeforeReset = 0;
-    let recovering = false;
-
     // 신규 유저 감지: 첫 데이터포인트가 actualStartDate 이후면
     // 패딩 기간에 데이터가 없었다는 뜻 → 카운터 초기값이 실제 누적량
     const firstDate = s.values.length > 0 ? tsToDate(s.values[0][0]) : "";
@@ -115,18 +108,8 @@ function computeDailyIncrease(
       const delta = curVal - prevVal;
 
       if (delta < 0) {
-        // 카운터 리셋 또는 stale 시리즈 탈락 감지
-        peakBeforeReset = prevVal;
-        recovering = true;
-      } else if (recovering) {
-        // 리셋 후 회복 중: 카운터가 이전 최고값을 초과할 때까지 무시
-        if (curVal > peakBeforeReset) {
-          // 초과분만 진짜 새 데이터
-          const realIncrease = curVal - peakBeforeReset;
-          dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + realIncrease);
-          recovering = false;
-        }
-        // else: 아직 따라잡는 중 — 이중 집계 방지를 위해 무시
+        // 카운터 리셋 감지 → skip, curVal이 새 baseline이 됨
+        // 다음 양의 delta부터 정상 집계 재개
       } else if (delta > 0) {
         // 정상 증가
         dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);

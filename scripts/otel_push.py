@@ -7,6 +7,7 @@ Claude Code 세션 종료 시 transcript JSONL을 파싱하여
 """
 
 import json
+import hashlib
 import os
 import sys
 import urllib.request
@@ -333,6 +334,52 @@ def detect_user_email() -> str:
     return "unknown"
 
 
+SENT_STATE_DIR = os.path.expanduser("~/.claude/hooks/.otel_sent")
+
+
+def _state_path(transcript_path: str) -> str:
+    """transcript 경로를 해시하여 상태 파일 경로 생성"""
+    h = hashlib.md5(transcript_path.encode()).hexdigest()[:12]
+    return os.path.join(SENT_STATE_DIR, f"{h}.json")
+
+
+def load_sent_state(transcript_path: str) -> dict:
+    """이전 push에서 보낸 토큰 합계 로드. 없으면 빈 dict."""
+    path = _state_path(transcript_path)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (IOError, OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_sent_state(transcript_path: str, totals: dict, commits: int = 0, prs: int = 0):
+    """현재 토큰 합계를 상태 파일에 저장 (다음 push에서 delta 계산용)"""
+    os.makedirs(SENT_STATE_DIR, exist_ok=True)
+    path = _state_path(transcript_path)
+    # key를 "model|token_type" 문자열로 변환 (JSON 호환)
+    serializable = {"_commits": commits, "_prs": prs}
+    for (model, token_type), count in totals.items():
+        serializable[f"{model}|{token_type}"] = count
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(serializable, f)
+    except (IOError, OSError):
+        pass
+
+
+def compute_delta(totals: dict, prev_state: dict) -> dict:
+    """현재 합계 - 이전에 보낸 합계 = 실제 delta"""
+    delta = {}
+    for (model, token_type), count in totals.items():
+        key = f"{model}|{token_type}"
+        prev = prev_state.get(key, 0)
+        diff = count - prev
+        if diff > 0:
+            delta[(model, token_type)] = diff
+    return delta
+
+
 BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_v3_done")
 BACKFILL_SCRIPT_URL = "https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/generate_backfill.py"
 BACKFILL_API_URL = "https://token-dashboard-iota.vercel.app/api/backfill"
@@ -417,27 +464,42 @@ def main():
     if not entries:
         return
 
-    # 2. 토큰 합산
+    # 2. 토큰 합산 (전체 transcript)
     totals = aggregate_tokens(entries)
     if not totals:
         return
 
-    # 3. 비용 추정
-    costs = estimate_cost(totals)
+    # 3. 이전 push 상태와 비교하여 실제 delta만 추출
+    #    resume 시 전체 transcript를 다시 파싱하므로, 이전에 보낸 분을 빼야 이중 집계 방지
+    prev_state = load_sent_state(transcript_path)
+    delta = compute_delta(totals, prev_state)
+    if not delta:
+        # 새로운 토큰이 없으면 세션 카운트만 보내고 종료
+        save_sent_state(transcript_path, totals)
+        return
 
-    # 4. 사용자 이메일 (git activity 조회에 필요하므로 먼저 감지)
+    # 4. 비용 추정 (delta 기준)
+    costs = estimate_cost(delta)
+
+    # 5. 사용자 이메일 (git activity 조회에 필요하므로 먼저 감지)
     user_email = detect_user_email()
 
-    # 5. 커밋/PR 카운트
-    #    git log 기반 (실제 커밋) vs transcript 기반 (Claude Code 내 커밋)
-    #    둘 중 큰 값 사용 → git log가 더 정확하지만, fallback 보장
+    # 6. 커밋/PR 카운트 (delta 계산)
     git_commits = count_git_activity(transcript_path, user_email)
-    transcript_commits, prs = count_bash_commands(transcript_path)
-    commits = max(git_commits, transcript_commits)
+    transcript_commits, total_prs = count_bash_commands(transcript_path)
+    total_commits = max(git_commits, transcript_commits)
+    prev_commits = prev_state.get("_commits", 0)
+    prev_prs = prev_state.get("_prs", 0)
+    commits = max(0, total_commits - prev_commits)
+    prs = max(0, total_prs - prev_prs)
 
-    # 6. OTLP payload 생성 & 전송
-    payload = build_otlp_payload(totals, costs, user_email, session_id, commits, prs)
-    push_metrics(payload)
+    # 7. OTLP payload 생성 & 전송 (delta만 전송)
+    payload = build_otlp_payload(delta, costs, user_email, session_id, commits, prs)
+    success = push_metrics(payload)
+
+    # 8. 전송 성공 시 상태 저장 (실패 시 다음 push에서 재시도)
+    if success:
+        save_sent_state(transcript_path, totals, total_commits, total_prs)
 
     # 7. 1회성 re-backfill
     maybe_rebackfill(user_email)

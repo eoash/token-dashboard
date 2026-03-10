@@ -52,13 +52,6 @@ function loadAllBackfill(): ClaudeCodeDataPoint[] {
 
 const backfillData = loadAllBackfill();
 
-/** ISO date 문자열에 N일 추가 */
-function addDays(dateStr: string, days: number): string {
-  const d = new Date(dateStr + "T00:00:00Z");
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
 /** Codex 모델 여부 (gpt-* 계열은 /api/codex-usage에서 별도 서빙) */
 function isCodexModel(model: string): boolean {
   return model.startsWith("gpt-");
@@ -110,14 +103,13 @@ export async function fetchAnalytics(params: {
   // Prometheus + backfill JSON 병합 (유저별 cutoff)
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus 데이터: 해당 유저의 cutoff + 2일 이후만 사용
-  // (cutoff+1일은 grace period — Prometheus 카운터 전환 시 스케일 불일치 방지)
+  // Prometheus 데이터: 해당 유저의 cutoff 이후만 사용
+  // (backfill ≤ cutoff, Prometheus > cutoff — gap 없음)
   const promPoints = promData.data.filter((d) => {
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const cutoff = perUserCutoff.get(email) ?? "";
     if (!cutoff) return true;
-    const graceCutoff = addDays(cutoff, 1);
-    return d.date > graceCutoff;
+    return d.date > cutoff;
   });
 
   // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
