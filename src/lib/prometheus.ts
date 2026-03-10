@@ -93,12 +93,21 @@ function computeDailyIncrease(
     let peakBeforeReset = 0;
     let recovering = false;
 
+    // 신규 유저 감지: 첫 데이터포인트가 actualStartDate 이후면
+    // 패딩 기간에 데이터가 없었다는 뜻 → 카운터 초기값이 실제 누적량
+    const firstDate = s.values.length > 0 ? tsToDate(s.values[0][0]) : "";
+    const isNewUser = firstDate >= actualStartDate;
+
     for (let i = 0; i < s.values.length; i++) {
       const curVal = parseFloat(s.values[i][1]);
       const curDate = tsToDate(s.values[i][0]);
 
       if (i === 0) {
-        // 첫 데이터포인트는 항상 baseline (skip). delta 계산의 기준점으로만 사용.
+        if (isNewUser && curVal > 0) {
+          // 신규 유저: 첫 데이터포인트의 누적값 자체가 실제 사용량
+          dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + curVal);
+        }
+        // 기존 유저: baseline으로만 사용 (값 제외)
         continue;
       }
 

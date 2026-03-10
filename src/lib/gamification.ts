@@ -49,14 +49,14 @@ export interface UserProfile {
 
 // === Level Table (Space Explorer Ranks) ===
 export const LEVELS: LevelInfo[] = [
-  { level: 1, requiredXp: 0,          titleKo: "스카우트",       titleEn: "Scout",        icon: "📡", color: ["#666","#888"],     logEn: "[LOG] New scout detected. Awaiting first contact." },
-  { level: 2, requiredXp: 15_000,     titleKo: "레인저",         titleEn: "Ranger",       icon: "🛰️", color: ["#4A9EFF","#6BB5FF"], logEn: "[LOG] Basic tools acquired. Field operations authorized." },
-  { level: 3, requiredXp: 80_000,     titleKo: "탐험가",         titleEn: "Explorer",     icon: "🌍", color: ["#00E87A","#4AFFA0"], logEn: "[LOG] Explorer protocol active. Mapping uncharted territory." },
-  { level: 4, requiredXp: 300_000,    titleKo: "패스파인더",     titleEn: "Pathfinder",   icon: "🧬", color: ["#00CED1","#48D1CC"], logEn: "[LOG] Unique path divergence detected. Self-navigation engaged." },
-  { level: 5, requiredXp: 1_000_000,  titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "☄️", color: ["#A855F7","#C084FC"], logEn: "[LOG] Breakthrough pattern identified. New methods emerging." },
-  { level: 6, requiredXp: 3_000_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🚀", color: ["#F59E0B","#FBBF24"], logEn: "[LOG] Vanguard status confirmed. Leading expedition team." },
-  { level: 7, requiredXp: 10_000_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🌌", color: ["#EF4444","#F97316"], logEn: "[LOG] ⚠ Anomaly: Subject producing AI-native artifacts." },
-  { level: 8, requiredXp: 50_000_000, titleKo: "AI 네이티브",     titleEn: "AI Native",    icon: "✦",  color: ["#E8FF47","#00E87A"], logEn: "[LOG] ★ Transformation complete. Human-AI boundary dissolved." },
+  { level: 1, requiredXp: 0,       titleKo: "스카우트",       titleEn: "Scout",        icon: "📡", color: ["#666","#888"],     logEn: "[LOG] New scout detected. Awaiting first contact." },
+  { level: 2, requiredXp: 200,     titleKo: "레인저",         titleEn: "Ranger",       icon: "🛰️", color: ["#4A9EFF","#6BB5FF"], logEn: "[LOG] Basic tools acquired. Field operations authorized." },
+  { level: 3, requiredXp: 1_500,   titleKo: "탐험가",         titleEn: "Explorer",     icon: "🌍", color: ["#00E87A","#4AFFA0"], logEn: "[LOG] Explorer protocol active. Mapping uncharted territory." },
+  { level: 4, requiredXp: 6_000,   titleKo: "패스파인더",     titleEn: "Pathfinder",   icon: "🧬", color: ["#00CED1","#48D1CC"], logEn: "[LOG] Unique path divergence detected. Self-navigation engaged." },
+  { level: 5, requiredXp: 20_000,  titleKo: "파이오니어",     titleEn: "Pioneer",      icon: "☄️", color: ["#A855F7","#C084FC"], logEn: "[LOG] Breakthrough pattern identified. New methods emerging." },
+  { level: 6, requiredXp: 60_000,  titleKo: "뱅가드",         titleEn: "Vanguard",     icon: "🚀", color: ["#F59E0B","#FBBF24"], logEn: "[LOG] Vanguard status confirmed. Leading expedition team." },
+  { level: 7, requiredXp: 200_000, titleKo: "트레일블레이저", titleEn: "Trailblazer",  icon: "🌌", color: ["#EF4444","#F97316"], logEn: "[LOG] ⚠ Anomaly: Subject producing AI-native artifacts." },
+  { level: 8, requiredXp: 1_000_000, titleKo: "AI 네이티브",   titleEn: "AI Native",    icon: "✦",  color: ["#E8FF47","#00E87A"], logEn: "[LOG] ★ Transformation complete. Human-AI boundary dissolved." },
 ];
 
 // === Achievements (38) — AI Explorer's Log ===
