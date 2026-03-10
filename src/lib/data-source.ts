@@ -110,14 +110,15 @@ export async function fetchAnalytics(params: {
   // Prometheus + backfill JSON 병합 (유저별 cutoff)
   const promData = await fetchFromPrometheus(params);
 
-  // Prometheus 데이터: 해당 유저의 cutoff + 2일 이후만 사용
-  // (카운터 첫 등장일의 increase([1d])는 외삽으로 부정확 → cutoff+1일도 건너뜀)
+  // Prometheus 데이터: 해당 유저의 cutoff 이후만 사용
+  // backfill cutoff 날짜는 backfill에서 이미 커버 → Prometheus는 cutoff+1일부터
+  // (이전: cutoff+2일부터 사용했으나, increase([1d]) 외삽 문제는 JS delta 방식 전환으로 해결됨.
+  //  grace period 2일→1일로 축소하여 cutoff+1일 데이터 누락 방지)
   const promPoints = promData.data.filter((d) => {
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const cutoff = perUserCutoff.get(email) ?? "";
     if (!cutoff) return true;
-    const graceCutoff = addDays(cutoff, 1);
-    return d.date > graceCutoff;
+    return d.date > cutoff;
   });
 
   // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
