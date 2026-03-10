@@ -121,7 +121,9 @@ export async function fetchAnalytics(params: {
   });
 
   // Backfill 데이터: 날짜 범위 내 + 해당 유저의 cutoff 이전
+  // Codex(gpt-*) 모델은 /api/codex-usage에서 별도 서빙 → 여기서 제외
   const backfillPoints = backfillData.filter((d) => {
+    if (isCodexModel(d.model)) return false;
     const email = d.actor?.email_address ?? d.actor?.id ?? "";
     const cutoff = perUserCutoff.get(email) ?? "";
     return (
