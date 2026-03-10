@@ -104,6 +104,28 @@ export default function RadarComparison({ profile, allProfiles }: Props) {
         {isKo ? "🛰️ 탐사 프로필" : "🛰️ Exploration Profile"}
       </h2>
 
+      {/* Legend */}
+      <div className="flex items-center gap-4 mb-2 px-1">
+        <div className="flex items-center gap-1.5">
+          <span
+            className="inline-block w-3 h-3 rounded-sm"
+            style={{ backgroundColor: userColor, opacity: 0.6 }}
+          />
+          <span className="text-xs text-gray-400">
+            {isKo ? "나" : "You"}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span
+            className="inline-block w-3 h-3 rounded-sm border border-dashed"
+            style={{ borderColor: "#666", backgroundColor: "transparent" }}
+          />
+          <span className="text-xs text-gray-400">
+            {isKo ? "팀 평균" : "Team Avg"}
+          </span>
+        </div>
+      </div>
+
       <div style={{ width: "100%", height: 250 }}>
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={chartData} cx="50%" cy="50%" outerRadius="75%">
@@ -131,8 +153,25 @@ export default function RadarComparison({ profile, allProfiles }: Props) {
         </ResponsiveContainer>
       </div>
 
+      {/* Axis descriptions */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 mt-2 px-1">
+        {[
+          { labelKo: "토큰", labelEn: "Tokens", descKo: "총 사용 토큰", descEn: "Total tokens used" },
+          { labelKo: "활동일", labelEn: "Active Days", descKo: "AI 사용한 날 수", descEn: "Days with AI usage" },
+          { labelKo: "커밋", labelEn: "Commits", descKo: "Git 커밋 수", descEn: "Git commits made" },
+          { labelKo: "스트릭", labelEn: "Streak", descKo: "연속 활동일", descEn: "Consecutive active days" },
+          { labelKo: "업적", labelEn: "Achievements", descKo: "획득한 업적 수", descEn: "Achievements earned" },
+        ].map((item) => (
+          <p key={item.labelEn} className="text-[10px] text-gray-600">
+            <span className="text-gray-500">{isKo ? item.labelKo : item.labelEn}</span>
+            {" — "}
+            {isKo ? item.descKo : item.descEn}
+          </p>
+        ))}
+      </div>
+
       <p
-        className="text-xs text-gray-500 mt-2 font-mono"
+        className="text-xs text-gray-500 mt-3 font-mono"
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         [LOG] Above average in {aboveAvgCount}/5 dimensions.
