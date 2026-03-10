@@ -444,30 +444,29 @@ export async function GET(request: NextRequest) {
 
         {/* === Corner sparkle decorations === */}
         {[
-          { top: "20px", right: "30px", bottom: "", left: "", s: "8px" },
-          { top: "35px", right: "55px", bottom: "", left: "", s: "5px" },
-          { top: "50px", right: "25px", bottom: "", left: "", s: "4px" },
-          { top: "", right: "", bottom: "30px", left: "25px", s: "5px" },
-          { top: "", right: "", bottom: "50px", left: "40px", s: "3px" },
-          { top: "25px", right: "80px", bottom: "", left: "", s: "3px" },
-          { top: "", right: "50px", bottom: "60px", left: "", s: "4px" },
-          { top: "", right: "30px", bottom: "40px", left: "", s: "6px" },
+          { top: "20px", right: "30px", s: "8px" },
+          { top: "35px", right: "55px", s: "5px" },
+          { top: "50px", right: "25px", s: "4px" },
+          { bottom: "30px", left: "25px", s: "5px" },
+          { bottom: "50px", left: "40px", s: "3px" },
+          { top: "25px", right: "80px", s: "3px" },
+          { right: "50px", bottom: "60px", s: "4px" },
+          { right: "30px", bottom: "40px", s: "6px" },
         ].map((sp, i) => (
           <div
             key={`sp-${i}`}
             style={{
               position: "absolute",
-              top: sp.top || undefined,
-              right: sp.right || undefined,
-              bottom: sp.bottom || undefined,
-              left: sp.left || undefined,
+              display: "flex",
+              ...("top" in sp ? { top: sp.top } : {}),
+              ...("right" in sp ? { right: sp.right } : {}),
+              ...("bottom" in sp ? { bottom: (sp as unknown as Record<string, string>).bottom } : {}),
+              ...("left" in sp ? { left: (sp as unknown as Record<string, string>).left } : {}),
               width: sp.s,
               height: sp.s,
               borderRadius: i % 3 === 0 ? "0" : "50%",
-              transform: i % 3 === 0 ? "rotate(45deg)" : undefined,
               background: i % 2 === 0 ? color1 : color2,
               opacity: "0.4",
-              display: "flex",
             }}
           />
         ))}

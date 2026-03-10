@@ -13,6 +13,8 @@
   python3 scripts/notify_levelup.py --send       # 실제 발송
 """
 
+from __future__ import annotations
+
 import json
 import os
 import sys
@@ -31,14 +33,14 @@ STATE_FILE = Path(__file__).parent / "level-state.json"
 
 # --- 레벨 테이블 (gamification.ts와 동기화 필수) ---
 LEVELS = [
-    (1, 0,          "Scout",        "📡", "[LOG] New scout detected. Awaiting first contact."),
-    (2, 15_000,     "Ranger",       "🛰️", "[LOG] Basic tools acquired. Field operations authorized."),
-    (3, 80_000,     "Explorer",     "🌍", "[LOG] Explorer protocol active. Mapping uncharted territory."),
-    (4, 300_000,    "Pathfinder",   "🧬", "[LOG] Unique path divergence detected. Self-navigation engaged."),
-    (5, 1_000_000,  "Pioneer",      "☄️", "[LOG] Breakthrough pattern identified. New methods emerging."),
-    (6, 3_000_000,  "Vanguard",     "🚀", "[LOG] Vanguard status confirmed. Leading expedition team."),
-    (7, 10_000_000, "Trailblazer",  "🌌", "[LOG] ⚠ Anomaly: Subject producing AI-native artifacts."),
-    (8, 50_000_000, "AI Native",    "✦",  "[LOG] ★ Transformation complete. Human-AI boundary dissolved."),
+    (1, 0,           "Scout",        "📡", "[LOG] New scout detected. Awaiting first contact."),
+    (2, 200,         "Ranger",       "🛰️", "[LOG] Basic tools acquired. Field operations authorized."),
+    (3, 1_500,       "Explorer",     "🌍", "[LOG] Explorer protocol active. Mapping uncharted territory."),
+    (4, 6_000,       "Pathfinder",   "🧬", "[LOG] Unique path divergence detected. Self-navigation engaged."),
+    (5, 20_000,      "Pioneer",      "☄️", "[LOG] Breakthrough pattern identified. New methods emerging."),
+    (6, 60_000,      "Vanguard",     "🚀", "[LOG] Vanguard status confirmed. Leading expedition team."),
+    (7, 200_000,     "Trailblazer",  "🌌", "[LOG] ⚠ Anomaly: Subject producing AI-native artifacts."),
+    (8, 1_000_000,   "AI Native",    "✦",  "[LOG] ★ Transformation complete. Human-AI boundary dissolved."),
 ]
 AUTO_LEVEL_CAP = 6
 
@@ -128,7 +130,7 @@ def build_user_levels(data: list[dict]) -> dict[str, dict]:
             }
 
         u = users[email]
-        u["tokens"] += d.get("input_tokens", 0) + d.get("output_tokens", 0) + d.get("cache_read_tokens", 0)
+        u["tokens"] += d.get("input_tokens", 0) + d.get("output_tokens", 0)
         u["commits"] += d.get("commits", 0)
         u["prs"] += d.get("pull_requests", 0)
         if d.get("date"):

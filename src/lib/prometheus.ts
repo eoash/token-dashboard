@@ -1,6 +1,6 @@
 import type { ClaudeCodeAnalyticsResponse, ClaudeCodeDataPoint } from "./types";
 
-const PROM_URL = process.env.PROMETHEUS_URL || "http://localhost:9090";
+const PROM_URL = (process.env.PROMETHEUS_URL || "http://localhost:9090").replace(/\\n$/, "").trim();
 
 // --- Prometheus HTTP API types ---
 
@@ -16,6 +16,14 @@ interface PromSeries {
   metric: Record<string, string>;
   values: [number, string][]; // [unix_timestamp, value_string]
 }
+
+/**
+ * 시간당 delta 상한 (토큰 수 기준).
+ * otel_push.py 구버전이 resume 시 전체 transcript를 DELTA로 재전송하면
+ * 시간당 5~10M+ 팽창이 발생함. 정상 최대(Haiku 동시 5세션)는 ~1M/hour.
+ * 2M으로 cap → 정상 사용 2배, 팽창 1/3~1/5 수준에서 차단.
+ */
+export const MAX_HOURLY_DELTA = 2_000_000;
 
 // --- PromQL queries ---
 // Raw counter queries (no increase()) — delta computed in JS to handle collector restarts
@@ -57,7 +65,7 @@ async function queryRangeRaw(
   url.searchParams.set("end", endISO);
   url.searchParams.set("step", "3600"); // 1 hour — fine-grained for reset detection
 
-  const res = await fetch(url.toString(), { next: { revalidate: 300 } });
+  const res = await fetch(url.toString(), { cache: "no-store" });
   if (!res.ok) throw new Error(`Prometheus ${res.status}: ${await res.text()}`);
 
   const json: PromQueryResponse = await res.json();
@@ -71,13 +79,15 @@ async function queryRangeRaw(
  *
  * OTel Collector 재시작 시 카운터가 0으로 리셋됨.
  * Prometheus increase()는 리셋 전 값을 다시 더해서 과다 집계하므로,
- * 직접 양의 delta만 합산하고, 리셋 시에는 리셋 후 현재 값(= 리셋 이후 실제 누적)을 더함.
+ * 직접 양의 delta만 합산하고, 리셋 시 skip → 다음 양의 delta부터 재개.
+ *
+ * 첫 데이터포인트는 항상 baseline으로 취급 (값 제외).
+ * 신규 유저의 첫 시간 소량 누락은 backfill(Admin API)이 커버.
+ * (이전 isNewUser 로직은 OTel Collector 리셋 후 전 유저를 "신규"로 오판하여 스파이크 유발)
  *
  * @param actualStartDate 실제 조회 시작일 (YYYY-MM-DD). 이 날짜 이전은 baseline 패딩.
- *   - 패딩 기간에 첫 데이터포인트가 있으면 → 기존 유저 (baseline, 값 제외)
- *   - 첫 데이터포인트가 actualStartDate 이후면 → 신규 유저 (카운터 초기값 = 실제 누적)
  */
-function computeDailyIncrease(
+export function computeDailyIncrease(
   rawSeries: PromSeries[],
   actualStartDate: string
 ): PromSeries[] {
@@ -86,21 +96,12 @@ function computeDailyIncrease(
   for (const s of rawSeries) {
     const dailyIncrease = new Map<string, number>();
 
-    // 신규 유저 감지: 첫 데이터포인트가 actualStartDate 이후면
-    // 패딩 기간에 데이터가 없었다는 뜻 → 카운터 초기값이 실제 누적량
-    const firstDate = s.values.length > 0 ? tsToDate(s.values[0][0]) : "";
-    const isNewUser = firstDate >= actualStartDate;
-
     for (let i = 0; i < s.values.length; i++) {
       const curVal = parseFloat(s.values[i][1]);
       const curDate = tsToDate(s.values[i][0]);
 
       if (i === 0) {
-        if (isNewUser && curVal > 0) {
-          // 신규 유저: 첫 데이터포인트의 누적값 자체가 실제 사용량
-          dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + curVal);
-        }
-        // 기존 유저: baseline으로만 사용 (값 제외)
+        // 첫 데이터포인트: 항상 baseline (값 제외)
         continue;
       }
 
@@ -111,8 +112,9 @@ function computeDailyIncrease(
         // 카운터 리셋 감지 → skip, curVal이 새 baseline이 됨
         // 다음 양의 delta부터 정상 집계 재개
       } else if (delta > 0) {
-        // 정상 증가
-        dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);
+        // 정상 증가 (otel_push 이중 전송 방어: 시간당 상한 적용)
+        const capped = Math.min(delta, MAX_HOURLY_DELTA);
+        dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + capped);
       }
     }
 
@@ -149,7 +151,7 @@ async function queryDailyIncrease(
  * backfill JSON도 KST 로컬 날짜를 사용하므로 timezone 일관성 유지.
  * UTC 사용 시 KST 자정~09시 활동이 전날로 분류되어 grace period에 걸림.
  */
-function tsToDate(ts: number): string {
+export function tsToDate(ts: number): string {
   const KST_OFFSET = 9 * 3600; // UTC+9
   return new Date((ts + KST_OFFSET) * 1000).toISOString().slice(0, 10);
 }
