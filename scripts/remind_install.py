@@ -73,6 +73,11 @@ curl -sL https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/in
 powershell -Command "irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex"
 ```
 
+:rotating_light: *설치 중 보안 경고가 뜰 수 있지만 정상입니다!*
+• Mac: "네트워크 연결 허용" / "cron 등록" 팝업 → 모두 허용
+• Windows: SmartScreen 경고 → "추가 정보" → "실행", 방화벽 → 허용
+EO Studio 내부 도구이며 AI 사용량만 수집합니다 (코드·개인정보 수집 없음) :lock:
+
 :link: 대시보드: https://token-dashboard-iota.vercel.app
 
 문제가 있으면 서현에게 DM 주세요!"""
