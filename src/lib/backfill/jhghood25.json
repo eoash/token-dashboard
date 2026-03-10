@@ -1,0 +1,418 @@
+{
+  "data": [
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-16",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 29605,
+      "output_tokens": 67801,
+      "cache_read_tokens": 41028512,
+      "cache_creation_tokens": 2855187
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-17",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 880,
+      "output_tokens": 70058,
+      "cache_read_tokens": 42810792,
+      "cache_creation_tokens": 3451804
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 4,
+      "output_tokens": 3,
+      "cache_read_tokens": 27698,
+      "cache_creation_tokens": 65320
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 5075,
+      "output_tokens": 149916,
+      "cache_read_tokens": 121802818,
+      "cache_creation_tokens": 5057805
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-18",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 27,
+      "output_tokens": 103,
+      "cache_read_tokens": 400292,
+      "cache_creation_tokens": 38695
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-19",
+      "session_count": 5,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 11038,
+      "output_tokens": 65640,
+      "cache_read_tokens": 25200319,
+      "cache_creation_tokens": 3475628
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-20",
+      "session_count": 3,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 411,
+      "output_tokens": 22419,
+      "cache_read_tokens": 20727281,
+      "cache_creation_tokens": 2516811
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-20",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 85,
+      "output_tokens": 82,
+      "cache_read_tokens": 570818,
+      "cache_creation_tokens": 78544
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-22",
+      "session_count": 3,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 182099,
+      "output_tokens": 196549,
+      "cache_read_tokens": 52801702,
+      "cache_creation_tokens": 5864063
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-23",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 65,
+      "output_tokens": 54,
+      "cache_read_tokens": 404926,
+      "cache_creation_tokens": 73560
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-24",
+      "session_count": 4,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1535,
+      "output_tokens": 155224,
+      "cache_read_tokens": 93559268,
+      "cache_creation_tokens": 3464411
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-25",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 189,
+      "output_tokens": 50159,
+      "cache_read_tokens": 6539027,
+      "cache_creation_tokens": 1700524
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-25",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 88,
+      "output_tokens": 58,
+      "cache_read_tokens": 651648,
+      "cache_creation_tokens": 114790
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-26",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 4021,
+      "output_tokens": 46214,
+      "cache_read_tokens": 12188964,
+      "cache_creation_tokens": 759008
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-02-27",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 49,
+      "output_tokens": 546,
+      "cache_read_tokens": 1701651,
+      "cache_creation_tokens": 279168
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-02-27",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 75,
+      "output_tokens": 63,
+      "cache_read_tokens": 715996,
+      "cache_creation_tokens": 113492
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-01",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 1,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 1546,
+      "output_tokens": 25583,
+      "cache_read_tokens": 23165972,
+      "cache_creation_tokens": 1731623
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-03-02",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 59,
+      "output_tokens": 4235,
+      "cache_read_tokens": 569379,
+      "cache_creation_tokens": 99864
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-03-04",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 38,
+      "output_tokens": 33,
+      "cache_read_tokens": 245494,
+      "cache_creation_tokens": 71472
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-06",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 36718,
+      "output_tokens": 183672,
+      "cache_read_tokens": 70504131,
+      "cache_creation_tokens": 4191873
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-03-06",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 89,
+      "output_tokens": 67,
+      "cache_read_tokens": 811520,
+      "cache_creation_tokens": 100886
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-07",
+      "session_count": 3,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 70368,
+      "output_tokens": 295531,
+      "cache_read_tokens": 138282508,
+      "cache_creation_tokens": 6452694
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "jhghood25@eoeoeo.net",
+        "email_address": "jhghood25@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-5-20250929",
+      "date": "2026-03-09",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 120,
+      "output_tokens": 115,
+      "cache_read_tokens": 865543,
+      "cache_creation_tokens": 110200
+    }
+  ]
+}
