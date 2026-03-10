@@ -203,7 +203,8 @@ export async function fetchFromPrometheus(params: {
   const paddedStart = new Date(rollingStart.getTime() - 86400 * 1000);
   const start = paddedStart.toISOString();
   // actualStartDate: 패딩 제외한 실제 시작일 (신규 유저 첫 데이터포인트 판별용)
-  const actualStartDate = rollingStart.toISOString().slice(0, 10);
+  // tsToDate()와 동일하게 KST 기준 — UTC 사용 시 padding 데이터가 신규 유저로 오인되어 스파이크 발생
+  const actualStartDate = tsToDate(Math.floor(rollingStart.getTime() / 1000));
 
   // Execute all queries in parallel — raw counters + JS-side delta (reset-safe)
   const [
