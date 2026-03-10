@@ -100,7 +100,7 @@
       "date": "2026-02-18",
       "session_count": 1,
       "lines_of_code": 0,
-      "commits": 0,
+      "commits": 6,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
       "input_tokens": 15527,
@@ -406,7 +406,7 @@
       "date": "2026-03-03",
       "session_count": 1,
       "lines_of_code": 0,
-      "commits": 0,
+      "commits": 2,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
       "input_tokens": 55,
@@ -566,15 +566,15 @@
       },
       "model": "claude-haiku-4-5-20251001",
       "date": "2026-03-08",
-      "session_count": 5,
+      "session_count": 7,
       "lines_of_code": 0,
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 11690,
-      "output_tokens": 370036,
-      "cache_read_tokens": 79624286,
-      "cache_creation_tokens": 2445155
+      "input_tokens": 18278,
+      "output_tokens": 610773,
+      "cache_read_tokens": 174593304,
+      "cache_creation_tokens": 4634107
     },
     {
       "actor": {
@@ -589,10 +589,28 @@
       "commits": 0,
       "pull_requests": 0,
       "tool_acceptance_rate": 0,
-      "input_tokens": 172,
-      "output_tokens": 1973,
-      "cache_read_tokens": 5306781,
-      "cache_creation_tokens": 617791
+      "input_tokens": 21802,
+      "output_tokens": 6130,
+      "cache_read_tokens": 25006100,
+      "cache_creation_tokens": 1174411
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-03-08",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 28,
+      "output_tokens": 13426,
+      "cache_read_tokens": 2008211,
+      "cache_creation_tokens": 187268
     },
     {
       "actor": {
@@ -611,6 +629,60 @@
       "output_tokens": 21244,
       "cache_read_tokens": 4708224,
       "cache_creation_tokens": 0
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "claude-haiku-4-5-20251001",
+      "date": "2026-03-09",
+      "session_count": 1,
+      "lines_of_code": 0,
+      "commits": 2,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 25404,
+      "output_tokens": 847981,
+      "cache_read_tokens": 296789919,
+      "cache_creation_tokens": 8105084
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "claude-opus-4-6",
+      "date": "2026-03-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 85,
+      "output_tokens": 3825,
+      "cache_read_tokens": 3964135,
+      "cache_creation_tokens": 337599
+    },
+    {
+      "actor": {
+        "type": "user",
+        "id": "chiri@eoeoeo.net",
+        "email_address": "chiri@eoeoeo.net"
+      },
+      "model": "claude-sonnet-4-6",
+      "date": "2026-03-09",
+      "session_count": 0,
+      "lines_of_code": 0,
+      "commits": 0,
+      "pull_requests": 0,
+      "tool_acceptance_rate": 0,
+      "input_tokens": 80,
+      "output_tokens": 45445,
+      "cache_read_tokens": 6269509,
+      "cache_creation_tokens": 1398285
     }
   ]
 }
