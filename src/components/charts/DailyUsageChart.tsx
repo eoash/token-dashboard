@@ -16,7 +16,6 @@ interface DailyUsageData {
   date: string;
   input_tokens: number;
   output_tokens: number;
-  cache_read_tokens: number;
 }
 
 interface DailyUsageChartProps {
@@ -68,16 +67,11 @@ export default function DailyUsageChart({ data }: DailyUsageChartProps) {
                 <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
                 <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="cacheGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
-              </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#222" />
             <XAxis dataKey="date" tickFormatter={formatDate} stroke="#666" tick={{ fill: "#999", fontSize: 12 }} />
             <YAxis tickFormatter={formatTokenAxis} stroke="#666" tick={{ fill: "#999", fontSize: 12 }} />
             <Tooltip content={CustomTooltip} />
-            <Area type="monotone" dataKey="cache_read_tokens" stackId="1" stroke="#8B5CF6" fill="url(#cacheGrad)" name={t("chart.cacheRead")} />
             <Area type="monotone" dataKey="output_tokens" stackId="1" stroke="#10B981" fill="url(#outputGrad)" name={t("chart.output")} />
             <Area type="monotone" dataKey="input_tokens" stackId="1" stroke="#3B82F6" fill="url(#inputGrad)" name={t("chart.input")} />
           </AreaChart>
