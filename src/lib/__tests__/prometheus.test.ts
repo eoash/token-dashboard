@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeDailyIncrease, tsToDate, MAX_HOURLY_DELTA } from "../prometheus";
+import { computeDailyIncrease, tsToDate, MAX_HOURLY_DELTA, MAX_DAILY_DELTA } from "../prometheus";
 
 // --- Helper: KST 날짜 → Unix timestamp (정오 KST = 03:00 UTC) ---
 function kstNoon(dateStr: string): number {
@@ -259,14 +259,14 @@ describe("computeDailyIncrease — MAX_HOURLY_DELTA cap", () => {
     const series = [
       makeSeries("a@test.com", "haiku", [
         ["2026-03-08", 0],
-        ["2026-03-09", 500_000],  // +500K (정상)
-        ["2026-03-09", 1_200_000], // +700K (정상)
+        ["2026-03-09", 300_000],  // +300K (정상)
+        ["2026-03-09", 800_000],  // +500K (정상)
       ]),
     ];
 
     const result = computeDailyIncrease(series, "2026-03-09");
     const dayMap = new Map(result[0].values.map(([ts, v]) => [tsToDate(ts), Number(v)]));
-    expect(dayMap.get("2026-03-09")).toBe(1_200_000); // 500K + 700K
+    expect(dayMap.get("2026-03-09")).toBe(800_000); // 300K + 500K (일별 2M 이내)
   });
 
   it("팽창 delta는 MAX_HOURLY_DELTA로 cap", () => {
@@ -283,7 +283,7 @@ describe("computeDailyIncrease — MAX_HOURLY_DELTA cap", () => {
     const result = computeDailyIncrease(series, "2026-03-09");
     const dayMap = new Map(result[0].values.map(([ts, v]) => [tsToDate(ts), Number(v)]));
 
-    // 3/9: 2M + 2M = 4M (원래 20M이 cap 됨)
+    // 3/9: 시간당 500K × 2 = 1M, 일별 cap 2M 이내 → 1M
     expect(dayMap.get("2026-03-09")).toBe(MAX_HOURLY_DELTA * 2);
     // 3/10: 500K (정상 범위, cap 안 걸림)
     expect(dayMap.get("2026-03-10")).toBe(500_000);
@@ -315,5 +315,26 @@ describe("computeDailyIncrease — MAX_HOURLY_DELTA cap", () => {
     const result = computeDailyIncrease(series, "2026-03-09");
     const dayMap = new Map(result[0].values.map(([ts, v]) => [tsToDate(ts), Number(v)]));
     expect(dayMap.get("2026-03-09")).toBe(MAX_HOURLY_DELTA + 500_000);
+  });
+
+  it("다수 스파이크 시간 누적 시 일별 cap 적용", () => {
+    // 시간당 cap 통과하는 값이 여러 시간 누적 → 일별 cap에 걸림
+    const series = [
+      makeSeries("a@test.com", "haiku", [
+        ["2026-03-08", 0],
+        ["2026-03-09", 400_000],       // +400K
+        ["2026-03-09", 800_000],       // +400K
+        ["2026-03-09", 1_200_000],     // +400K
+        ["2026-03-09", 1_600_000],     // +400K
+        ["2026-03-09", 2_000_000],     // +400K
+        ["2026-03-09", 2_400_000],     // +400K → 누적 2.4M
+        ["2026-03-09", 2_800_000],     // +400K → 누적 2.8M
+      ]),
+    ];
+
+    const result = computeDailyIncrease(series, "2026-03-09");
+    const dayMap = new Map(result[0].values.map(([ts, v]) => [tsToDate(ts), Number(v)]));
+    // 시간당 합계 = 2.8M이지만 일별 cap 2M으로 제한
+    expect(dayMap.get("2026-03-09")).toBe(MAX_DAILY_DELTA);
   });
 });

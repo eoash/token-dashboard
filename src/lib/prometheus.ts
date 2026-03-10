@@ -25,6 +25,13 @@ interface PromSeries {
  */
 export const MAX_HOURLY_DELTA = 500_000;
 
+/**
+ * 일별 delta 상한 (시리즈당, 토큰 수 기준).
+ * 시간당 cap만으로는 스파이크 시간이 다수(10+)일 때 누적 과다.
+ * 정상 최대 일일 사용: ~1M (ash 3/7: 926K). 2M이면 충분한 여유.
+ */
+export const MAX_DAILY_DELTA = 2_000_000;
+
 // --- PromQL queries ---
 // Raw counter queries (no increase()) — delta computed in JS to handle collector restarts
 // OTel Collector 재시작 시 누적 카운터가 리셋되며, increase([1d])는 리셋 전 값을
@@ -118,12 +125,13 @@ export function computeDailyIncrease(
       }
     }
 
-    // 패딩 기간 날짜 제외, 일별 값으로 PromSeries 재구성
+    // 패딩 기간 날짜 제외, 일별 상한 적용 후 PromSeries 재구성
     const values: [number, string][] = [];
     for (const [date, increase] of dailyIncrease) {
       if (date >= actualStartDate) {
         const ts = new Date(`${date}T12:00:00Z`).getTime() / 1000;
-        values.push([ts, String(Math.round(increase))]);
+        const dailyCapped = Math.min(increase, MAX_DAILY_DELTA);
+        values.push([ts, String(Math.round(dailyCapped))]);
       }
     }
     values.sort((a, b) => a[0] - b[0]);
