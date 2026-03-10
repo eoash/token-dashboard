@@ -96,7 +96,8 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 - Gemini 등 간헐적 메트릭: `last_over_time(metric[30d])`로 staleness 방지 (5분 규칙)
 
 ### OTel Collector 재시작 대응
-- **카운터 리셋 보정**: `prometheus.ts`에서 원본 카운터를 시간별(step=3600) 조회 후, 양의 delta만 합산. 음의 delta(리셋)는 리셋 후 현재 값을 사용. 1일 패딩으로 기존 유저 baseline 확보, 신규 유저는 첫 데이터포인트를 initial increase로 처리
+- **카운터 리셋 보정**: `prometheus.ts`에서 원본 카운터를 시간별(step=3600) 조회 후, 양의 delta만 합산. 음의 delta(리셋)는 skip → curVal이 새 baseline, 다음 양의 delta부터 집계 재개. 1일 패딩으로 기존 유저 baseline 확보, 신규 유저는 첫 데이터포인트를 initial increase로 처리
+- **recovery 모드 절대 다시 추가하지 말 것**: "리셋 후 old peak까지 따라잡기=이중 집계"는 잘못된 가정. old peak은 수일간 누적된 역사적 합계이고, 리셋 후 성장은 실제 신규 사용량 (실사례: haiku input 실제 1.18M → recovery가 46K만 집계, 26배 과소)
 - **Railway 재시작 원인**: Railway free tier 자동 재시작, 또는 인프라 업데이트. Collector 재시작 시 delta→cumulative 변환 상태가 초기화됨
 
 ### Backfill cutoff

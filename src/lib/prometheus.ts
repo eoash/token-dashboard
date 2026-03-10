@@ -86,13 +86,6 @@ function computeDailyIncrease(
   for (const s of rawSeries) {
     const dailyIncrease = new Map<string, number>();
 
-    // Reset recovery: OTel Collector 재시작 시 카운터가 0부터 재누적.
-    // sum by 집계에서 stale 시리즈 탈락(음의 delta) 후, 새 시리즈가
-    // 이전 최고값까지 "따라잡는" 구간의 양의 delta는 이중 집계이므로 무시.
-    // 카운터가 리셋 전 최고값을 초과해야 진짜 새 데이터.
-    let peakBeforeReset = 0;
-    let recovering = false;
-
     // 신규 유저 감지: 첫 데이터포인트가 actualStartDate 이후면
     // 패딩 기간에 데이터가 없었다는 뜻 → 카운터 초기값이 실제 누적량
     const firstDate = s.values.length > 0 ? tsToDate(s.values[0][0]) : "";
@@ -114,23 +107,20 @@ function computeDailyIncrease(
       const prevVal = parseFloat(s.values[i - 1][1]);
       const delta = curVal - prevVal;
 
-      if (delta < 0) {
-        // 카운터 리셋 또는 stale 시리즈 탈락 감지
-        peakBeforeReset = prevVal;
-        recovering = true;
-      } else if (recovering) {
-        // 리셋 후 회복 중: 카운터가 이전 최고값을 초과할 때까지 무시
-        if (curVal > peakBeforeReset) {
-          // 초과분만 진짜 새 데이터
-          const realIncrease = curVal - peakBeforeReset;
-          dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + realIncrease);
-          recovering = false;
-        }
-        // else: 아직 따라잡는 중 — 이중 집계 방지를 위해 무시
-      } else if (delta > 0) {
+      if (delta > 0) {
         // 정상 증가
         dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);
       }
+      // delta <= 0: 카운터 리셋(OTel Collector 재시작) 또는 변동 없음
+      // 리셋 시 curVal이 새 baseline이 되고, 다음 양의 delta부터 집계 재개.
+      //
+      // [왜 recovery 모드를 제거했는가]
+      // 이전 로직: 리셋 후 old peak까지 "따라잡는" 양의 delta는 이중 집계 → 무시
+      // 문제: old peak(예: 797K)는 수일간 누적된 역사적 합계.
+      //       리셋 후 성장(예: 214K→2M)은 Collector 재시작 후 실제 신규 사용량.
+      //       실사례: haiku input 실제 1.18M → recovery가 46K만 집계 (26배 과소)
+      // 수정: 리셋 후 즉시 normal delta tracking 재개. 잠깐의 series overlap으로
+      //       인한 소폭 과다(~수십K)는 recovery의 대규모 과소(~수백K~수M)보다 낫다.
     }
 
     // 패딩 기간 날짜 제외, 일별 값으로 PromSeries 재구성
