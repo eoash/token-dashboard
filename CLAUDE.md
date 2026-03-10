@@ -91,9 +91,13 @@ Gemini CLI  → 네이티브 OTel → OTel Collector (Railway) → Prometheus
 ## 오답노트 (이 프로젝트 전용)
 
 ### Prometheus
-- `increase([1d])` 외삽 주의: 카운터 첫째 날 데이터 부족 시 24시간으로 외삽 → cutoff+1일 grace period 필수
-- **grace period `>` 절대 `>=`로 바꾸지 말 것**: 카운터 첫 등장일에 increase()가 전체 누적값을 외삽함 (실사례: ash 3/8 실제 622K → 외삽 6.9M, 10배 스파이크). `data-source.ts`의 `d.date > graceCutoff`는 의도적 설계
+- **`increase()` 사용 금지 → 원본 카운터 + JS delta 방식 사용**: OTel Collector 재시작 시 누적 카운터가 리셋되며, `increase([1d])`는 리셋 전 값을 다시 더해 과다 집계함 (실사례: 3/10 ash 커밋 1,073→실제 844, chiri haiku 115M→108M). `prometheus.ts`의 `computeDailyIncrease()`가 리셋을 보정. 절대 `increase()`로 되돌리지 말 것
+- **grace period `>` 절대 `>=`로 바꾸지 말 것**: 카운터 첫 등장일에 전체 누적값이 외삽됨 (실사례: ash 3/8 실제 622K → 외삽 6.9M). `data-source.ts`의 `d.date > graceCutoff`는 의도적 설계
 - Gemini 등 간헐적 메트릭: `last_over_time(metric[30d])`로 staleness 방지 (5분 규칙)
+
+### OTel Collector 재시작 대응
+- **카운터 리셋 보정**: `prometheus.ts`에서 원본 카운터를 시간별(step=3600) 조회 후, 양의 delta만 합산. 음의 delta(리셋)는 리셋 후 현재 값을 사용. 1일 패딩으로 기존 유저 baseline 확보, 신규 유저는 첫 데이터포인트를 initial increase로 처리
+- **Railway 재시작 원인**: Railway free tier 자동 재시작, 또는 인프라 업데이트. Collector 재시작 시 delta→cumulative 변환 상태가 초기화됨
 
 ### Backfill cutoff
 - **cutoff 계산에 Codex(gpt-*) 모델 포함 금지**: Codex backfill이 Claude cutoff를 오염시켜 Prometheus 데이터가 필터링됨 (실사례: ash Codex 3/8 데이터가 cutoff=3/8로 설정 → Claude 3/8 Prometheus 데이터 소실). `isCodexModel()` 가드 필수

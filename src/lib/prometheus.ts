@@ -18,33 +18,35 @@ interface PromSeries {
 }
 
 // --- PromQL queries ---
-// Claude Code OTel metrics (dots→underscores, counter→_total suffix)
+// Raw counter queries (no increase()) — delta computed in JS to handle collector restarts
+// OTel Collector 재시작 시 누적 카운터가 리셋되며, increase([1d])는 리셋 전 값을
+// 다시 더해서 과다 집계함. 원본 카운터를 시간별로 조회 후 JS에서 보정.
 
-const Q = {
+const Q_RAW = {
   inputTokens:
-    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="input"}[1d]))',
+    'sum by (user_email, model) (claude_code_tokens_total{token_type="input"})',
   outputTokens:
-    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="output"}[1d]))',
+    'sum by (user_email, model) (claude_code_tokens_total{token_type="output"})',
   cacheReadTokens:
-    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_read"}[1d]))',
+    'sum by (user_email, model) (claude_code_tokens_total{token_type="cache_read"})',
   cacheCreationTokens:
-    'sum by (user_email, model) (increase(claude_code_tokens_total{token_type="cache_creation"}[1d]))',
+    'sum by (user_email, model) (claude_code_tokens_total{token_type="cache_creation"})',
   sessions:
-    "sum by (user_email) (increase(claude_code_session_count_total[1d]))",
+    "sum by (user_email) (claude_code_session_count_total)",
   lines:
-    "sum by (user_email) (increase(claude_code_lines_of_code_count_total[1d]))",
+    "sum by (user_email) (claude_code_lines_of_code_count_total)",
   commits:
-    "sum by (user_email) (increase(claude_code_commit_count_total[1d]))",
-  prs: "sum by (user_email) (increase(claude_code_pull_request_count_total[1d]))",
+    "sum by (user_email) (claude_code_commit_count_total)",
+  prs: "sum by (user_email) (claude_code_pull_request_count_total)",
   acceptedDecisions:
-    'sum by (user_email) (increase(claude_code_code_edit_tool_decision_total{decision="accepted"}[1d]))',
+    'sum by (user_email) (claude_code_code_edit_tool_decision_total{decision="accepted"})',
   totalDecisions:
-    "sum by (user_email) (increase(claude_code_code_edit_tool_decision_total[1d]))",
+    "sum by (user_email) (claude_code_code_edit_tool_decision_total)",
 };
 
 // --- Query helpers ---
 
-async function queryRange(
+async function queryRangeRaw(
   query: string,
   startISO: string,
   endISO: string
@@ -53,7 +55,7 @@ async function queryRange(
   url.searchParams.set("query", query);
   url.searchParams.set("start", startISO);
   url.searchParams.set("end", endISO);
-  url.searchParams.set("step", "86400"); // 1 day in seconds
+  url.searchParams.set("step", "3600"); // 1 hour — fine-grained for reset detection
 
   const res = await fetch(url.toString(), { next: { revalidate: 300 } });
   if (!res.ok) throw new Error(`Prometheus ${res.status}: ${await res.text()}`);
@@ -62,6 +64,80 @@ async function queryRange(
   if (json.status !== "success") throw new Error("Prometheus query error");
 
   return json.data.result;
+}
+
+/**
+ * 원본 누적 카운터 → 일별 증가량 변환 (카운터 리셋 보정)
+ *
+ * OTel Collector 재시작 시 카운터가 0으로 리셋됨.
+ * Prometheus increase()는 리셋 전 값을 다시 더해서 과다 집계하므로,
+ * 직접 양의 delta만 합산하고, 리셋 시에는 리셋 후 현재 값(= 리셋 이후 실제 누적)을 더함.
+ *
+ * @param actualStartDate 실제 조회 시작일 (YYYY-MM-DD). 이 날짜 이전은 baseline 패딩.
+ *   - 패딩 기간에 첫 데이터포인트가 있으면 → 기존 유저 (baseline, 값 제외)
+ *   - 첫 데이터포인트가 actualStartDate 이후면 → 신규 유저 (카운터 초기값 = 실제 누적)
+ */
+function computeDailyIncrease(
+  rawSeries: PromSeries[],
+  actualStartDate: string
+): PromSeries[] {
+  const result: PromSeries[] = [];
+
+  for (const s of rawSeries) {
+    const dailyIncrease = new Map<string, number>();
+
+    for (let i = 0; i < s.values.length; i++) {
+      const curVal = parseFloat(s.values[i][1]);
+      const curDate = tsToDate(s.values[i][0]);
+
+      if (i === 0) {
+        // 첫 데이터포인트: 패딩 기간이면 baseline (skip), 실제 범위면 신규 카운터 (count)
+        if (curDate >= actualStartDate && curVal > 0) {
+          dailyIncrease.set(curDate, curVal);
+        }
+        continue;
+      }
+
+      const prevVal = parseFloat(s.values[i - 1][1]);
+      const delta = curVal - prevVal;
+
+      if (delta > 0) {
+        // 정상 증가
+        dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);
+      } else if (delta < 0) {
+        // 카운터 리셋: 현재 값 = 리셋 이후 실제 누적량
+        dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + curVal);
+      }
+      // delta === 0: 변화 없음, skip
+    }
+
+    // 패딩 기간 날짜 제외, 일별 값으로 PromSeries 재구성
+    const values: [number, string][] = [];
+    for (const [date, increase] of dailyIncrease) {
+      if (date >= actualStartDate) {
+        const ts = new Date(`${date}T12:00:00Z`).getTime() / 1000;
+        values.push([ts, String(Math.round(increase))]);
+      }
+    }
+    values.sort((a, b) => a[0] - b[0]);
+
+    if (values.length > 0) {
+      result.push({ metric: s.metric, values });
+    }
+  }
+
+  return result;
+}
+
+/** Raw counter query + daily increase computation (reset-safe) */
+async function queryDailyIncrease(
+  query: string,
+  startISO: string,
+  endISO: string,
+  actualStartDate: string
+): Promise<PromSeries[]> {
+  const rawSeries = await queryRangeRaw(query, startISO, endISO);
+  return computeDailyIncrease(rawSeries, actualStartDate);
 }
 
 function tsToDate(ts: number): string {
@@ -118,9 +194,13 @@ export async function fetchFromPrometheus(params: {
   // 단일 날짜 조회(daysDiff=0)시 최소 1일 보장 → 0폭 윈도우 방지
   const daysDiff = Math.max(1, Math.round((endDay.getTime() - startDay.getTime()) / 86400000));
   const rollingStart = new Date(now.getTime() - daysDiff * 86400 * 1000);
-  const start = rollingStart.toISOString();
+  // 1일 전부터 조회: 첫 데이터포인트의 baseline 확보 (delta 계산용)
+  const paddedStart = new Date(rollingStart.getTime() - 86400 * 1000);
+  const start = paddedStart.toISOString();
+  // actualStartDate: 패딩 제외한 실제 시작일 (신규 유저 첫 데이터포인트 판별용)
+  const actualStartDate = rollingStart.toISOString().slice(0, 10);
 
-  // Execute all queries in parallel
+  // Execute all queries in parallel — raw counters + JS-side delta (reset-safe)
   const [
     inputTokens,
     outputTokens,
@@ -133,16 +213,16 @@ export async function fetchFromPrometheus(params: {
     acceptedDecisions,
     totalDecisions,
   ] = await Promise.all([
-    queryRange(Q.inputTokens, start, end),
-    queryRange(Q.outputTokens, start, end),
-    queryRange(Q.cacheReadTokens, start, end),
-    queryRange(Q.cacheCreationTokens, start, end),
-    queryRange(Q.sessions, start, end),
-    queryRange(Q.lines, start, end),
-    queryRange(Q.commits, start, end),
-    queryRange(Q.prs, start, end),
-    queryRange(Q.acceptedDecisions, start, end),
-    queryRange(Q.totalDecisions, start, end),
+    queryDailyIncrease(Q_RAW.inputTokens, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.outputTokens, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.cacheReadTokens, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.cacheCreationTokens, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.sessions, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.lines, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.commits, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.prs, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.acceptedDecisions, start, end, actualStartDate),
+    queryDailyIncrease(Q_RAW.totalDecisions, start, end, actualStartDate),
   ]);
 
   // --- Phase 1: Per-model metrics (email × model × date) ---
