@@ -26,7 +26,7 @@ function getWeeklyChampions(data: ClaudeCodeDataPoint[]): WeeklyChampion[] {
     const weekStart = startOfWeek(parseISO(d.date), { weekStartsOn: 1 });
     const weekKey = format(weekStart, "yyyy-MM-dd");
     const name = resolveActorName(d.actor);
-    const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    const tokens = d.input_tokens + d.output_tokens;
 
     if (!weekUserMap.has(weekKey)) weekUserMap.set(weekKey, new Map());
     const userMap = weekUserMap.get(weekKey)!;

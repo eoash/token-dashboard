@@ -39,7 +39,7 @@ export function aggregateModels(data: ClaudeCodeDataPoint[]): {
     existing.output += d.output_tokens;
     existing.cache += d.cache_read_tokens;
 
-    const dayTokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    const dayTokens = d.input_tokens + d.output_tokens;
     existing.daily.set(d.date, (existing.daily.get(d.date) ?? 0) + dayTokens);
     modelMap.set(d.model, existing);
   }

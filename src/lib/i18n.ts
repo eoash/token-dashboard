@@ -32,10 +32,10 @@ const translations = {
 
   // ── Overview KPI ──
   "kpi.totalTokens": { ko: "전체 토큰", en: "Total Tokens" },
-  "kpi.totalTokens.sub": { ko: "입력 + 출력 + 캐시", en: "input + output + cache" },
+  "kpi.totalTokens.sub": { ko: "입력 + 출력 (캐시 제외)", en: "input + output (excl. cache)" },
   "kpi.totalTokens.tip": {
-    ko: "입력·출력·캐시를 포함한 전체 토큰 사용량. 팀 전체가 Claude에게 보내고 받은 텍스트의 총량입니다.",
-    en: "Total token usage including input, output, and cache. The total volume of text the team sent to and received from Claude.",
+    ko: "입력·출력 토큰 합계 (캐시 제외). 팀 전체가 Claude에게 보내고 받은 실제 텍스트 양입니다.",
+    en: "Total input + output tokens (excluding cache). The actual volume of text the team sent to and received from Claude.",
   },
   "kpi.cacheHitRate": { ko: "캐시 적중률", en: "Cache Hit Rate" },
   "kpi.cacheHitRate.sub": { ko: "캐시 재활용 효율", en: "cache reuse efficiency" },
@@ -102,8 +102,8 @@ const translations = {
     en: "Tokens reused from cache instead of resending. Includes CLAUDE.md, skills, and repeated context.",
   },
   "lb.total.tip": {
-    ko: "입력 + 출력 + 캐시 읽기를 합산한 전체 토큰 사용량입니다.",
-    en: "Total token usage: input + output + cache read combined.",
+    ko: "입력 + 출력 합산 토큰 사용량입니다 (캐시 제외).",
+    en: "Total token usage: input + output combined (excluding cache).",
   },
   "lb.cacheHit.tip": {
     ko: "캐시 재활용 비율. 높을수록 동일 컨텍스트를 효율적으로 재사용하고 있다는 뜻입니다.",
@@ -203,8 +203,8 @@ const translations = {
   },
   "eff.member": { ko: "팀원", en: "Member" },
   "eff.totalTokens.tip": {
-    ko: "input + output + cache_read + cache_creation 합계",
-    en: "Sum of input + output + cache_read + cache_creation",
+    ko: "input + output 합계 (cache 제외)",
+    en: "Sum of input + output (excluding cache)",
   },
   "eff.cacheHit.tip": {
     ko: "cache_read / (cache_read + cache_creation + input). 높을수록 좋음",

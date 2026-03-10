@@ -23,8 +23,15 @@ TEAM_NAME = "eostudio"
 
 
 def parse_transcript(transcript_path: str) -> list[dict]:
-    """transcript JSONL에서 assistant 메시지의 model/usage 추출"""
-    entries = []
+    """transcript JSONL에서 assistant 메시지의 model/usage 추출 (message ID 중복 제거)
+
+    Claude Code transcript는 하나의 API 호출에 대해 여러 JSONL 행을 기록
+    (thinking block, tool_use block, text block 등). 같은 message.id는
+    동일한 usage를 공유하므로 마지막 항목만 사용하여 2-4x 과다집계 방지.
+    """
+    # message ID별로 마지막 항목만 유지 (last-wins 전략)
+    seen: dict[str, dict] = {}
+    no_id_entries: list[dict] = []
     try:
         with open(transcript_path, "r", encoding="utf-8", errors="replace") as f:
             for line in f:
@@ -45,10 +52,15 @@ def parse_transcript(transcript_path: str) -> list[dict]:
                 if not model or not usage:
                     continue
 
-                entries.append({"model": model, "usage": usage})
+                msg_id = msg.get("id")
+                entry = {"model": model, "usage": usage}
+                if msg_id:
+                    seen[msg_id] = entry  # 같은 ID는 마지막 값으로 덮어쓰기
+                else:
+                    no_id_entries.append(entry)
     except (IOError, OSError):
         pass
-    return entries
+    return list(seen.values()) + no_id_entries
 
 
 def count_bash_commands(transcript_path: str):

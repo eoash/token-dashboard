@@ -45,7 +45,7 @@ export function aggregateUtilization(data: ClaudeCodeDataPoint[]): UtilizationAg
     }
 
     if (d.model) {
-      const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+      const tokens = d.input_tokens + d.output_tokens;
       modelMap.set(d.model, (modelMap.get(d.model) ?? 0) + tokens);
     }
   }

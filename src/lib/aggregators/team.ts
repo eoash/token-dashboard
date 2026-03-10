@@ -31,7 +31,7 @@ export function aggregateMember(data: ClaudeCodeDataPoint[], name: string): Memb
   const modelMap = new Map<string, number>();
 
   for (const d of filtered) {
-    const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    const tokens = d.input_tokens + d.output_tokens;
     totalTokens += tokens;
     totalInput += d.input_tokens;
     totalCacheRead += d.cache_read_tokens;

@@ -32,7 +32,7 @@ export function aggregateOverview(data: ClaudeCodeDataPoint[]): OverviewAggregat
   const modelMap = new Map<string, number>();
 
   for (const d of data) {
-    const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    const tokens = d.input_tokens + d.output_tokens;
     totalTokens += tokens;
     totalCacheRead += d.cache_read_tokens;
     totalCacheCreation += d.cache_creation_tokens;

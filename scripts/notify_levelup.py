@@ -18,6 +18,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
+import urllib.parse
 from datetime import date, datetime
 from pathlib import Path
 
@@ -25,6 +26,7 @@ from pathlib import Path
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_CHANNEL = "C0ADUGUNV99"
 API_URL = "https://token-dashboard-iota.vercel.app/api/analytics?days=365"
+CARD_API_URL = "https://token-dashboard-iota.vercel.app/api/levelup-card"
 STATE_FILE = Path(__file__).parent / "level-state.json"
 
 # --- 레벨 테이블 (gamification.ts와 동기화 필수) ---
@@ -193,6 +195,14 @@ def save_state(state: dict) -> None:
     )
 
 
+def get_title_for_level(level_num: int) -> str:
+    """레벨 번호로 타이틀 조회."""
+    for lv, _, title, _, _ in LEVELS:
+        if lv == level_num:
+            return title
+    return ""
+
+
 def detect_levelups(current: dict[str, dict], prev_state: dict) -> list[dict]:
     """레벨업 감지. 새 유저 포함."""
     levelups = []
@@ -203,6 +213,7 @@ def detect_levelups(current: dict[str, dict], prev_state: dict) -> list[dict]:
                 "email": email,
                 "name": info["name"],
                 "prev_level": prev_level,
+                "prev_title": get_title_for_level(prev_level),
                 "new_level": info["level"],
                 "title": info["title"],
                 "icon": info["icon"],
@@ -212,8 +223,79 @@ def detect_levelups(current: dict[str, dict], prev_state: dict) -> list[dict]:
     return levelups
 
 
+def build_card_url(lu: dict) -> str:
+    """레벨업 카드 이미지 URL 생성."""
+    params = urllib.parse.urlencode({
+        "name": lu["name"],
+        "level": str(lu["new_level"]),
+        "title": lu["title"],
+        "icon": lu["icon"],
+        "xp": str(lu["xp"]),
+        "streak": str(lu.get("streak", 0)),
+        "prevLevel": str(lu["prev_level"]) if lu["prev_level"] > 0 else "",
+        "prevTitle": lu.get("prev_title", ""),
+        "log": lu["log"],
+    })
+    return f"{CARD_API_URL}?{params}"
+
+
+def download_card_image(url: str) -> bytes | None:
+    """카드 이미지 API에서 PNG 다운로드."""
+    req = urllib.request.Request(url, headers={"User-Agent": "levelup-notify"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read()
+    except Exception as e:
+        print(f"  ⚠️ 카드 이미지 다운로드 실패: {e}")
+        return None
+
+
+def upload_slack_image(image_data: bytes, filename: str, comment: str) -> bool:
+    """Slack에 이미지 파일 업로드 (files.upload)."""
+    url = "https://slack.com/api/files.upload"
+    boundary = "----LevelUpBoundary"
+
+    # multipart/form-data 수동 구성
+    parts = []
+    # channels
+    parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"channels\"\r\n\r\n{SLACK_CHANNEL}")
+    # initial_comment
+    parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"initial_comment\"\r\n\r\n{comment}")
+    # filename
+    parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"filename\"\r\n\r\n{filename}")
+    # file (binary)
+    file_header = (
+        f"--{boundary}\r\n"
+        f"Content-Disposition: form-data; name=\"file\"; filename=\"{filename}\"\r\n"
+        f"Content-Type: image/png\r\n\r\n"
+    )
+
+    body = b""
+    for part in parts:
+        body += (part + "\r\n").encode("utf-8")
+    body += file_header.encode("utf-8")
+    body += image_data
+    body += f"\r\n--{boundary}--\r\n".encode("utf-8")
+
+    req = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "Authorization": f"Bearer {SLACK_BOT_TOKEN}",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read())
+            return result.get("ok", False)
+    except Exception as e:
+        print(f"  ❌ Slack 이미지 업로드 실패: {e}")
+        return False
+
+
 def send_slack_message(text: str) -> bool:
-    """Slack 채널에 메시지 발송."""
+    """Slack 채널에 텍스트 메시지 발송 (이미지 없을 때 폴백)."""
     url = "https://slack.com/api/chat.postMessage"
     payload = json.dumps({
         "channel": SLACK_CHANNEL,
@@ -243,7 +325,7 @@ def format_levelup_message(lu: dict) -> str:
     return (
         f"🎉 *{lu['name']}* 님이 {lu['icon']} *Lv.{lu['new_level']} {lu['title']}* 에 도달했습니다!\n"
         f"> {lu['log']}\n"
-        f"📊 <https://token-dashboard-iota.vercel.app/rank|대시보드에서 확인>"
+        f"📊 <https://token-dashboard-iota.vercel.app/rank|Explorer's Log에서 확인>"
     )
 
 
@@ -288,8 +370,21 @@ def main():
                     print("   ❌ SLACK_BOT_TOKEN 미설정")
                 else:
                     msg = format_levelup_message(lu)
-                    ok = send_slack_message(msg)
-                    print(f"   {'✅ Slack 발송 완료' if ok else '❌ Slack 발송 실패'}")
+                    # 이미지 카드 다운로드 → Slack 업로드 (실패 시 텍스트 폴백)
+                    card_url = build_card_url(lu)
+                    print(f"   🖼️ 카드 생성 중: {card_url[:80]}...")
+                    image_data = download_card_image(card_url)
+                    if image_data:
+                        filename = f"levelup-{lu['name'].lower()}-lv{lu['new_level']}.png"
+                        ok = upload_slack_image(image_data, filename, msg)
+                        print(f"   {'✅ Slack 이미지 발송 완료' if ok else '⚠️ 이미지 실패, 텍스트 폴백'}")
+                        if not ok:
+                            ok = send_slack_message(msg)
+                            print(f"   {'✅ 텍스트 폴백 완료' if ok else '❌ 텍스트 발송도 실패'}")
+                    else:
+                        print("   ⚠️ 이미지 다운로드 실패, 텍스트 폴백")
+                        ok = send_slack_message(msg)
+                        print(f"   {'✅ 텍스트 폴백 완료' if ok else '❌ 텍스트 발송도 실패'}")
 
     # 4. 상태 저장
     new_state = {email: info["level"] for email, info in current.items()}

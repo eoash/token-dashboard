@@ -35,7 +35,7 @@ export default function WeeklySummary({ profile, data }: Props) {
     let weeklyTokens = 0;
     const activeDates = new Set<string>();
     for (const d of userPoints) {
-      weeklyTokens += d.input_tokens + d.output_tokens + d.cache_read_tokens;
+      weeklyTokens += d.input_tokens + d.output_tokens;
       activeDates.add(d.date);
     }
 

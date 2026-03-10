@@ -215,7 +215,7 @@ function getWeeklyChampionHistory(data: ClaudeCodeDataPoint[]): Map<string, stri
     const weekStart = startOfWeek(parseISO(d.date), { weekStartsOn: 1 });
     const weekKey = format(weekStart, "yyyy-MM-dd");
     const name = resolveActorName(d.actor);
-    const tokens = d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    const tokens = d.input_tokens + d.output_tokens;
     if (!weekUserMap.has(weekKey)) weekUserMap.set(weekKey, new Map());
     const userMap = weekUserMap.get(weekKey)!;
     userMap.set(name, (userMap.get(name) ?? 0) + tokens);
@@ -309,7 +309,7 @@ function computeAchievementDates(
       day = { tokens: 0, commits: 0, prs: 0, output: 0, tools: new Set(), models: new Set() };
       dailyAgg.set(d.date, day);
     }
-    day.tokens += d.input_tokens + d.output_tokens + d.cache_read_tokens;
+    day.tokens += d.input_tokens + d.output_tokens;
     day.commits += d.commits;
     day.prs += d.pull_requests;
     day.output += d.output_tokens;
@@ -445,7 +445,7 @@ export function buildProfiles(data: ClaudeCodeDataPoint[]): UserProfile[] {
     const models = new Set<string>();
 
     for (const d of points) {
-      totalTokens += d.input_tokens + d.output_tokens + d.cache_read_tokens;
+      totalTokens += d.input_tokens + d.output_tokens;
       totalCommits += d.commits;
       totalPRs += d.pull_requests;
       if (d.date) activeDates.push(d.date);
