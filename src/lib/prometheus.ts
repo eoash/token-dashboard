@@ -103,11 +103,10 @@ function computeDailyIncrease(
       if (delta > 0) {
         // 정상 증가
         dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);
-      } else if (delta < 0) {
-        // 카운터 리셋: 현재 값 = 리셋 이후 실제 누적량
-        dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + curVal);
       }
-      // delta === 0: 변화 없음, skip
+      // delta <= 0: 카운터 리셋 또는 sum by 집계에서 stale 시리즈 탈락.
+      // curVal을 더하면 잔존 시리즈의 누적값이 스파이크됨. 안전하게 무시.
+      // 리셋 후 정상 증가분은 다음 양의 delta에서 자연 포착됨.
     }
 
     // 패딩 기간 날짜 제외, 일별 값으로 PromSeries 재구성
