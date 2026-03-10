@@ -140,8 +140,13 @@ async function queryDailyIncrease(
   return computeDailyIncrease(rawSeries, actualStartDate);
 }
 
+/** Unix timestamp → YYYY-MM-DD (KST 기준)
+ * backfill JSON도 KST 로컬 날짜를 사용하므로 timezone 일관성 유지.
+ * UTC 사용 시 KST 자정~09시 활동이 전날로 분류되어 grace period에 걸림.
+ */
 function tsToDate(ts: number): string {
-  return new Date(ts * 1000).toISOString().slice(0, 10);
+  const KST_OFFSET = 9 * 3600; // UTC+9
+  return new Date((ts + KST_OFFSET) * 1000).toISOString().slice(0, 10);
 }
 
 function parseVal(v: string): number {
