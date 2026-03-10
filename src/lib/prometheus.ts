@@ -20,10 +20,10 @@ interface PromSeries {
 /**
  * 시간당 delta 상한 (토큰 수 기준).
  * otel_push.py 구버전이 resume 시 전체 transcript를 DELTA로 재전송하면
- * 시간당 5~10M+ 팽창이 발생함. 정상 최대(Haiku 동시 5세션)는 ~1M/hour.
- * 2M으로 cap → 정상 사용 2배, 팽창 1/3~1/5 수준에서 차단.
+ * 시간당 5~10M+ 팽창이 발생함. 정상 집중 사용 최대 ~200K/hour.
+ * 500K으로 cap → 정상 사용 2.5배, 스파이크 대부분 차단.
  */
-export const MAX_HOURLY_DELTA = 2_000_000;
+export const MAX_HOURLY_DELTA = 500_000;
 
 // --- PromQL queries ---
 // Raw counter queries (no increase()) — delta computed in JS to handle collector restarts
