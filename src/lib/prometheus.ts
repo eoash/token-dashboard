@@ -91,10 +91,9 @@ function computeDailyIncrease(
       const curDate = tsToDate(s.values[i][0]);
 
       if (i === 0) {
-        // 첫 데이터포인트: 패딩 기간이면 baseline (skip), 실제 범위면 신규 카운터 (count)
-        if (curDate >= actualStartDate && curVal > 0) {
-          dailyIncrease.set(curDate, curVal);
-        }
+        // 첫 데이터포인트는 항상 baseline (skip). delta 계산의 기준점으로만 사용.
+        // "신규 유저" 판별을 제거: 기존 유저의 누적 카운터가 padding 미스로
+        // 1일 증가량으로 오집계되는 스파이크 방지 (실사례: chiri cache_read 21.7B)
         continue;
       }
 
