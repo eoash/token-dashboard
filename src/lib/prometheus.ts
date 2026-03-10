@@ -86,27 +86,42 @@ function computeDailyIncrease(
   for (const s of rawSeries) {
     const dailyIncrease = new Map<string, number>();
 
+    // Reset recovery: OTel Collector 재시작 시 카운터가 0부터 재누적.
+    // sum by 집계에서 stale 시리즈 탈락(음의 delta) 후, 새 시리즈가
+    // 이전 최고값까지 "따라잡는" 구간의 양의 delta는 이중 집계이므로 무시.
+    // 카운터가 리셋 전 최고값을 초과해야 진짜 새 데이터.
+    let peakBeforeReset = 0;
+    let recovering = false;
+
     for (let i = 0; i < s.values.length; i++) {
       const curVal = parseFloat(s.values[i][1]);
       const curDate = tsToDate(s.values[i][0]);
 
       if (i === 0) {
         // 첫 데이터포인트는 항상 baseline (skip). delta 계산의 기준점으로만 사용.
-        // "신규 유저" 판별을 제거: 기존 유저의 누적 카운터가 padding 미스로
-        // 1일 증가량으로 오집계되는 스파이크 방지 (실사례: chiri cache_read 21.7B)
         continue;
       }
 
       const prevVal = parseFloat(s.values[i - 1][1]);
       const delta = curVal - prevVal;
 
-      if (delta > 0) {
+      if (delta < 0) {
+        // 카운터 리셋 또는 stale 시리즈 탈락 감지
+        peakBeforeReset = prevVal;
+        recovering = true;
+      } else if (recovering) {
+        // 리셋 후 회복 중: 카운터가 이전 최고값을 초과할 때까지 무시
+        if (curVal > peakBeforeReset) {
+          // 초과분만 진짜 새 데이터
+          const realIncrease = curVal - peakBeforeReset;
+          dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + realIncrease);
+          recovering = false;
+        }
+        // else: 아직 따라잡는 중 — 이중 집계 방지를 위해 무시
+      } else if (delta > 0) {
         // 정상 증가
         dailyIncrease.set(curDate, (dailyIncrease.get(curDate) ?? 0) + delta);
       }
-      // delta <= 0: 카운터 리셋 또는 sum by 집계에서 stale 시리즈 탈락.
-      // curVal을 더하면 잔존 시리즈의 누적값이 스파이크됨. 안전하게 무시.
-      // 리셋 후 정상 증가분은 다음 양의 delta에서 자연 포착됨.
     }
 
     // 패딩 기간 날짜 제외, 일별 값으로 PromSeries 재구성
