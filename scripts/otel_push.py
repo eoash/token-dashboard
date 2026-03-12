@@ -310,17 +310,24 @@ def push_metrics(payload: dict) -> bool:
         return False
 
 
+EMAIL_ALIAS = {
+    "jobskim@icloud.com": "ty@eoeoeo.net",
+}
+
+
 def sanitize_email(email: str) -> str:
-    """중복 도메인 제거 (예: user@eoeoeo.net@eoeoeo.net → user@eoeoeo.net)"""
+    """중복 도메인 제거 + alias 변환 (git email이 다른 팀원용)"""
     at_count = email.count("@")
     if at_count > 1:
         parts = email.split("@")
-        return f"{parts[0]}@{parts[-1]}"
-    return email
+        email = f"{parts[0]}@{parts[-1]}"
+    normalized = email.lower()
+    return EMAIL_ALIAS.get(normalized, normalized)
 
 
 def detect_user_email() -> str:
-    """git config에서 이메일 추출"""
+    """이메일 감지: git config → .otel_email 파일 → unknown"""
+    # 1. git config
     try:
         import subprocess
         result = subprocess.run(
@@ -329,6 +336,16 @@ def detect_user_email() -> str:
         )
         if result.returncode == 0 and result.stdout.strip():
             return sanitize_email(result.stdout.strip())
+    except Exception:
+        pass
+    # 2. install-hook이 저장한 .otel_email 파일
+    otel_email_path = os.path.join(os.path.expanduser("~/.claude/hooks"), ".otel_email")
+    try:
+        if os.path.exists(otel_email_path):
+            with open(otel_email_path, "r", encoding="utf-8") as f:
+                email = f.read().strip()
+            if email:
+                return sanitize_email(email)
     except Exception:
         pass
     return "unknown"
@@ -380,28 +397,82 @@ def compute_delta(totals: dict, prev_state: dict) -> dict:
     return delta
 
 
-BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_v3_done")
-BACKFILL_SCRIPT_URL = "https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/generate_backfill.py"
+DAILY_BACKFILL_MARKER = os.path.expanduser("~/.claude/hooks/.backfill_daily")
+BACKFILL_SCRIPT_URL = "https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts/generate_backfill.py"
 BACKFILL_API_URL = "https://token-dashboard-iota.vercel.app/api/backfill"
 
 
-def maybe_rebackfill(user_email: str):
-    """1회성 re-backfill: marker 파일이 없으면 최신 generate_backfill.py로 재생성 후 API에 전송"""
-    if os.path.exists(BACKFILL_MARKER):
+def send_session_backfill(delta: dict, user_email: str):
+    """매 세션 종료 시 현재 세션의 delta를 backfill API에 전송.
+    backfill cutoff를 항상 오늘로 유지하여 Prometheus 과다집계 영향 차단."""
+    import datetime
+
+    if not delta or not user_email:
         return
+
+    today = datetime.date.today().isoformat()
+
+    # delta: {(model, token_type): count} → 날짜+모델별 집계
+    by_model = defaultdict(lambda: {"input_tokens": 0, "output_tokens": 0,
+                                     "cache_read_tokens": 0, "cache_creation_tokens": 0})
+    for (model, token_type), count in delta.items():
+        if token_type == "input":
+            by_model[model]["input_tokens"] += count
+        elif token_type == "output":
+            by_model[model]["output_tokens"] += count
+        elif token_type == "cache_read":
+            by_model[model]["cache_read_tokens"] += count
+        elif token_type == "cache_creation":
+            by_model[model]["cache_creation_tokens"] += count
+
+    records = []
+    for model, tokens in by_model.items():
+        records.append({"date": today, "model": model, **tokens})
+
+    if not records:
+        return
+
+    try:
+        payload = json.dumps({"email": user_email, "data": records, "mode": "add"}).encode("utf-8")
+        req = urllib.request.Request(
+            BACKFILL_API_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        urllib.request.urlopen(req, timeout=15)
+    except Exception:
+        pass  # 실패해도 메인 로직에 영향 없음
+
+
+def maybe_daily_rebackfill(user_email: str):
+    """하루 1회 전체 transcript re-backfill. 누락 보정용 안전망.
+    날짜 마커로 오늘 이미 실행했으면 스킵."""
+    import datetime
+
+    today = datetime.date.today().isoformat()
+
+    # 오늘 이미 실행했는지 확인
+    try:
+        if os.path.exists(DAILY_BACKFILL_MARKER):
+            with open(DAILY_BACKFILL_MARKER, "r", encoding="utf-8") as f:
+                if f.read().strip() == today:
+                    return
+    except Exception:
+        pass
 
     import subprocess
     import tempfile
 
     try:
         # 최신 generate_backfill.py 다운로드
-        script_path = os.path.join(tempfile.gettempdir(), "generate_backfill_v2.py")
+        script_path = os.path.join(tempfile.gettempdir(), "generate_backfill_daily.py")
         urllib.request.urlretrieve(BACKFILL_SCRIPT_URL, script_path)
 
-        # 실행하여 backfill JSON 생성
-        out_path = os.path.join(tempfile.gettempdir(), "backfill_v2.json")
+        # 실행하여 backfill JSON 생성 (Windows: python3 없을 수 있으므로 sys.executable 사용)
+        out_path = os.path.join(tempfile.gettempdir(), "backfill_daily.json")
         subprocess.run(
-            ["python3", script_path, "--out", out_path],
+            [sys.executable, script_path, "--out", out_path],
             capture_output=True, text=True, timeout=60,
         )
 
@@ -425,10 +496,10 @@ def maybe_rebackfill(user_email: str):
         )
         with urllib.request.urlopen(req, timeout=30) as resp:
             if resp.status == 200:
-                # marker 파일 생성 — 다음부터 실행 안 함
-                os.makedirs(os.path.dirname(BACKFILL_MARKER), exist_ok=True)
-                with open(BACKFILL_MARKER, "w", encoding="utf-8") as m:
-                    m.write("v3")
+                # 날짜 마커 갱신 — 오늘은 다시 실행 안 함
+                os.makedirs(os.path.dirname(DAILY_BACKFILL_MARKER), exist_ok=True)
+                with open(DAILY_BACKFILL_MARKER, "w", encoding="utf-8") as m:
+                    m.write(today)
     except Exception:
         pass  # 실패해도 메인 로직에 영향 없음
     finally:
@@ -437,6 +508,70 @@ def maybe_rebackfill(user_email: str):
                 os.remove(p)
             except Exception:
                 pass
+
+
+def ensure_hook_registered():
+    """settings.json에 Stop hook이 등록되어 있는지 확인하고, 없으면 자동 복구.
+    otel_push.py는 매 세션 GitHub에서 자동 다운로드되므로,
+    이 함수만으로 전 팀원 자가복구가 가능하다 (재설치 불필요)."""
+    import platform
+    settings_path = os.path.expanduser("~/.claude/settings.json")
+    base_url = "https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts"
+    hooks_dir = os.path.expanduser("~/.claude/hooks")
+    hook_file = os.path.join(hooks_dir, "otel_push.py")
+
+    if platform.system() == "Windows":
+        hook_file_win = hook_file.replace("/", "\\")
+        hook_cmd = (
+            "powershell -NoProfile -Command \""
+            "$env:PYTHONUTF8='1';$env:PYTHONIOENCODING='utf-8';"
+            "$d=[Console]::In.ReadToEnd();"
+            f"Invoke-WebRequest -Uri '{base_url}/otel_push.py' -OutFile '{hook_file_win}' -ErrorAction SilentlyContinue;"
+            f"$d|python3 '{hook_file_win}'\""
+        )
+    else:
+        hook_cmd = (
+            "bash -c 'D=$(cat);curl -sL "
+            f"{base_url}/otel_push.py -o ~/.claude/hooks/otel_push.py 2>/dev/null;"
+            "echo \"$D\"|python3 ~/.claude/hooks/otel_push.py'"
+        )
+
+    try:
+        data = {}
+        if os.path.exists(settings_path):
+            with open(settings_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+        # Stop hook에 otel_push가 있는지 확인 + Windows에서 bash hook 감지 시 교체
+        found = False
+        needs_replace = False
+        for entry in data.get("hooks", {}).get("Stop", []):
+            for hook in entry.get("hooks", []):
+                cmd = hook.get("command", "")
+                if "otel_push" in cmd:
+                    found = True
+                    # Windows인데 bash 명령어가 등록되어 있으면 powershell로 교체
+                    if platform.system() == "Windows" and cmd.startswith("bash "):
+                        hook["command"] = hook_cmd
+                        needs_replace = True
+                    break
+
+        if needs_replace:
+            with open(settings_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+
+        if not found:
+            if "hooks" not in data:
+                data["hooks"] = {}
+            if "Stop" not in data["hooks"]:
+                data["hooks"]["Stop"] = []
+            data["hooks"]["Stop"].append(
+                {"hooks": [{"type": "command", "command": hook_cmd}]}
+            )
+            with open(settings_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+    except Exception:
+        pass  # 복구 실패해도 메인 로직에 영향 없음
 
 
 def main():
@@ -458,6 +593,9 @@ def main():
 
     if not transcript_path or not os.path.exists(transcript_path):
         return
+
+    # 0. Hook 자가복구 — settings.json에 Stop hook이 없으면 재등록
+    ensure_hook_registered()
 
     # 1. transcript 파싱
     entries = parse_transcript(transcript_path)
@@ -501,8 +639,11 @@ def main():
     if success:
         save_sent_state(transcript_path, totals, total_commits, total_prs)
 
-    # 7. 1회성 re-backfill
-    maybe_rebackfill(user_email)
+    # 9. 세션 backfill — 매 세션 delta를 backfill API에도 전송 (Prometheus 과다집계 차단)
+    send_session_backfill(delta, user_email)
+
+    # 10. 하루 1회 전체 re-backfill — 누락 보정용 안전망
+    maybe_daily_rebackfill(user_email)
 
 
 if __name__ == "__main__":

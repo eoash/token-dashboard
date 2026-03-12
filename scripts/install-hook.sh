@@ -6,7 +6,7 @@
 # 필요: python3, curl, git (GitHub 계정 불필요)
 #
 # 사용법:
-#   curl -sL https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.sh | bash
+#   curl -sL https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts/install-hook.sh | bash
 
 set -e
 
@@ -19,7 +19,7 @@ fi
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 HOOK_FILE="$HOOKS_DIR/otel_push.py"
-BASE_URL="https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts"
+BASE_URL="https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts"
 DASHBOARD_API="https://token-dashboard-iota.vercel.app/api/backfill"
 OTEL_COLLECTOR="https://otel-collector-production-2dac.up.railway.app"
 GEMINI_SETTINGS="$HOME/.gemini/settings.json"
@@ -80,6 +80,10 @@ if [ -z "$GIT_EMAIL" ] || ! echo "$GIT_EMAIL" | grep -q "@eoeoeo.net"; then
 fi
 
 echo "사용자: $GIT_EMAIL"
+
+# 이메일을 파일로 저장 (git 없는 환경에서도 otel_push가 사용자를 식별하도록)
+mkdir -p "$HOOKS_DIR"
+echo "$GIT_EMAIL" > "$HOOKS_DIR/.otel_email"
 echo ""
 
 # 1. hooks 디렉토리 생성
@@ -202,15 +206,17 @@ else
   echo "      ~/.codex/sessions/ 없음. Codex를 사용하면 자동 수집됩니다."
 fi
 
-# 6. Codex 자동 수집 cron 등록 (2시간마다)
-echo "[5/7] Codex 자동 수집 cron 등록 중..."
+# 6. Codex 자동 수집 + Hook 헬스체크 cron 등록 (2시간마다)
+echo "[5/7] Codex 자동 수집 + Hook 헬스체크 cron 등록 중..."
 
 CODEX_PUSH_LOCAL="$HOOKS_DIR/codex_push.py"
+HOOK_HEALTH_LOCAL="$HOOKS_DIR/hook_health.py"
 curl -sL "$BASE_URL/codex_push.py" -o "$CODEX_PUSH_LOCAL"
-chmod +x "$CODEX_PUSH_LOCAL"
+curl -sL "$BASE_URL/hook_health.py" -o "$HOOK_HEALTH_LOCAL"
+chmod +x "$CODEX_PUSH_LOCAL" "$HOOK_HEALTH_LOCAL"
 
-# cron 명령: 실행 전 최신 스크립트 다운로드 후 실행
-CRON_CMD="curl -sL $BASE_URL/codex_push.py -o $CODEX_PUSH_LOCAL 2>/dev/null; python3 $CODEX_PUSH_LOCAL --email $GIT_EMAIL"
+# cron 명령: 헬스체크 → 최신 스크립트 다운로드 → Codex 수집
+CRON_CMD="curl -sL $BASE_URL/hook_health.py -o $HOOK_HEALTH_LOCAL 2>/dev/null; python3 $HOOK_HEALTH_LOCAL; curl -sL $BASE_URL/codex_push.py -o $CODEX_PUSH_LOCAL 2>/dev/null; python3 $CODEX_PUSH_LOCAL --email $GIT_EMAIL"
 CRON_LINE="0 */2 * * * $CRON_CMD # eo-codex-push"
 
 # 기존 eo-codex-push cron 제거 후 새로 등록 (temp file 방식 — zsh/bash 호환)
@@ -220,7 +226,7 @@ grep -v "eo-codex-push" "$CRON_TMP" > "${CRON_TMP}.new" 2>/dev/null
 echo "$CRON_LINE" >> "${CRON_TMP}.new"
 crontab "${CRON_TMP}.new"
 rm -f "$CRON_TMP" "${CRON_TMP}.new"
-echo "      -> cron 등록 완료: 매 2시간마다 자동 수집"
+echo "      -> cron 등록 완료: 매 2시간마다 헬스체크 + 자동 수집"
 
 # 7. Gemini CLI 텔레메트리 설정 (네이티브 OTel → Collector 직접 전송)
 echo "[6/7] Gemini CLI 텔레메트리 설정 중..."
@@ -266,7 +272,6 @@ else:
 "
 else
   echo "      Gemini CLI 미설치. 설치 후 install-hook.sh를 다시 실행하면 자동 설정됩니다."
-  echo "      설치: npm install -g @anthropic-ai/gemini-cli 또는 https://geminicli.com"
 fi
 
 # 8. Gemini CLI GEMINI.md에 사용자 이메일 기록 (메트릭 식별용)

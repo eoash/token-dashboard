@@ -2,7 +2,7 @@
 # Claude Code / Codex / Gemini CLI 토큰 사용량을 자동으로 대시보드에 수집합니다.
 #
 # 사용법:
-#   powershell -Command "irm https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts/install-hook.ps1 | iex"
+#   powershell -Command "irm https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts/install-hook.ps1 | iex"
 
 $ErrorActionPreference = "Stop"
 
@@ -13,12 +13,15 @@ $env:PYTHONIOENCODING = "utf-8"
 $HOOKS_DIR = "$env:USERPROFILE\.claude\hooks"
 $SETTINGS = "$env:USERPROFILE\.claude\settings.json"
 $HOOK_FILE = "$HOOKS_DIR\otel_push.py"
-$BASE_URL = "https://raw.githubusercontent.com/eoash/token-dashboard/main/scripts"
+$BASE_URL = "https://raw.githubusercontent.com/eoash/eoash/main/token-dashboard/scripts"
 $DASHBOARD_API = "https://token-dashboard-iota.vercel.app/api/backfill"
 $OTEL_COLLECTOR = "https://otel-collector-production-2dac.up.railway.app"
 $GEMINI_SETTINGS = "$env:USERPROFILE\.gemini\settings.json"
+# python3 또는 python 실제 경로 감지 (Windows Store 스텁 우회)
+$PYTHON_EXE = if (Get-Command python3 -ErrorAction SilentlyContinue) { "python3" } else { "python" }
 # 자동 업데이트 hook 명령: bash가 없으므로 powershell로 실행
-$HOOK_CMD = "powershell -NoProfile -Command `"`$d=`$input|Out-String;Invoke-WebRequest -Uri '$BASE_URL/otel_push.py' -OutFile '$HOOK_FILE' -ErrorAction SilentlyContinue;`$d|python3 '$HOOK_FILE'`""
+# UTF-8 강제 + python 경로 동적 감지
+$HOOK_CMD = "powershell -NoProfile -Command `"`$env:PYTHONUTF8='1';`$env:PYTHONIOENCODING='utf-8';`$d=[Console]::In.ReadToEnd();Invoke-WebRequest -Uri '$BASE_URL/otel_push.py' -OutFile '$HOOK_FILE' -ErrorAction SilentlyContinue;`$d|$PYTHON_EXE '$HOOK_FILE'`""
 
 Write-Host ""
 Write-Host "  ╔═══════════════════════════════════════════════════════════╗"
@@ -43,12 +46,12 @@ Write-Host "  ╚═════════════════════
 Write-Host ""
 
 # 0. 필수 도구 확인
-foreach ($cmd in @("python3", "curl", "git")) {
+foreach ($cmd in @($PYTHON_EXE, "curl", "git")) {
     if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) {
         # python3이 없으면 python 시도
-        if ($cmd -eq "python3" -and (Get-Command "python" -ErrorAction SilentlyContinue)) {
+        if ($cmd -eq $PYTHON_EXE -and (Get-Command "python" -ErrorAction SilentlyContinue)) {
             Write-Host "[i] python3 대신 python 사용"
-            Set-Alias -Name python3 -Value python -Scope Script
+            $PYTHON_EXE = "python"
         } else {
             Write-Host "[!] $cmd 이 설치되어 있지 않습니다."
             exit 1
@@ -78,6 +81,10 @@ if (-not $GIT_EMAIL -or $GIT_EMAIL -notmatch "@eoeoeo\.net") {
 }
 
 Write-Host "사용자: $GIT_EMAIL"
+
+# 이메일을 파일로 저장 (git 없는 환경에서도 otel_push가 사용자를 식별하도록)
+New-Item -ItemType Directory -Path $HOOKS_DIR -Force | Out-Null
+[System.IO.File]::WriteAllText("$HOOKS_DIR\.otel_email", $GIT_EMAIL, [System.Text.Encoding]::UTF8)
 Write-Host ""
 
 # 1. hooks 디렉토리 생성
@@ -94,7 +101,7 @@ Write-Host "      -> $HOOK_FILE"
 Write-Host "[2/7] Claude Code Stop hook 등록 중..."
 
 $env:HOOK_CMD_ENV = $HOOK_CMD
-python3 -c @"
+$PYTHON_EXE -c @"
 import json, os
 
 path = os.path.expanduser('~/.claude/settings.json')
@@ -147,15 +154,15 @@ if (Test-Path $CLAUDE_DIR) {
         $BACKFILL_SCRIPT = [System.IO.Path]::GetTempFileName() -replace '\.tmp$', '.py'
         $BACKFILL_JSON = [System.IO.Path]::GetTempFileName() -replace '\.tmp$', '.json'
         Invoke-WebRequest -Uri "$BASE_URL/generate_backfill.py" -OutFile $BACKFILL_SCRIPT
-        python3 $BACKFILL_SCRIPT --out $BACKFILL_JSON
+        $PYTHON_EXE $BACKFILL_SCRIPT --out $BACKFILL_JSON
 
-        $DATA_COUNT = python3 -c "import json; print(len(json.load(open(r'$BACKFILL_JSON', encoding='utf-8'))['data']))" 2>$null
+        $DATA_COUNT = $PYTHON_EXE -c "import json; print(len(json.load(open(r'$BACKFILL_JSON', encoding='utf-8'))['data']))" 2>$null
         if (-not $DATA_COUNT) { $DATA_COUNT = "0" }
 
         if ([int]$DATA_COUNT -gt 0) {
             Write-Host "      ${DATA_COUNT}개 레코드 생성. 대시보드로 전송 중..."
 
-            $PAYLOAD = python3 -c @"
+            $PAYLOAD = $PYTHON_EXE -c @"
 import json
 with open(r'$BACKFILL_JSON', encoding='utf-8') as f:
     data = json.load(f)
@@ -193,36 +200,39 @@ $CODEX_SESSIONS = "$env:USERPROFILE\.codex\sessions"
 if (Test-Path $CODEX_SESSIONS) {
     $CODEX_SCRIPT = [System.IO.Path]::GetTempFileName() -replace '\.tmp$', '.py'
     Invoke-WebRequest -Uri "$BASE_URL/codex_push.py" -OutFile $CODEX_SCRIPT
-    python3 $CODEX_SCRIPT --email $GIT_EMAIL 2>&1 | ForEach-Object { "      $_" }
+    $PYTHON_EXE $CODEX_SCRIPT --email $GIT_EMAIL 2>&1 | ForEach-Object { "      $_" }
     Remove-Item -Path $CODEX_SCRIPT -Force -ErrorAction SilentlyContinue
 } else {
     Write-Host "      ~/.codex/sessions/ 없음. Codex를 사용하면 자동 수집됩니다."
 }
 
-# 6. Codex 자동 수집 - Windows Task Scheduler (2시간마다)
-Write-Host "[5/7] Codex 자동 수집 스케줄 등록 중..."
+# 6. Codex 자동 수집 + Hook 헬스체크 - Windows Task Scheduler (2시간마다)
+Write-Host "[5/7] Codex 자동 수집 + Hook 헬스체크 스케줄 등록 중..."
 
 $CODEX_PUSH_LOCAL = "$HOOKS_DIR\codex_push.py"
+$HOOK_HEALTH_LOCAL = "$HOOKS_DIR\hook_health.py"
 Invoke-WebRequest -Uri "$BASE_URL/codex_push.py" -OutFile $CODEX_PUSH_LOCAL
+Invoke-WebRequest -Uri "$BASE_URL/hook_health.py" -OutFile $HOOK_HEALTH_LOCAL
 
 $taskName = "EO-Codex-Push"
 $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 
-# python3 또는 python 경로
-$pythonPath = (Get-Command python3 -ErrorAction SilentlyContinue).Source
+# $PYTHON_EXE 또는 python 경로
+$pythonPath = (Get-Command $PYTHON_EXE -ErrorAction SilentlyContinue).Source
 if (-not $pythonPath) { $pythonPath = (Get-Command python -ErrorAction SilentlyContinue).Source }
 
 if ($pythonPath) {
-    $action = New-ScheduledTaskAction -Execute $pythonPath -Argument "`"$CODEX_PUSH_LOCAL`" --email `"$GIT_EMAIL`""
+    # 헬스체크 먼저 실행 후 Codex 수집
+    $action = New-ScheduledTaskAction -Execute $pythonPath -Argument "`"$HOOK_HEALTH_LOCAL`"; $pythonPath `"$CODEX_PUSH_LOCAL`" --email `"$GIT_EMAIL`""
     $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Hours 2)
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd
 
     if ($existingTask) {
         Set-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings | Out-Null
-        Write-Host "      -> 기존 스케줄 업데이트 완료: 매 2시간마다 자동 수집"
+        Write-Host "      -> 기존 스케줄 업데이트 완료: 매 2시간마다 헬스체크 + 자동 수집"
     } else {
-        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Description "EO Studio Codex usage collector" | Out-Null
-        Write-Host "      -> 스케줄 등록 완료: 매 2시간마다 자동 수집"
+        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Description "EO Studio hook health check + Codex usage collector" | Out-Null
+        Write-Host "      -> 스케줄 등록 완료: 매 2시간마다 헬스체크 + 자동 수집"
     }
 } else {
     Write-Host "      [!] python 경로를 찾을 수 없어 스케줄 등록을 건너뜁니다."
@@ -237,7 +247,7 @@ if (Get-Command gemini -ErrorAction SilentlyContinue) {
         New-Item -ItemType Directory -Path $geminiDir -Force | Out-Null
     }
 
-    python3 -c @"
+    $PYTHON_EXE -c @"
 import json, os
 
 path = os.path.expanduser('~/.gemini/settings.json')
@@ -279,7 +289,7 @@ else:
 Write-Host "[7/7] Gemini CLI 사용자 설정 중..."
 
 if (Get-Command gemini -ErrorAction SilentlyContinue) {
-    python3 -c @"
+    $PYTHON_EXE -c @"
 import json, os
 
 path = os.path.expanduser('~/.gemini/settings.json')
